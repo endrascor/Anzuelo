@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Anzuelo.Application.DTOs
 {
-    public record class ComboProductoDTO
+    public record ComboProductoDTO
     {
         public int IdProducto { get; init; }
         public string NombreProducto { get; init; } = null!;

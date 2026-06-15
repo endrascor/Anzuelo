@@ -9,7 +9,7 @@ public partial class ImagenProducto
 
     public int IdProducto { get; set; }
 
-    public string Imagen { get; set; } = null!;
+    public byte[] Imagen { get; set; } = null!;
 
     public virtual Producto IdProductoNavigation { get; set; } = null!;
 }
