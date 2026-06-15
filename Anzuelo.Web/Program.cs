@@ -2,12 +2,14 @@ using Anzuelo.Application.Profiles;
 using Anzuelo.Application.Services.Implementations;
 using Anzuelo.Application.Services.Interfaces;
 using Anzuelo.Infraestructure.Data;
+using Anzuelo.Infraestructure.Models;
 using Anzuelo.Infraestructure.Repository.Implementations;
 using Anzuelo.Infraestructure.Repository.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Serilog.Events;
-using Serilog;
 using Anzuelo.Web.Middleware;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 using System.Text;
 
 

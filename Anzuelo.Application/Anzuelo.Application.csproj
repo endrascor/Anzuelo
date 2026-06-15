@@ -22,8 +22,4 @@
     <ProjectReference Include="..\Anzuelo.Infraestructure\Anzuelo.Infraestructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-  </ItemGroup>
-
 </Project>
