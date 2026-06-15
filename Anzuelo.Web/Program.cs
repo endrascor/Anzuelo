@@ -18,8 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
+builder.Services.AddTransient<IServicePreparacion, ServicePreparacion>();
 //Repository
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
+builder.Services.AddTransient<IRepositoryPreparacion, RepositoryPreparacion>();
 
 //Services
 
@@ -28,6 +30,7 @@ builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ComboProfile>();
+    config.AddProfile<PreparacionProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 
