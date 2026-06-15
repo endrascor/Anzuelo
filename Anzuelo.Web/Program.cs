@@ -17,9 +17,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
 //Repository
-
+builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 
 //Services
 
@@ -27,7 +27,7 @@ builder.Services.AddControllersWithViews();
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
 {
-
+    config.AddProfile<ComboProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 

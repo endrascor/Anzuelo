@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Anzuelo.Application.DTOs.ComboDTO>
+@{
+    ViewData["Title"] = "Combos";
+}
+
+<h1 class="mb-4">Combos</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var item in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Nombre</h5>
+                    <p class="card-text text-muted">@item.Descripcion</p>
+                    <p class="card-text">
+                        <span class="badge bg-secondary">@item.NombreCategoria</span>
+                    </p>
+                    <p class="card-text">
+                        <strong>Precio:</strong> ₡@item.PrecioTotal.ToString("N2")
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="Details" asp-route-id="@item.IdCombo"
+                       class="btn btn-primary btn-sm">Ver detalle</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
