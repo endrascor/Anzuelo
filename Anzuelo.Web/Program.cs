@@ -17,20 +17,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
+
 //Repository
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
+builder.Services.AddTransient<IRepositoryPreparacion, RepositoryPreparacion>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
 builder.Services.AddTransient<IServiceProducto, ServiceProducto>();
+builder.Services.AddTransient<IServicePreparacion, ServicePreparacion>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<ComboProfile>();
     config.AddProfile<ProductoProfile>();
+    config.AddProfile<PreparacionProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 

@@ -16,7 +16,8 @@
             @if (Model.Imagenes.Any())
             {
                 <div id="productoCarousel"
-                     class="carousel slide">
+                     class="carousel slide"
+                     style="height:350px;">
 
                     <div class="carousel-inner">
 
@@ -28,10 +29,17 @@
                         {
                             <div class="carousel-item @(primera ? "active" : "")">
 
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagen.Imagen)"
-                                     class="img-fluid rounded"
-                                     alt="@Model.Nombre"
-                                     style="max-height:350px; object-fit:contain;" />
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="height:350px;">
+
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagen.Imagen)"
+                                         class="img-fluid rounded"
+                                         alt="@Model.Nombre"
+                                         style="max-height:330px;
+                                                        max-width:100%;
+                                                        object-fit:contain;" />
+
+                                </div>
 
                             </div>
 
@@ -63,11 +71,25 @@
 
                 </div>
             }
+            else if (Model.Imagen != null)
+            {
+                <div class="d-flex justify-content-center align-items-center"
+                     style="height:350px;">
+
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
+                         class="img-fluid rounded"
+                         alt="@Model.Nombre"
+                         style="max-height:330px;
+                                    max-width:100%;
+                                    object-fit:contain;" />
+
+                </div>
+            }
 
         </div>
 
         <!-- Información -->
-        <div class="col-md-7">
+        <div class="col-md-7 d-flex flex-column justify-content-center">
 
             <h3>@Model.Nombre</h3>
 
@@ -128,3 +150,18 @@
         Volver
     </a>
 </div>
+
+@section Scripts
+{
+    @if (Model.Imagenes.Count > 1)
+    {
+        <script>
+            const carouselElement = document.getElementById('productoCarousel');
+
+            new bootstrap.Carousel(carouselElement, {
+                interval: 3000,
+                ride: 'carousel'
+            });
+        </script>
+    }
+}
