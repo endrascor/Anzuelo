@@ -1,8 +1,78 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section class="text-center py-5">
+
+    <h1 class="display-2 fw-bold"
+        style="color:var(--anzuelo-primary);">
+
+        EL ANZUELO
+
+    </h1>
+
+    <p class="lead">
+        Sabor del mar en cada plato
+    </p>
+
+</section>
+
+<section class="text-center mb-5">
+
+    <img src="~/images/logo.jpeg"
+         class="img-fluid"
+         style="max-height:500px;"
+         alt="Anzuelo" />
+
+</section>
+
+<section class="container mb-5">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-white text-center">
+
+            <button class="btn btn-link text-decoration-none fs-4 fw-bold"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#quienesSomos"
+                    aria-expanded="true"
+                    aria-controls="quienesSomos">
+
+                ¿Quiénes Somos? ▼
+
+            </button>
+
+        </div>
+
+        <div class="collapse show" id="quienesSomos">
+
+            <div class="card-body p-5">
+
+                <p class="fs-5 text-center">
+
+                    En Soda El Anzuelo nos especializamos en la preparación
+                    de ceviches, mariscos frescos y platos típicos
+                    costarricenses. Nuestro objetivo es ofrecer a cada
+                    cliente una experiencia gastronómica auténtica,
+                    utilizando ingredientes frescos y recetas llenas
+                    de sabor.
+
+                </p>
+
+                <p class="fs-5 text-center">
+
+                    Desde nuestros tradicionales ceviches hasta nuestros
+                    casados y combos especiales, cada platillo es preparado
+                    con dedicación para brindar calidad, frescura y el
+                    auténtico sabor del mar.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

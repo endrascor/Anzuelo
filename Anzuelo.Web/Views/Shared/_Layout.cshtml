@@ -10,30 +10,79 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Anzuelo</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+             style="background-color: var(--anzuelo-primary);">
+
+            <div class="container">
+
+                <a class="navbar-brand d-flex align-items-center"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <img src="~/images/logo.jpeg"
+                         alt="Logo"
+                         width="60"
+                         height="60"
+                         class="me-3" />
+
+                    <span style="font-size:2rem;font-weight:bold;">
+                        ANZUELO
+                    </span>
+
+                </a>
+
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarAnzuelo">
+
                     <span class="navbar-toggler-icon"></span>
+
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Inicio</a>
+
+                <div class="collapse navbar-collapse justify-content-end"
+                     id="navbarAnzuelo">
+
+                    <ul class="navbar-nav text-end">
+
+                        <li class="nav-item mx-3">
+                            <a class="nav-link text-white fs-5"
+                               asp-controller="Home"
+                               asp-action="Index">
+                                Inicio
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Combo" asp-action="Index">Combos</a>
+
+                        <li class="nav-item mx-3">
+                            <a class="nav-link text-white fs-5"
+                               asp-controller="Combo"
+                               asp-action="Index">
+                                Combos
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Producto" asp-action="Index">Productos</a>
+
+                        <li class="nav-item mx-3">
+                            <a class="nav-link text-white fs-5"
+                               asp-controller="Producto"
+                               asp-action="Index">
+                                Productos
+                            </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Preparacion" asp-action="Index">Procesos de Preparación</a>
+
+                        <li class="nav-item mx-3">
+                            <a class="nav-link text-white fs-5"
+                               asp-controller="Preparacion"
+                               asp-action="Index">
+                                Preparación
+                            </a>
                         </li>
+
                     </ul>
+
                 </div>
+
             </div>
+
         </nav>
     </header>
     <div class="container">
@@ -41,10 +90,39 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
+    <footer class="mt-5 py-4 text-center text-white"
+            style="background-color: var(--anzuelo-primary);">
+
         <div class="container">
-            &copy; 2026 - Anzuelo
+
+            <h5>Soda Anzuelo</h5>
+
+            <p>
+                Especialistas en ceviches, mariscos frescos
+                y comida tradicional costarricense.
+            </p>
+
+            <p>
+                📍 Puntarenas, Costa Rica
+            </p>
+
+            <p>
+                📞 2222-2222
+            </p>
+
+            <p>
+                ✉ contacto@anzuelo.com
+            </p>
+
+            <hr />
+
+            <small>
+                © 2026 Sistema El Anzuelo.
+                Todos los derechos reservados.
+            </small>
+
         </div>
+
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
