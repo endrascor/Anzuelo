@@ -2,32 +2,122 @@
 @{
     ViewData["Title"] = "Procesos de Preparación";
 }
-<h1 class="mb-4">Procesos de Preparación</h1>
-<div class="table-responsive">
-    <table class="table table-hover shadow-sm">
-        <thead class="table-dark">
-            <tr>
-                <th>Producto</th>
-                <th class="text-center">Cantidad de Pasos</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@string.Join(", ", item.NombresProductos)</td>
-                    <td class="text-center">
-                        <span class="badge bg-primary rounded-pill">
-                            @item.Estaciones.Count
-                        </span>
-                    </td>
-                    <td class="text-center">
-                        <a asp-action="Details" asp-route-id="@item.IdPreparacion"
-                           class="btn btn-primary btn-sm">Ver detalle</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<style>
+    .prep-table-wrap {
+        background: #fff;
+        border-radius: .5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+    }
+
+    .prep-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .9rem 1.2rem;
+    }
+
+    .prep-table tbody tr {
+        border-bottom: 1px solid #edf0f2;
+        transition: background .15s;
+    }
+
+        .prep-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .prep-table tbody tr:hover {
+            background: #fff5ee;
+        }
+
+    .prep-table td {
+        padding: .85rem 1.2rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .badge-pasos {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 700;
+        padding: .3em .85em;
+        border-radius: 2rem;
+        min-width: 2rem;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-ver-prep {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .8rem;
+        font-weight: 600;
+        padding: .28rem .85rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-ver-prep:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-diagram-3 me-2"></i>Procesos de Preparación</h1>
+        <p class="page-hero-sub">Flujo de estaciones para cada producto de la cocina</p>
+    </div>
+</div>
+
+<div class="container">
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox" style="font-size:3rem;opacity:.4;"></i>
+            <h5 class="mt-3">No hay procesos registrados aún</h5>
+        </div>
+    }
+    else
+    {
+        <div class="prep-table-wrap">
+            <table class="table prep-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Pasos</th>
+                        <th class="text-center">Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@string.Join(", ", item.NombresProductos)</td>
+                            <td class="text-center">
+                                <span class="badge-pasos">@item.Estaciones.Count</span>
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Details" asp-route-id="@item.IdPreparacion"
+                                   class="btn-ver-prep">
+                                    Ver
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>

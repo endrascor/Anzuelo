@@ -2,38 +2,119 @@
 @{
     ViewData["Title"] = "Detalle del Combo";
 }
+<style>
+    .detail-card {
+        border: none;
+        border-left: 4px solid var(--anzuelo-accent);
+        border-radius: 0 .5rem .5rem 0;
+    }
 
-<h1 class="mb-4">@Model.Nombre</h1>
+    .precio-destacado {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--anzuelo-accent);
+    }
 
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Descripción</dt>
-            <dd class="col-sm-9">@Model.Descripcion</dd>
+    .producto-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .8rem 1.1rem;
+        border-bottom: 1px solid #edf0f2;
+        transition: background .15s;
+    }
 
-            <dt class="col-sm-3">Categoría</dt>
-            <dd class="col-sm-9">@Model.NombreCategoria</dd>
+        .producto-row:last-child {
+            border-bottom: none;
+        }
 
-            <dt class="col-sm-3">Estado</dt>
-            <dd class="col-sm-9">@Model.NombreEstado</dd>
+        .producto-row:hover {
+            background: #fff5ee;
+        }
 
-            <dt class="col-sm-3">Precio Total</dt>
-            <dd class="col-sm-9">₡@Model.PrecioTotal.ToString("N2")</dd>
-        </dl>
+    .badge-cant {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-size: .78rem;
+        font-weight: 700;
+        padding: .25em .75em;
+        border-radius: 2rem;
+    }
+
+    .subtotal-box {
+        background: #fff5ee;
+        border-radius: .4rem;
+        padding: .9rem 1.1rem;
+        margin-top: 1.1rem;
+    }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-bag-heart me-2"></i>@Model.Nombre</h1>
+        <p class="page-hero-sub">Detalle del combo</p>
     </div>
 </div>
 
-<h4 class="mb-3">Productos del Combo</h4>
-<ul class="list-group">
-    @foreach (var producto in Model.Productos)
-    {
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            @producto.NombreProducto
-            <span class="badge bg-primary rounded-pill">Cantidad: @producto.Cantidad</span>
-        </li>
-    }
-</ul>
+<div class="container">
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="card detail-card shadow-sm h-100">
+                <div class="card-body p-4">
+                    <h6 class="section-heading">Información</h6>
 
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+                    <p class="field-label">Descripción</p>
+                    <p>@Model.Descripcion</p>
+
+                    <p class="field-label">Categoría</p>
+                    <p>
+                        <span class="badge rounded-pill"
+                              style="background:var(--anzuelo-primary);color:#fff;">
+                            @Model.NombreCategoria
+                        </span>
+                    </p>
+
+                    <p class="field-label">Estado</p>
+                    <p>
+                        <span class="badge rounded-pill"
+                              style="background:#eaf4de;color:#3d6b1a;">
+                            @Model.NombreEstado
+                        </span>
+                    </p>
+
+                    <div class="subtotal-box">
+                        <p class="field-label mb-1">Precio total</p>
+                        <p class="precio-destacado mb-0">₡@Model.PrecioTotal.ToString("N2")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card shadow-sm" style="border:none;">
+                <div class="card-body p-4">
+                    <h6 class="section-heading">
+                        <i class="bi bi-list-ul me-1"></i>Productos incluidos
+                    </h6>
+                </div>
+                @foreach (var producto in Model.Productos)
+                {
+                    <div class="producto-row">
+                        <span>
+                            <i class="bi bi-circle-fill me-2"
+                               style="font-size:.45rem;color:var(--anzuelo-accent);vertical-align:middle;"></i>
+                            @producto.NombreProducto
+                        </span>
+                        <span class="badge-cant">×@producto.Cantidad</span>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-anzuelo-outline px-4">
+            <i class="bi bi-arrow-left me-1"></i>Volver a Combos
+        </a>
+    </div>
 </div>

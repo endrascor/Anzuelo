@@ -2,29 +2,101 @@
 @{
     ViewData["Title"] = "Combos";
 }
+<style>
+    .combo-card {
+        border: none;
+        border-left: 4px solid var(--anzuelo-accent);
+        border-radius: 0 .5rem .5rem 0;
+        transition: transform .2s, box-shadow .2s;
+    }
 
-<h1 class="mb-4">Combos</h1>
+        .combo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(10, 47, 90, .13) !important;
+        }
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    @foreach (var item in Model)
+        .combo-card .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--anzuelo-primary);
+        }
+
+    .combo-price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--anzuelo-accent);
+    }
+
+    .badge-cat {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .7rem;
+        font-weight: 600;
+        padding: .3em .75em;
+        border-radius: 2rem;
+        white-space: nowrap;
+    }
+
+    .btn-ver-combo {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        border: none;
+        font-size: .82rem;
+        font-weight: 600;
+        padding: .35rem .9rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        transition: background .2s;
+    }
+
+        .btn-ver-combo:hover {
+            background: #c0621a;
+            color: #fff;
+        }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-bag-heart me-2"></i>Combos</h1>
+        <p class="page-hero-sub">Selecciones especiales con nuestros mejores mariscos</p>
+    </div>
+</div>
+
+<div class="container">
+    @if (!Model.Any())
     {
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">@item.Nombre</h5>
-                    <p class="card-text text-muted">@item.Descripcion</p>
-                    <p class="card-text">
-                        <span class="badge bg-secondary">@item.NombreCategoria</span>
-                    </p>
-                    <p class="card-text">
-                        <strong>Precio:</strong> ₡@item.PrecioTotal.ToString("N2")
-                    </p>
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox" style="font-size:3rem;opacity:.4;"></i>
+            <h5 class="mt-3">No hay combos disponibles por el momento</h5>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col">
+                    <div class="card combo-card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">@item.Nombre</h5>
+                                <span class="badge-cat ms-2">@item.NombreCategoria</span>
+                            </div>
+                            <p class="card-text text-muted small flex-grow-1">@item.Descripcion</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <span class="combo-price">₡@item.PrecioTotal.ToString("N2")</span>
+                                <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn-ver-combo">
+                                    Ver detalle
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer">
-                    <a asp-action="Details" asp-route-id="@item.IdCombo"
-                       class="btn btn-primary btn-sm">Ver detalle</a>
-                </div>
-            </div>
+            }
         </div>
     }
 </div>

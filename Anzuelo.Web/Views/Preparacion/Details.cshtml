@@ -1,32 +1,168 @@
 ﻿@model Anzuelo.Application.DTOs.PreparacionDTO
 @{
     ViewData["Title"] = "Detalle del Proceso de Preparación";
+    var tiempoTotal = Model.Estaciones.Sum(e => e.TiempoEstimadoMinutos);
 }
-<h1 class="mb-4">Proceso de Preparación</h1>
-<div class="card shadow-sm mb-4">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Descripción</dt>
-            <dd class="col-sm-9">@Model.Descripcion</dd>
-            <dt class="col-sm-3">Producto(s)</dt>
-            <dd class="col-sm-9">@string.Join(", ", Model.NombresProductos)</dd>
-        </dl>
+<style>
+    .detail-card {
+        border: none;
+        border-left: 4px solid var(--anzuelo-accent);
+        border-radius: 0 .5rem .5rem 0;
+    }
+
+    .tiempo-box {
+        background: #fff5ee;
+        border-radius: .4rem;
+        padding: .9rem 1.1rem;
+        margin-top: 1.1rem;
+    }
+
+    .tiempo-total {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--anzuelo-accent);
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 2.75rem;
+    }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: .95rem;
+            top: .6rem;
+            bottom: .6rem;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--anzuelo-accent), rgba(230, 126, 34, .2));
+            border-radius: 1px;
+        }
+
+    .tl-item {
+        position: relative;
+        background: #fff;
+        border: 1px solid #e5edf0;
+        border-radius: .45rem;
+        padding: .8rem 1rem;
+        margin-bottom: .8rem;
+        transition: box-shadow .15s;
+    }
+
+        .tl-item:hover {
+            box-shadow: 0 3px 12px rgba(10, 47, 90, .1);
+        }
+
+    .tl-dot {
+        position: absolute;
+        left: -2.1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.5rem;
+        height: 1.5rem;
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-size: .68rem;
+        font-weight: 700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tl-nombre {
+        font-weight: 600;
+        color: var(--anzuelo-primary);
+    }
+
+    .tl-tiempo {
+        font-size: .8rem;
+        font-weight: 600;
+        color: var(--anzuelo-accent);
+        background: #fff5ee;
+        padding: .2em .65em;
+        border-radius: 2rem;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+    }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-diagram-3 me-2"></i>Proceso de Preparación</h1>
+        <p class="page-hero-sub">@string.Join(", ", Model.NombresProductos)</p>
     </div>
 </div>
-<h4 class="mb-3">Estaciones de Preparación</h4>
-<ul class="list-group">
-    @foreach (var estacion in Model.Estaciones.OrderBy(e => e.NumeroOrden))
-    {
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span>
-                <strong>#@estacion.NumeroOrden</strong> — @estacion.NombreEstacion
-            </span>
-            <span class="badge bg-secondary rounded-pill">
-                @estacion.TiempoEstimadoMinutos min
-            </span>
-        </li>
-    }
-</ul>
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+
+<div class="container">
+    <div class="row g-4">
+
+        <div class="col-lg-4">
+            <div class="card detail-card shadow-sm h-100">
+                <div class="card-body p-4">
+
+                    <h6 class="section-heading">Información</h6>
+
+                    <p class="field-label">Descripción</p>
+                    <p>@Model.Descripcion</p>
+
+                    <p class="field-label">Producto(s)</p>
+                    <p class="fw-semibold">@string.Join(", ", Model.NombresProductos)</p>
+
+                    <p class="field-label">Estaciones</p>
+                    <p>
+                        <span class="badge rounded-pill"
+                              style="background:var(--anzuelo-accent);color:#fff;font-size:.9rem;padding:.4em .9em;">
+                            @Model.Estaciones.Count
+                        </span>
+                    </p>
+
+                    <div class="tiempo-box">
+                        <p class="field-label mb-1">
+                            <i class="bi bi-clock me-1"></i>Tiempo total estimado
+                        </p>
+                        <p class="tiempo-total mb-0">@tiempoTotal min</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm" style="border:none;">
+                <div class="card-body p-4">
+
+                    <h6 class="section-heading">
+                        <i class="bi bi-signpost-split me-1"></i>Estaciones de preparación
+                    </h6>
+
+                    <div class="timeline">
+                        @foreach (var estacion in Model.Estaciones.OrderBy(e => e.NumeroOrden))
+                        {
+                            <div class="tl-item">
+                                <span class="tl-dot">@estacion.NumeroOrden</span>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="tl-nombre">@estacion.NombreEstacion</span>
+                                    <span class="tl-tiempo">
+                                        <i class="bi bi-clock"></i>
+                                        @estacion.TiempoEstimadoMinutos min
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-anzuelo-outline px-4">
+            <i class="bi bi-arrow-left me-1"></i>Volver a Preparaciones
+        </a>
+    </div>
 </div>
