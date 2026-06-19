@@ -5,8 +5,8 @@
 <style>
     .detail-card {
         border: none;
-        border-left: 4px solid var(--anzuelo-accent);
-        border-radius: 0 .5rem .5rem 0;
+        border-radius: .5rem;
+        border-top: 4px solid var(--anzuelo-accent);
     }
 
     .precio-destacado {
@@ -61,12 +61,12 @@
         <div class="col-lg-5">
             <div class="card detail-card shadow-sm h-100">
                 <div class="card-body p-4">
-                    <h6 class="section-heading">Información</h6>
+                    <h6 class="section-heading"><strong>Información</strong></h6>
 
-                    <p class="field-label">Descripción</p>
+                    <p class="field-label"><strong>Descripción</strong></p>
                     <p>@Model.Descripcion</p>
 
-                    <p class="field-label">Categoría</p>
+                    <p class="field-label"><strong>Categoría</strong></p>
                     <p>
                         <span class="badge rounded-pill"
                               style="background:var(--anzuelo-primary);color:#fff;">
@@ -74,7 +74,7 @@
                         </span>
                     </p>
 
-                    <p class="field-label">Estado</p>
+                    <p class="field-label"><strong>Estado</strong></p>
                     <p>
                         <span class="badge rounded-pill"
                               style="background:#eaf4de;color:#3d6b1a;">
@@ -94,7 +94,7 @@
             <div class="card shadow-sm" style="border:none;">
                 <div class="card-body p-4">
                     <h6 class="section-heading">
-                        <i class="bi bi-list-ul me-1"></i>Productos incluidos
+                        <i class="bi bi-list-ul me-1"></i><strong>Productos incluidos</strong>
                     </h6>
                 </div>
                 @foreach (var producto in Model.Productos)

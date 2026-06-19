@@ -103,15 +103,15 @@
             <div class="card detail-card shadow-sm h-100">
                 <div class="card-body p-4">
 
-                    <h6 class="section-heading">Información</h6>
+                    <h6 class="section-heading"><strong>Información</strong></h6>
 
-                    <p class="field-label">Descripción</p>
+                    <p class="field-label"><strong>Descripción</strong></p>
                     <p>@Model.Descripcion</p>
 
-                    <p class="field-label">Producto(s)</p>
+                    <p class="field-label"><strong>Producto(s)</strong></p>
                     <p class="fw-semibold">@string.Join(", ", Model.NombresProductos)</p>
 
-                    <p class="field-label">Estaciones</p>
+                    <p class="field-label"><strong>Estaciones</strong></p>
                     <p>
                         <span class="badge rounded-pill"
                               style="background:var(--anzuelo-accent);color:#fff;font-size:.9rem;padding:.4em .9em;">
@@ -121,7 +121,7 @@
 
                     <div class="tiempo-box">
                         <p class="field-label mb-1">
-                            <i class="bi bi-clock me-1"></i>Tiempo total estimado
+                            <i class="bi bi-clock me-1"></i><strong>Tiempo total estimado</strong>
                         </p>
                         <p class="tiempo-total mb-0">@tiempoTotal min</p>
                     </div>
@@ -135,7 +135,7 @@
                 <div class="card-body p-4">
 
                     <h6 class="section-heading">
-                        <i class="bi bi-signpost-split me-1"></i>Estaciones de preparación
+                        <i class="bi bi-signpost-split me-1"></i><strong>Estaciones de preparación</strong>
                     </h6>
 
                     <div class="timeline">
