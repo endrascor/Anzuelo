@@ -233,6 +233,11 @@ public partial class AnzueloContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("horaInicio");
             entity.Property(e => e.IdDisponibilidadDia).HasColumnName("idDisponibilidadDia");
+
+            entity.HasOne(d => d.IdDisponibilidadDiaNavigation).WithMany(p => p.Disponibilidad)
+                .HasForeignKey(d => d.IdDisponibilidadDia)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Disponibilidad_DisponibilidadDia");
         });
 
         modelBuilder.Entity<DisponibilidadDia>(entity =>
@@ -374,7 +379,6 @@ public partial class AnzueloContext : DbContext
             entity.HasIndex(e => e.NombreMenu, "UQ__Menu__E0E7063B3E215FCF").IsUnique();
 
             entity.Property(e => e.IdMenu).HasColumnName("idMenu");
-            entity.Property(e => e.ActivoPublico).HasColumnName("activoPublico");
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(45)
                 .IsUnicode(false)

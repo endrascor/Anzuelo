@@ -11,8 +11,6 @@ public partial class Menu
 
     public string Descripcion { get; set; } = null!;
 
-    public bool ActivoPublico { get; set; }
-
     public int IdDisponibilidad { get; set; }
 
     public int IdEstadoMenu { get; set; }

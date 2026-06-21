@@ -1,0 +1,312 @@
+﻿@model Anzuelo.Application.DTOs.MenuDTO
+
+@{
+    ViewData["Title"] = "Detalle Menú";
+}
+
+<style>
+    .menu-card {
+        background: #fffdf8;
+        border-radius: .9rem;
+        box-shadow: 0 6px 22px rgba(10,47,90,.12);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .menu-header {
+        background: linear-gradient(135deg, var(--anzuelo-primary), #184f8a);
+        color: white;
+        padding: 1.8rem;
+        text-align: center;
+    }
+
+    .menu-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .menu-sub {
+        margin-top: .4rem;
+        opacity: .9;
+        font-size: 1rem;
+    }
+
+    .menu-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        font-size: .9rem;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .menu-section {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .menu-category {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--anzuelo-primary);
+        margin-bottom: 1.2rem;
+        padding-bottom: .5rem;
+        border-bottom: 3px solid var(--anzuelo-accent);
+        text-transform: uppercase;
+        letter-spacing: .06rem;
+    }
+
+    .item-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px dashed #ddd;
+    }
+
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+    .item-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .item-img {
+        width: 200px;
+        height: 200px;
+        border-radius: .7rem;
+        object-fit: contain;
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        padding: .25rem;
+        box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        flex-shrink: 0;
+        transition: transform .2s ease;
+    }
+
+        .item-img:hover {
+            transform: scale(1.06);
+        }
+
+    .item-text strong {
+        display: block;
+        font-size: 1.05rem;
+        margin-bottom: .2rem;
+    }
+
+    .item-text small {
+        color: #666;
+        font-size: .85rem;
+    }
+
+    .price-badge {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-size: .95rem;
+        font-weight: 800;
+        padding: .5rem 1rem;
+        border-radius: 2rem;
+        min-width: 100px;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0,0,0,.12);
+    }
+
+    .combo-gallery {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+        max-width: 260px;
+        min-width: 260px;
+    }
+
+        .combo-gallery .item-img {
+            width: 110px;
+            height: 110px;
+        }
+
+    .combo-items {
+        margin-top: .5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .3rem;
+    }
+
+    .combo-tag {
+        background: #fff3e6;
+        color: #b85c00;
+        padding: .2rem .6rem;
+        border-radius: 1rem;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    .menu-footer {
+        text-align: center;
+        padding: 1rem;
+        color: #777;
+        font-size: .85rem;
+        background: #fafafa;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-weight: 700;
+        border-radius: .4rem;
+        padding: .55rem 1.2rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: .2s;
+    }
+
+        .btn-back:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+</style>
+
+<div class="container">
+
+    <div class="menu-card">
+
+        <div class="menu-header">
+            <h2 class="menu-title">@Model.NombreMenu</h2>
+            <div class="menu-sub">@Model.Descripcion</div>
+        </div>
+
+        <div class="menu-info">
+            <strong>Disponibilidad:</strong>
+            @Model.FechaInicio.ToString("dd/MM/yyyy")
+            -
+            @Model.FechaFinal.ToString("dd/MM/yyyy")
+            &nbsp;|&nbsp;
+            @Model.HoraInicio.ToString(@"hh\:mm")
+            -
+            @Model.HoraFinal.ToString(@"hh\:mm")
+        </div>
+
+        <!-- PRODUCTOS -->
+        @foreach (var cat in Model.ProductosPorCategoria)
+        {
+            <div class="menu-section">
+
+                <div class="menu-category">@cat.Categoria</div>
+
+                @foreach (var p in cat.Productos)
+                {
+                    <div class="item-row">
+
+                        <div class="item-left">
+
+                            <img class="item-img"
+                                 src="@(p.Imagen != null
+                                                                       ? $"data:image/png;base64,{Convert.ToBase64String(p.Imagen)}"
+                                                                       : "/images/no-image.png")" />
+
+                    <div class="item-text">
+                        <strong>@p.Nombre</strong>
+                        <small>@p.Descripcion</small>
+                    </div>
+
+                        </div>
+
+                        <div class="price-badge">
+                            ₡@p.Precio.ToString("N0")
+                        </div>
+
+                    </div>
+                        }
+
+            </div>
+        }
+
+        <!-- COMBOS -->
+        @if (Model.CombosPorCategoria != null && Model.CombosPorCategoria.Any())
+        {
+            <div class="menu-section">
+
+                <div class="menu-category">Combos</div>
+
+                @foreach (var cat in Model.CombosPorCategoria)
+                {
+                    @foreach (var c in cat.Combos)
+                    {
+                        <div class="item-row">
+
+                            <div class="item-left">
+
+                                <div class="combo-gallery">
+
+                                    @if (c.Productos != null && c.Productos.Any())
+                                    {
+                                        @foreach (var producto in c.Productos)
+                                        {
+                                            <img class="item-img"
+                                                 src="@(producto.Imagen != null
+                                                                                                       ? $"data:image/png;base64,{Convert.ToBase64String(producto.Imagen)}"
+                                                                                                       : "/images/no-image.png")"
+                             title="@producto.NombreProducto" />
+                                                }
+                                    }
+                                    else
+                                    {
+                                        <img class="item-img" src="/images/no-image.png" />
+                                    }
+
+                                </div>
+
+                                <div class="item-text">
+
+                                    <strong>@c.Nombre</strong>
+                                    <small>@c.Descripcion</small>
+
+                                    @if (c.Productos != null && c.Productos.Any())
+                                    {
+                                        <div class="combo-items">
+                                            @foreach (var producto in c.Productos)
+                                            {
+                                                <span class="combo-tag">
+                                                    @producto.NombreProducto
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
+                            <div class="price-badge">
+                                ₡@c.PrecioTotal.ToString("N0")
+                            </div>
+
+                        </div>
+                    }
+                }
+
+            </div>
+        }
+
+        <div class="menu-footer">
+            Menú disponible actualmente
+        </div>
+
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="bi bi-arrow-left"></i>
+            Volver a Menus
+        </a>
+    </div>
+
+</div>

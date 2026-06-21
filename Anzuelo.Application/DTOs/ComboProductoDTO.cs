@@ -11,5 +11,6 @@ namespace Anzuelo.Application.DTOs
         public int IdProducto { get; init; }
         public string NombreProducto { get; init; } = null!;
         public int Cantidad { get; init; }
+        public byte[]? Imagen { get; init; }
     }
 }

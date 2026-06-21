@@ -1,61 +1,93 @@
 ﻿@model IEnumerable<Anzuelo.Application.DTOs.ComboDTO>
+
 @{
     ViewData["Title"] = "Combos";
 }
+
 <style>
+    .page-title {
+        font-weight: 800;
+        color: var(--anzuelo-primary);
+        margin-bottom: 1.5rem;
+    }
+
     .combo-card {
         border: none;
         border-radius: .5rem;
-        border-top: 4px solid var(--anzuelo-accent);
-        transition: transform .2s, box-shadow .2s;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+        transition: transform .15s ease, box-shadow .15s ease;
     }
 
         .combo-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 22px rgba(10, 47, 90, .13) !important;
+            box-shadow: 0 6px 18px rgba(10, 47, 90, .12);
         }
 
-        .combo-card .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--anzuelo-primary);
-        }
+    .combo-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--anzuelo-primary);
+        margin-bottom: .3rem;
+    }
+
+    .combo-desc {
+        font-size: .85rem;
+        color: #666;
+        min-height: 40px;
+    }
 
     .combo-price {
-        font-size: 1.25rem;
+        display: inline-block;
+        background: var(--anzuelo-accent);
+        color: #fff;
         font-weight: 700;
-        color: var(--anzuelo-accent);
+        font-size: .85rem;
+        padding: .35rem .8rem;
+        border-radius: 2rem;
+        margin-top: .5rem;
     }
 
     .badge-cat {
-        background-color: var(--anzuelo-primary);
+        background: var(--anzuelo-primary);
         color: #fff;
-        font-size: .7rem;
+        font-size: .75rem;
         font-weight: 600;
         padding: .3em .75em;
         border-radius: 2rem;
         white-space: nowrap;
     }
 
-    .btn-ver-combo {
-        background: var(--anzuelo-accent);
-        color: #fff;
-        border: none;
-        font-size: .82rem;
-        font-weight: 600;
-        padding: .35rem .9rem;
-        border-radius: .35rem;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: .35rem;
-        transition: background .2s;
+    .card-footer-custom {
+        background: #fff;
+        border-top: 1px solid #edf0f2;
     }
 
-        .btn-ver-combo:hover {
-            background: #c0621a;
+    /* BOTÓN estilo productos */
+    .btn-anzuelo {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .85rem;
+        font-weight: 600;
+        padding: .3rem .9rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+    }
+
+        .btn-anzuelo:hover {
+            background: var(--anzuelo-accent);
             color: #fff;
         }
+
+    .combo-card:hover .combo-title {
+        color: var(--anzuelo-accent);
+    }
 </style>
 
 <div class="page-hero">
@@ -66,6 +98,7 @@
 </div>
 
 <div class="container">
+
     @if (!Model.Any())
     {
         <div class="text-center py-5 text-muted">
@@ -76,27 +109,49 @@
     else
     {
         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+
             @foreach (var item in Model)
             {
                 <div class="col">
-                    <div class="card combo-card h-100 shadow-sm">
+
+                    <div class="card combo-card h-100">
+
                         <div class="card-body d-flex flex-column">
+
                             <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h5 class="card-title mb-0">@item.Nombre</h5>
-                                <span class="badge-cat ms-2">@item.NombreCategoria</span>
+                                <div class="combo-title">@item.Nombre</div>
+                                <span class="badge-cat">@item.NombreCategoria</span>
                             </div>
-                            <p class="card-text text-muted small flex-grow-1">@item.Descripcion</p>
+
+                            <p class="combo-desc flex-grow-1">
+                                @item.Descripcion
+                            </p>
+
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                <span class="combo-price">₡@item.PrecioTotal.ToString("N2")</span>
-                                <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn-ver-combo">
+
+                                <span class="combo-price">
+                                    ₡@item.PrecioTotal.ToString("N2")
+                                </span>
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.IdCombo"
+                                   class="btn-anzuelo">
+
                                     Ver detalle
                                     <i class="bi bi-arrow-right"></i>
+
                                 </a>
+
                             </div>
+
                         </div>
+
                     </div>
+
                 </div>
             }
+
         </div>
     }
+
 </div>

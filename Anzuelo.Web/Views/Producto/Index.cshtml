@@ -4,53 +4,149 @@
     ViewData["Title"] = "Productos";
 }
 
-<h1 class="mb-4">Productos</h1>
+<style>
+    .page-title {
+        font-weight: 800;
+        color: var(--anzuelo-primary);
+        margin-bottom: 1.5rem;
+    }
+    .product-card {
+        border: none;
+        border-radius: .5rem;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+        transition: transform .15s ease, box-shadow .15s ease;
+    }
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(10, 47, 90, .12);
+        }
 
-    @foreach (var item in Model)
-    {
-        <div class="col">
-            <div class="card h-100 shadow-sm">
+    .product-img {
+        height: 240px;
+        width: 100%;
+        object-fit: contain;
+        background: #fff;
+        padding: .8rem;
+        border-bottom: 1px solid #edf0f2;
+    }
+    .product-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--anzuelo-primary);
+        margin-bottom: .3rem;
+    }
 
-                @if (item.Imagen != null)
-                {
-                    <img class="card-img-top"
-                         style="height:250px; object-fit:cover;"
-                         src="data:image/jpeg;base64,@Convert.ToBase64String(item.Imagen)"
-                         alt="@item.Nombre" />
-                }
-                else
-                {
-                    <img class="card-img-top"
-                         style="height:250px; object-fit:cover;"
-                         src="~/images/no-image.png"
-                         alt="Sin imagen" />
-                }
+    .product-desc {
+        font-size: .85rem;
+        color: #666;
+        min-height: 40px;
+    }
 
-                <div class="card-body">
-                    <h5 class="card-title">@item.Nombre</h5>
+    .price-tag {
+        display: inline-block;
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: .85rem;
+        padding: .35rem .8rem;
+        border-radius: 2rem;
+        margin-top: .5rem;
+    }
 
-                    <p class="card-text text-muted">
-                        @item.Descripcion
-                    </p>
+    .card-footer-custom {
+        background: #fff;
+        border-top: 1px solid #edf0f2;
+    }
 
-                    <p class="card-text">
-                        <strong>Precio:</strong>
-                        ₡@item.Precio.ToString("N2")
-                    </p>
-                </div>
+    .btn-anzuelo {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .85rem;
+        font-weight: 600;
+        padding: .3rem .9rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
 
-                <div class="card-footer">
-                    <a asp-action="Details"
-                       asp-route-id="@item.IdProducto"
-                       class="btn btn-primary btn-sm">
-                        Ver detalle
-                    </a>
+        .btn-anzuelo:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+
+    .product-card:hover .product-title {
+        color: var(--anzuelo-accent);
+    }
+</style>
+
+<div class="container">
+
+    <div class="page-hero">
+        <div class="container">
+            <h1><i class="bi bi-box-seam me-2"></i>Productos</h1>
+            <p class="page-hero-sub">Listado de productos disponibles</p>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+
+        @foreach (var item in Model)
+        {
+            <div class="col">
+
+                <div class="card product-card h-100">
+
+                    @if (item.Imagen != null)
+                    {
+                        <img class="product-img"
+                             src="data:image/png;base64,@Convert.ToBase64String(item.Imagen)"
+                             alt="@item.Nombre" />
+                    }
+                    else
+                    {
+                        <img class="product-img"
+                             src="~/images/no-image.png"
+                             alt="Sin imagen" />
+                    }
+
+                    <div class="card-body">
+
+                        <div class="product-title">
+                            @item.Nombre
+                        </div>
+
+                        <div class="product-desc">
+                            @item.Descripcion
+                        </div>
+
+                        <div class="price-tag">
+                            ₡@item.Precio.ToString("N2")
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer card-footer-custom text-end">
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.IdProducto"
+                           class="btn btn-anzuelo btn-sm">
+
+                            <i class="bi bi-eye me-1"></i>
+                            Ver detalle
+
+                        </a>
+
+                    </div>
+
                 </div>
 
             </div>
-        </div>
-    }
+        }
+
+    </div>
 
 </div>

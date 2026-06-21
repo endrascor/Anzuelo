@@ -28,11 +28,20 @@ namespace Anzuelo.Application.Profiles
 
             CreateMap<ComboProducto, ComboProductoDTO>()
                 .ForMember(dest => dest.IdProducto,
-                    orig => orig.MapFrom(o => o.IdProducto))
+        opt => opt.MapFrom(src => src.IdProducto))
+
                 .ForMember(dest => dest.NombreProducto,
-                    orig => orig.MapFrom(o => o.IdProductoNavigation.Nombre))
+        opt => opt.MapFrom(src => src.IdProductoNavigation.Nombre))
+
                 .ForMember(dest => dest.Cantidad,
-                    orig => orig.MapFrom(o => o.Cantidad))
+        opt => opt.MapFrom(src => src.Cantidad))
+
+                .ForMember(dest => dest.Imagen,
+        opt => opt.MapFrom(src =>
+            src.IdProductoNavigation.ImagenProducto
+                .Select(i => i.Imagen)
+                .FirstOrDefault()))
+
                 .ReverseMap();
         }
     }
