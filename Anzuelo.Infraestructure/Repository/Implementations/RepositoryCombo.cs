@@ -34,8 +34,9 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .Include(x => x.IdEstadoComboNavigation)
                 .Include(x => x.ComboProducto)
                 .ThenInclude(x => x.IdProductoNavigation)
+                .ThenInclude(x => x.ImagenProducto)
                 .FirstOrDefaultAsync(x => x.IdCombo == id);
-            return @Object;
+            return @Object!;
         }
     }
 }
