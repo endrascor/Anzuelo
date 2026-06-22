@@ -29,13 +29,17 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         }
 
         public async Task<Menu> GetMenuDisponibleAsync()
-        {
-            var now = DateTime.Now;
-            var @Object = await _context.Set<Menu>()
-                .Include(x => x.IdDisponibilidadNavigation)
+{
+    var now = DateTime.Now;
+    var currentDate = now.Date;
+    var currentTime = now.TimeOfDay;
+    var currentDay = (int)now.DayOfWeek;
+
+    var menus = await _context.Set<Menu>()
+        .Include(x => x.IdDisponibilidadNavigation)
+            .ThenInclude(d => d.IdDisponibilidadDiaNavigation)
         .Include(x => x.IdEstadoMenuNavigation)
 
-        // PRODUCTOS + IMAGENES
         .Include(x => x.MenuProducto)
             .ThenInclude(mp => mp.IdProductoNavigation)
                 .ThenInclude(p => p.IdCategoriaProductoNavigation)
@@ -44,7 +48,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             .ThenInclude(mp => mp.IdProductoNavigation)
                 .ThenInclude(p => p.ImagenProducto)
 
-        // COMBOS + PRODUCTOS + IMAGENES
         .Include(x => x.MenuCombo)
             .ThenInclude(mc => mc.IdComboNavigation)
                 .ThenInclude(c => c.IdCategoriaComboNavigation)
@@ -55,13 +58,45 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                     .ThenInclude(cp => cp.IdProductoNavigation)
                         .ThenInclude(p => p.ImagenProducto)
 
-        .Where(x =>
-            x.IdDisponibilidadNavigation.FechaInicio <= now &&
-            x.IdDisponibilidadNavigation.FechaFinal >= now)
-        .OrderByDescending(x => x.IdDisponibilidadNavigation.FechaInicio)
-        .FirstOrDefaultAsync();
+        .ToListAsync();
 
-            return @Object;
-        }
+    var menuDisponible = menus
+        .Where(x =>
+        {
+            var d = x.IdDisponibilidadNavigation;
+
+            if (d == null || d.IdDisponibilidadDiaNavigation == null)
+                return false;
+
+            var fechaValida =
+                d.FechaInicio.Date <= currentDate &&
+                d.FechaFinal.Date >= currentDate;
+
+            var horaInicio = d.HoraInicio.TimeOfDay;
+            var horaFinal = d.HoraFinal.TimeOfDay;
+
+            var horaValida =
+                horaInicio <= currentTime &&
+                currentTime <= horaFinal;
+
+            var dayToMatch = DateTime.Now.DayOfWeek switch
+            {
+                DayOfWeek.Monday => 1,
+                DayOfWeek.Tuesday => 2,
+                DayOfWeek.Wednesday => 3,
+                DayOfWeek.Thursday => 4,
+                DayOfWeek.Friday => 5,
+                DayOfWeek.Saturday => 6,
+                DayOfWeek.Sunday => 7
+            };
+
+            var diaValido =
+                d.IdDisponibilidadDiaNavigation.IdDisponibilidadDia == dayToMatch;
+
+            return fechaValida && horaValida && diaValido;
+        })
+        .OrderByDescending(x => x.IdDisponibilidadNavigation.FechaInicio)
+        .FirstOrDefault();
+}
     }
 }
