@@ -15,5 +15,6 @@ namespace Anzuelo.Application.DTOs
         public string NombreCategoria { get; init; } = null!;
         public string NombreEstado { get; init; } = null!;
         public ICollection<ComboProductoDTO> Productos { get; init; } = new List<ComboProductoDTO>();
+        public ICollection<byte[]> ImagenesProductos { get; init; } = new List<byte[]>();
     }
 }

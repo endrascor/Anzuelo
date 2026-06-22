@@ -4,7 +4,6 @@
 }
 
 <style>
-    /* HERO igual a Producto */
     .page-hero {
         background: linear-gradient(135deg, var(--anzuelo-primary), #184f8a);
         color: #fff;
@@ -24,7 +23,6 @@
         font-size: .95rem;
     }
 
-    /* CARD principal */
     .detail-card {
         border: none;
         border-left: 4px solid var(--anzuelo-accent);
@@ -32,14 +30,12 @@
         background: #fff;
     }
 
-    /* PRECIO */
     .precio-destacado {
-        font-size: 1.9rem;
-        font-weight: 700;
+        font-size: 1.6rem;
+        font-weight: 800;
         color: var(--anzuelo-accent);
     }
 
-    /* FILA PRODUCTOS */
     .producto-row {
         display: flex;
         justify-content: space-between;
@@ -57,7 +53,6 @@
             background: #fff5ee;
         }
 
-    /* BADGE cantidad */
     .badge-cant {
         background: var(--anzuelo-accent);
         color: #fff;
@@ -67,15 +62,6 @@
         border-radius: 2rem;
     }
 
-    /* BOX precio */
-    .subtotal-box {
-        background: #fff5ee;
-        border-radius: .4rem;
-        padding: .9rem 1.1rem;
-        margin-top: 1.1rem;
-    }
-
-    /* BOTÓN VOLVER estilo Producto */
     .btn-back {
         background: transparent;
         border: 2px solid var(--anzuelo-accent);
@@ -98,90 +84,124 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-bag-heart me-2"></i>@Model.Nombre</h1>
-        <p class="page-hero-sub">Detalle del combo</p>
+        <h1><i class="bi bi-bag-heart me-2"></i>Detalle del Combo</h1>
+        <p class="page-hero-sub">@Model.Nombre</p>
     </div>
 </div>
 
 <div class="container">
-    <div class="row g-4">
 
-        <!-- INFO -->
-        <div class="col-lg-5">
-            <div class="card detail-card shadow-sm h-100">
-                <div class="card-body p-4">
+    <div class="card detail-card shadow-sm p-4">
+        <div class="row">
 
-                    <h6><strong style="color:var(--anzuelo-primary);">Información</strong></h6>
-
-                    <p><strong>Descripción:</strong></p>
-                    <p>@Model.Descripcion</p>
-
-                    <p><strong>Categoría:</strong></p>
-                    <p>
-                        <span class="badge rounded-pill"
-                              style="background:var(--anzuelo-primary);color:#fff;">
-                            @Model.NombreCategoria
-                        </span>
-                    </p>
-
-                    <p><strong>Estado:</strong></p>
-                    <p>
-                        <span class="badge rounded-pill"
-                              style="background:#eaf4de;color:#3d6b1a;">
-                            @Model.NombreEstado
-                        </span>
-                    </p>
-
-                    <div class="subtotal-box">
-                        <p class="mb-1"><strong>Precio total</strong></p>
-                        <p class="precio-destacado mb-0">
-                            ₡@Model.PrecioTotal.ToString("N2")
-                        </p>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- PRODUCTOS -->
-        <div class="col-lg-7">
-            <div class="card shadow-sm detail-card" style="border:none;">
-                <div class="card-body p-4">
-
-                    <h6>
-                        <i class="bi bi-list-ul me-1"></i>
-                        <strong style="color:var(--anzuelo-primary);">
-                            Productos incluidos
-                        </strong>
-                    </h6>
-
-                </div>
-
-                @foreach (var producto in Model.Productos)
+            <!-- CARRUSEL  -->
+            <div class="col-md-5 text-center">
+                @if (Model.ImagenesProductos != null && Model.ImagenesProductos.Any())
                 {
-                    <div class="producto-row">
-                        <span>
-                            <i class="bi bi-circle-fill me-2"
-                               style="font-size:.45rem;color:var(--anzuelo-accent);"></i>
-                            @producto.NombreProducto
-                        </span>
-                        <span class="badge-cant">
-                            ×@producto.Cantidad
-                        </span>
+                    <div id="comboCarousel" class="carousel slide" style="height:350px;">
+                        <div class="carousel-inner">
+                            @{
+                                bool primera = true;
+                            }
+                            @foreach (var img in Model.ImagenesProductos)
+                            {
+                                <div class="carousel-item @(primera ? "active" : "")">
+                                    <div class="d-flex justify-content-center align-items-center" style="height:350px;">
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(img)"
+                                             class="img-fluid rounded"
+                                             alt="@Model.Nombre"
+                                             style="max-height:330px; max-width:100%; object-fit:contain;" />
+                                    </div>
+                                </div>
+                                primera = false;
+                            }
+                        </div>
+                        @if (Model.ImagenesProductos.Count > 1)
+                        {
+                            <button class="carousel-control-prev" type="button"
+                                    data-bs-target="#comboCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark rounded-circle"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button"
+                                    data-bs-target="#comboCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
+                            </button>
+                        }
                     </div>
                 }
-
+                else
+                {
+                    <div class="d-flex justify-content-center align-items-center text-muted" style="height:350px;">
+                        <div class="text-center">
+                            <i class="bi bi-image" style="font-size:3rem;opacity:.3;"></i>
+                            <p class="mt-2 small">Sin imágenes</p>
+                        </div>
+                    </div>
+                }
             </div>
-        </div>
 
+            <!-- INFO -->
+            <div class="col-md-7 d-flex flex-column justify-content-center">
+                <h3 style="color:var(--anzuelo-primary);font-weight:700;">@Model.Nombre</h3>
+                <hr />
+                <p><strong>Descripción:</strong><br />@Model.Descripcion</p>
+                <p>
+                    <strong>Categoría:</strong>
+                    <span class="badge rounded-pill ms-1"
+                          style="background:var(--anzuelo-primary);color:#fff;">
+                        @Model.NombreCategoria
+                    </span>
+                </p>
+                <p>
+                    <strong>Estado:</strong>
+                    <span class="badge rounded-pill ms-1"
+                          style="background:#eaf4de;color:#3d6b1a;">
+                        @Model.NombreEstado
+                    </span>
+                </p>
+                <p class="precio-destacado mt-2">₡@Model.PrecioTotal.ToString("N2")</p>
+            </div>
+
+        </div>
     </div>
 
-    <!-- BOTÓN VOLVER -->
-    <div class="mt-4 text-center">
+    <!-- PRODUCTOS INCLUIDOS -->
+    <div class="card detail-card shadow-sm mt-4">
+        <div class="card-body p-4">
+            <h4 style="color:var(--anzuelo-primary);font-weight:700;">
+                <i class="bi bi-list-ul me-1"></i>Productos incluidos
+            </h4>
+        </div>
+        @foreach (var producto in Model.Productos)
+        {
+            <div class="producto-row">
+                <span>
+                    <i class="bi bi-circle-fill me-2"
+                       style="font-size:.45rem;color:var(--anzuelo-accent);vertical-align:middle;"></i>
+                    @producto.NombreProducto
+                </span>
+                <span class="badge-cant">×@producto.Cantidad</span>
+            </div>
+        }
+    </div>
+
+    <div class="mt-4">
         <a href="javascript:history.back()" class="btn-back">
-            <i class="bi bi-arrow-left"></i>
-            Volver a Combos
+            <i class="bi bi-arrow-left"></i> Volver a Combos
         </a>
     </div>
 
 </div>
+
+@section Scripts {
+    @if (Model.ImagenesProductos != null && Model.ImagenesProductos.Count > 1)
+    {
+        <script>
+            const carouselElement = document.getElementById('comboCarousel');
+            new bootstrap.Carousel(carouselElement, {
+                interval: 3000,
+                ride: 'carousel'
+            });
+        </script>
+    }
+}
