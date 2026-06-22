@@ -28,14 +28,14 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             return collection;
         }
 
-        public async Task<Menu?> GetMenuDisponibleAsync()
+        public async Task<Menu> GetMenuDisponibleAsync()
         {
             var now = DateTime.Now;
             var currentDate = now.Date;
             var currentTime = now.TimeOfDay;
             var currentDay = now.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)now.DayOfWeek;
 
-            return await _context.Set<Menu>()
+            var @Object =  await _context.Set<Menu>()
                 .AsNoTracking()
                 .Include(x => x.IdDisponibilidadNavigation)
                     .ThenInclude(d => d.IdDisponibilidadDiaNavigation)
@@ -66,6 +66,7 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 )
                 .OrderByDescending(x => x.IdDisponibilidadNavigation.FechaInicio)
                 .FirstOrDefaultAsync();
+            return @Object!;
         }
     }
 }
