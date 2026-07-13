@@ -39,5 +39,30 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             return @Object;
         }
+        public async Task<int> AddAsync(Preparacion entity, int idProducto)
+        {
+            await _context.Set<Preparacion>().AddAsync(entity);
+            await _context.SaveChangesAsync(); 
+
+            var producto = await _context.Set<Producto>().FindAsync(idProducto);
+            producto!.IdPreparacion = entity.IdPreparacion;
+            await _context.SaveChangesAsync();
+
+            return entity.IdPreparacion;
+        }
+
+        public async Task UpdateAsync(Preparacion entity)
+        {
+            var existente = await _context.Preparacion
+                .Include(x => x.PreparacionEstacion)
+                .FirstAsync(x => x.IdPreparacion == entity.IdPreparacion);
+
+            existente.Descripcion = entity.Descripcion;
+
+            _context.RemoveRange(existente.PreparacionEstacion);
+            existente.PreparacionEstacion = entity.PreparacionEstacion;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
