@@ -39,5 +39,20 @@ namespace Anzuelo.Application.Services.Implementations
             var objectMapped = _mapper.Map<ComboDTO>(@object);
             return objectMapped;
         }
+
+        public async Task<int> AddAsync(ComboDTO dto)
+        {
+            var entity = _mapper.Map<Combo>(dto);
+
+            return await _repository.AddAsync(entity);
+        }
+
+        public async Task UpdateAsync(ComboDTO dto)
+        {
+            var entity = _mapper.Map<Combo>(dto);
+
+            await _repository.UpdateAsync(entity);
+
+        }
     }
 }
