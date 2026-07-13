@@ -11,5 +11,7 @@ namespace Anzuelo.Application.Services.Interfaces
     {
         Task<ICollection<PreparacionDTO>> ListAync();
         Task<PreparacionDTO> FindByIdAsync(int id);
+        Task<int> AddAsync(PreparacionDTO dto);
+        Task UpdateAsync(PreparacionDTO dto);
     }
 }

@@ -39,15 +39,10 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             return @Object;
         }
-        public async Task<int> AddAsync(Preparacion entity, int idProducto)
+        public async Task<int> AddAsync(Preparacion entity)
         {
-            await _context.Set<Preparacion>().AddAsync(entity);
-            await _context.SaveChangesAsync(); 
-
-            var producto = await _context.Set<Producto>().FindAsync(idProducto);
-            producto!.IdPreparacion = entity.IdPreparacion;
+            await _context.Preparacion.AddAsync(entity);
             await _context.SaveChangesAsync();
-
             return entity.IdPreparacion;
         }
 
@@ -60,7 +55,12 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             existente.Descripcion = entity.Descripcion;
 
             _context.RemoveRange(existente.PreparacionEstacion);
-            existente.PreparacionEstacion = entity.PreparacionEstacion;
+
+            foreach (var estacion in entity.PreparacionEstacion)
+            {
+                estacion.IdPreparacion = entity.IdPreparacion;
+                existente.PreparacionEstacion.Add(estacion);
+            }
 
             await _context.SaveChangesAsync();
         }

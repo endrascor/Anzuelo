@@ -11,7 +11,7 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<Preparacion>> ListAsync();
         Task<Preparacion> FindByIdAsync(int id);
-        Task<int> AddAsync(Preparacion entity, int idProducto);
+        Task<int> AddAsync(Preparacion entity);
         Task UpdateAsync(Preparacion entity);
     }
 }

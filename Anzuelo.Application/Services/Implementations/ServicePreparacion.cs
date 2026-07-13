@@ -1,5 +1,6 @@
 ﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Application.Services.Interfaces;
+using Anzuelo.Infraestructure.Models;
 using Anzuelo.Infraestructure.Repository.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,17 @@ namespace Anzuelo.Application.Services.Implementations
             var @object = await _repository.FindByIdAsync(id);
             var objectMapped = _mapper.Map<PreparacionDTO>(@object);
             return objectMapped;
+        }
+        public async Task<int> AddAsync(PreparacionDTO dto)
+        {
+            var entity = _mapper.Map<Preparacion>(dto);
+            return await _repository.AddAsync(entity); 
+        }
+
+        public async Task UpdateAsync(PreparacionDTO dto)
+        {
+            var entity = _mapper.Map<Preparacion>(dto);
+            await _repository.UpdateAsync(entity);
         }
     }
 }
