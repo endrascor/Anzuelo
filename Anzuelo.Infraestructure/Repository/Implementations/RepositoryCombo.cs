@@ -38,5 +38,33 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .FirstOrDefaultAsync(x => x.IdCombo == id);
             return @Object!;
         }
+
+        public async Task<int> AddAsync(Combo entity)
+        {
+            await _context.Set<Combo>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdCombo;
+        }
+        public async Task UpdateAsync(Combo entity)
+        {
+            var existente = await _context.Set<Combo>()
+                .Include(x => x.ComboProducto)
+                .FirstAsync(x => x.IdCombo == entity.IdCombo);
+
+            existente.Nombre = entity.Nombre;
+            existente.Descripcion = entity.Descripcion;
+            existente.PrecioTotal = entity.PrecioTotal;
+            existente.IdCategoriaCombo = entity.IdCategoriaCombo;
+            existente.IdEstadoCombo = entity.IdEstadoCombo;
+
+            if (entity.Imagen != null)
+                existente.Imagen = entity.Imagen;
+
+          
+            _context.RemoveRange(existente.ComboProducto);
+            existente.ComboProducto = entity.ComboProducto;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

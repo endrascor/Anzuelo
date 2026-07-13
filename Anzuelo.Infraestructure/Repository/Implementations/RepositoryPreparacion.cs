@@ -21,9 +21,9 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         public async Task<ICollection<Preparacion>> ListAsync()
         {
             var collection = await _context.Preparacion
-            .Include(p => p.PreparacionEstacion)
-                .ThenInclude(pe => pe.IdEstacionCocinaNavigation)
-            .Include(p => p.Producto)
+            .Include(x => x.PreparacionEstacion)
+            .ThenInclude(x => x.IdEstacionCocinaNavigation)
+            .Include(x => x.Producto)
             .ToListAsync();
 
             return collection;
@@ -32,10 +32,10 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         public async Task<Preparacion> FindByIdAsync(int id)
         {
             var @Object = await _context.Preparacion
-            .Include(p => p.PreparacionEstacion)
-                .ThenInclude(pe => pe.IdEstacionCocinaNavigation)
-            .Include(p => p.Producto)
-            .FirstOrDefaultAsync(p => p.IdPreparacion == id);
+            .Include(x => x.PreparacionEstacion)
+                .ThenInclude(x => x.IdEstacionCocinaNavigation)
+            .Include(x => x.Producto)
+            .FirstOrDefaultAsync(x => x.IdPreparacion == id);
 
             return @Object;
         }
