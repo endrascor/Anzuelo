@@ -21,12 +21,11 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         {
             var collection = await _context.Set<Producto>()
                 .Include(x => x.IdCategoriaProductoNavigation)
-        .Include(x => x.IdEstadoProductoNavigation)
-        .Include(x => x.ImagenProducto)
-        .OrderBy(x => x.Nombre)
-        .ToListAsync();
-
-            return collection;
+                .Include(x => x.IdEstadoProductoNavigation)
+                .Include(x => x.ImagenProducto)
+                .OrderBy(x => x.Nombre)
+                .ToListAsync();
+           return collection;
         }
 
         public async Task<Producto> FindByIdAsync(int id)
