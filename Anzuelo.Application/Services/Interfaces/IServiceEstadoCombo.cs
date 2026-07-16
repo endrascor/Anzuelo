@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Anzuelo.Application.Services.Interfaces
 {
-    public interface IServiceCombo
+    public interface IServiceEstadoCombo
     {
-        Task<ICollection<ComboDTO>> ListAync();
-        Task<ComboDTO> FindByIdAsync(int id);
-        Task<int> AddAsync(ComboDTO dto);
-        Task UpdateAsync(ComboDTO dto);
+        Task<ICollection<EstadoComboDTO>> ListAync();
     }
 }

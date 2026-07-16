@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace Anzuelo.Infraestructure.Repository.Interfaces
 {
-    public interface IRepositoryCombo
+    public interface IRepositoryUsuario
     {
-        Task<ICollection<Combo>> ListAsync();
-        Task<Combo> FindByIdAsync(int id);
-        Task<int> AddAsync(Combo entity);
-        Task UpdateAsync(Combo entity);
+        Task<ICollection<Usuario>> ListAsync();
+        Task<Usuario> FindByIdAsync(int id);
     }
 }

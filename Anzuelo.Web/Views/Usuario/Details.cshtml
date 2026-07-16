@@ -1,0 +1,129 @@
+﻿@model Anzuelo.Application.DTOs.UsuarioDTO
+@{
+    ViewData["Title"] = "Detalle del Usuario";
+}
+
+<style>
+    .detail-card {
+        border: none;
+        border-left: 4px solid var(--anzuelo-accent);
+        border-radius: .5rem;
+        background: #fff;
+    }
+
+    .detail-label {
+        font-size: .78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--anzuelo-primary);
+        margin-bottom: .2rem;
+    }
+
+    .detail-value {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 1.2rem;
+    }
+
+    .badge-rol {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .8rem;
+        font-weight: 600;
+        padding: .3em .8em;
+        border-radius: 2rem;
+    }
+
+    .badge-estado {
+        font-size: .8rem;
+        font-weight: 600;
+        padding: .3em .8em;
+        border-radius: 2rem;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+
+    .badge-estado-activo {
+        background: #e6f4ea;
+        color: #1e7e34;
+    }
+
+    .badge-estado-inactivo {
+        background: #f8d7da;
+        color: #a71d2a;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-weight: 600;
+        border-radius: .4rem;
+        padding: .45rem 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: .2s;
+    }
+
+        .btn-back:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-person-badge me-2"></i>Detalle del Usuario</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card detail-card shadow-sm">
+        <div class="card-body p-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="detail-label">Id Usuario</div>
+                    <div class="detail-value">@Model.IdUsuario</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-label">Nombre completo</div>
+                    <div class="detail-value">@Model.Nombre @Model.Apellido1 @Model.Apellido2</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-label">Correo</div>
+                    <div class="detail-value">@Model.Email</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="detail-label">Rol</div>
+                    <div class="detail-value">
+                        <span class="badge-rol">@Model.NombreRol</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-label">Estado</div>
+                    <div class="detail-value">
+                        <span class="badge-estado @(Model.NombreEstado.ToLower() == "activo" ? "badge-estado-activo" : "badge-estado-inactivo")">
+                            @Model.NombreEstado
+                        </span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-label">Fecha de registro</div>
+                    <div class="detail-value">@Model.FechaRegistro.ToString("dd/MM/yyyy")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="javascript:history.back()" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Volver
+        </a>
+    </div>
+</div>

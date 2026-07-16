@@ -21,9 +21,9 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         public async Task<ICollection<Preparacion>> ListAsync()
         {
             var collection = await _context.Preparacion
-            .Include(p => p.PreparacionEstacion)
-                .ThenInclude(pe => pe.IdEstacionCocinaNavigation)
-            .Include(p => p.Producto)
+            .Include(x => x.PreparacionEstacion)
+            .ThenInclude(x => x.IdEstacionCocinaNavigation)
+            .Include(x => x.Producto)
             .ToListAsync();
 
             return collection;
@@ -32,12 +32,37 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         public async Task<Preparacion> FindByIdAsync(int id)
         {
             var @Object = await _context.Preparacion
-            .Include(p => p.PreparacionEstacion)
-                .ThenInclude(pe => pe.IdEstacionCocinaNavigation)
-            .Include(p => p.Producto)
-            .FirstOrDefaultAsync(p => p.IdPreparacion == id);
+            .Include(x => x.PreparacionEstacion)
+                .ThenInclude(x => x.IdEstacionCocinaNavigation)
+            .Include(x => x.Producto)
+            .FirstOrDefaultAsync(x => x.IdPreparacion == id);
 
             return @Object;
+        }
+        public async Task<int> AddAsync(Preparacion entity)
+        {
+            await _context.Preparacion.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdPreparacion;
+        }
+
+        public async Task UpdateAsync(Preparacion entity)
+        {
+            var existente = await _context.Preparacion
+                .Include(x => x.PreparacionEstacion)
+                .FirstAsync(x => x.IdPreparacion == entity.IdPreparacion);
+
+            existente.Descripcion = entity.Descripcion;
+
+            _context.RemoveRange(existente.PreparacionEstacion);
+
+            foreach (var estacion in entity.PreparacionEstacion)
+            {
+                estacion.IdPreparacion = entity.IdPreparacion;
+                existente.PreparacionEstacion.Add(estacion);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

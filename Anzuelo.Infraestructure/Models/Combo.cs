@@ -24,4 +24,5 @@ public partial class Combo
     public virtual EstadoCombo IdEstadoComboNavigation { get; set; } = null!;
 
     public virtual ICollection<MenuCombo> MenuCombo { get; set; } = new List<MenuCombo>();
+    public byte[]? Imagen { get; set; }
 }
