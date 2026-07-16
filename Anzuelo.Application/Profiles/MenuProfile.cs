@@ -49,15 +49,16 @@ namespace Anzuelo.Application.Profiles
                                 Precio = x.IdProductoNavigation.Precio,
                                 NombreCategoria = g.Key,
                                 Imagen = x.IdProductoNavigation.ImagenProducto
-                                .Select(i => i.Imagen)
-                                .FirstOrDefault()
+        .Select(i => i.Imagen)
+        .FirstOrDefault()
                             }).ToList()
                         }).ToList()
                 ))
 
             .ForMember(d => d.CombosPorCategoria,
-                o => o.MapFrom(s => s.MenuCombo
-                .GroupBy(mc =>
+    o => o.MapFrom(s =>
+        s.MenuCombo
+            .GroupBy(mc =>
                 mc.IdComboNavigation.IdCategoriaComboNavigation.Descripcion ?? "Sin categoría")
             .Select(g => new MenuCategoriaComboDTO
             {
