@@ -9,6 +9,8 @@ namespace Anzuelo.Application.DTOs
     public record UsuarioDTO
     {
         public int IdUsuario { get; set; }
+
+        public string Cedula { get; set; } = null!;
         public string Nombre { get; set; } = null!;
         public string Apellido1 { get; set; } = null!;
         public string Apellido2 { get; set; } = null!;
