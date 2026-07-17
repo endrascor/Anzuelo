@@ -1,0 +1,1431 @@
+﻿@model Anzuelo.Application.DTOs.ProductoDTO
+
+@using Anzuelo.Application.DTOs
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Collections.Generic
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Crear producto";
+
+    var ingredientesDisponibles =
+        (ViewBag.ListIngredientes as IEnumerable<SelectListItem>)?.ToList()
+        ?? new List<SelectListItem>();
+
+    /*
+     * Solo se recuperan ingredientes válidos después
+     * de que el formulario haya sido enviado con errores.
+     *
+     * No se crea una fila automáticamente al abrir
+     * o recargar la página.
+     */
+    var ingredientesSeleccionados =
+        Model?.Ingredientes?
+            .Where(x =>
+                x.IdIngrediente > 0 &&
+                x.Cantidad > 0)
+            .ToList()
+        ?? new List<IngredienteDTO>();
+}
+
+<style>
+    .create-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10, 47, 90, .10);
+        overflow: hidden;
+    }
+
+    .create-card-header {
+        background: var(--anzuelo-primary);
+        color: white;
+        padding: 1.25rem 1.5rem;
+    }
+
+        .create-card-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .ingrediente-fila {
+        background: #f8f9fa;
+        border: 1px solid #e5e8eb;
+        border-radius: .55rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .imagen-preview-card {
+        border: 1px solid #dee2e6;
+        border-radius: .6rem;
+        overflow: hidden;
+        height: 100%;
+        background: white;
+        position: relative;
+    }
+
+    .imagen-preview {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #f5f5f5;
+    }
+
+    .btn-eliminar-imagen {
+        position: absolute;
+        top: .45rem;
+        right: .45rem;
+        z-index: 5;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, .25);
+    }
+
+    .imagen-x {
+        color: white;
+        font-size: 1.65rem;
+        font-weight: 700;
+        line-height: 1;
+        display: block;
+        transform: translateY(-1px);
+    }
+
+    .imagen-preview-info {
+        padding: .7rem;
+    }
+
+    .btn-guardar-producto {
+        background: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+        color: white;
+        font-weight: 600;
+    }
+
+        .btn-guardar-producto:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: white;
+        }
+
+    .mensaje-validacion-seccion {
+        font-weight: 600;
+        margin-top: .65rem;
+    }
+</style>
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+
+            <div class="card create-card">
+
+                <div class="create-card-header">
+
+                    <h2>
+                        <i class="bi bi-box-seam me-2"></i>
+                        Crear producto
+                    </h2>
+
+                    <p class="mb-0 mt-1">
+                        Complete la información, los ingredientes y las imágenes.
+                    </p>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form asp-controller="Producto"
+                          asp-action="Create"
+                          method="post"
+                          enctype="multipart/form-data"
+                          id="formProducto">
+
+                        @Html.AntiForgeryToken()
+
+                        <!-- INFORMACIÓN GENERAL -->
+                        <section class="form-section">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Información general
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Nombre"
+                                           class="form-label">
+                                    </label>
+
+                                    <input asp-for="Nombre"
+                                           class="form-control"
+                                           maxlength="20"
+                                           placeholder="Nombre del producto" />
+
+                                    <span asp-validation-for="Nombre"
+                                          class="text-danger">
+                                    </span>
+
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Precio"
+                                           class="form-label">
+                                    </label>
+
+                                    <div class="input-group">
+
+                                        <span class="input-group-text">
+                                            ₡
+                                        </span>
+
+                                        <input asp-for="Precio"
+                                               class="form-control"
+                                               type="number"
+                                               min="0.01"
+                                               step="0.01"
+                                               placeholder="0.00" />
+
+                                    </div>
+
+                                    <span asp-validation-for="Precio"
+                                          class="text-danger">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label asp-for="Descripcion"
+                                       class="form-label">
+                                </label>
+
+                                <textarea asp-for="Descripcion"
+                                          class="form-control"
+                                          rows="4"
+                                          maxlength="45"
+                                          placeholder="Descripción del producto"></textarea>
+
+                                <span asp-validation-for="Descripcion"
+                                      class="text-danger">
+                                </span>
+
+                                <div class="form-text">
+                                    Máximo 45 caracteres.
+                                </div>
+
+                            </div>
+
+                        </section>
+
+                        <!-- CLASIFICACIÓN -->
+                        <section class="form-section">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-tags me-1"></i>
+                                Clasificación
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label asp-for="IdCategoriaProducto"
+                                           class="form-label">
+                                    </label>
+
+                                    <select asp-for="IdCategoriaProducto"
+                                            asp-items="ViewBag.ListCategorias"
+                                            class="form-select">
+
+                                        <option value="0">
+                                            Seleccione una categoría
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdCategoriaProducto"
+                                          class="text-danger">
+                                    </span>
+
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label asp-for="IdEstadoProducto"
+                                           class="form-label">
+                                    </label>
+
+                                    <select asp-for="IdEstadoProducto"
+                                            asp-items="ViewBag.ListEstados"
+                                            class="form-select">
+
+                                        <option value="0">
+                                            Seleccione un estado
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdEstadoProducto"
+                                          class="text-danger">
+                                    </span>
+
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+
+                                    <label asp-for="IdPreparacion"
+                                           class="form-label">
+                                    </label>
+
+                                    <select asp-for="IdPreparacion"
+                                            asp-items="ViewBag.ListPreparaciones"
+                                            class="form-select">
+
+                                        <option value="0">
+                                            Seleccione una preparación
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdPreparacion"
+                                          class="text-danger">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+                        <!-- INGREDIENTES -->
+                        <section class="form-section"
+                                 id="seccionIngredientes">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-basket me-1"></i>
+                                Ingredientes
+                            </div>
+
+                            <!-- CREACIÓN RÁPIDA DE INGREDIENTE -->
+                            <div class="card bg-light border-0 mb-4">
+
+                                <div class="card-body">
+
+                                    <label for="nuevoIngredienteNombre"
+                                           class="form-label fw-semibold">
+
+                                        Crear un ingrediente nuevo
+                                    </label>
+
+                                    <div class="input-group">
+
+                                        <input type="text"
+                                               id="nuevoIngredienteNombre"
+                                               class="form-control"
+                                               maxlength="100"
+                                               placeholder="Ejemplo: queso cheddar" />
+
+                                        <button type="button"
+                                                id="btnCrearIngrediente"
+                                                class="btn btn-success">
+
+                                            <i class="bi bi-plus-circle me-1"></i>
+                                            Crear ingrediente
+                                        </button>
+
+                                    </div>
+
+                                    <div id="mensajeCrearIngrediente"
+                                         class="small mt-2">
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="d-flex justify-content-between
+                                        align-items-center mb-3">
+
+                                <p class="text-muted mb-0">
+                                    Agregue los ingredientes utilizados en el producto.
+                                </p>
+
+                                <button type="button"
+                                        class="btn btn-outline-primary btn-sm"
+                                        id="btnAgregarIngrediente">
+
+                                    <i class="bi bi-plus-lg me-1"></i>
+                                    Agregar ingrediente
+                                </button>
+
+                            </div>
+
+                            <div id="contenedorIngredientes">
+
+                                @for (int i = 0;
+                                                                i < ingredientesSeleccionados.Count;
+                                                                i++)
+                                {
+                                    var ingrediente =
+                                    ingredientesSeleccionados[i];
+
+                                    <div class="row align-items-end ingrediente-fila">
+
+                                        <div class="col-md-7 mb-2">
+
+                                            <label class="form-label">
+                                                Ingrediente
+                                            </label>
+
+                                            <select name="Ingredientes[@i].IdIngrediente"
+                                                    class="form-select ingrediente-select">
+
+                                                <option value="">
+                                                    Seleccione un ingrediente
+                                                </option>
+
+                                                @foreach (var opcion
+                                                                                            in ingredientesDisponibles)
+                                                {
+                                                    if (opcion.Value ==
+                                                    ingrediente.IdIngrediente.ToString())
+                                                    {
+                                                        <option value="@opcion.Value"
+                                                                selected>
+
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@opcion.Value">
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+
+                                            <label class="form-label">
+                                                Cantidad
+                                            </label>
+
+                                            <input name="Ingredientes[@i].Cantidad"
+                                                   value="@ingrediente.Cantidad"
+                                                   type="number"
+                                                   min="1"
+                                                   step="1"
+                                                   class="form-control ingrediente-cantidad" />
+
+                                        </div>
+
+                                        <div class="col-md-2 mb-2">
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger
+                                                               w-100
+                                                               btnEliminarIngrediente">
+
+                                                <i class="bi bi-trash me-1"></i>
+                                                Quitar
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+                                }
+
+                            </div>
+
+                            <!-- Mensaje informativo cuando no hay filas -->
+                            <div id="mensajeSinIngredientes"
+                                 class="alert alert-light border mb-0">
+
+                                No se han agregado ingredientes.
+                            </div>
+
+                            <!-- Error del lado del cliente -->
+                            <div id="errorIngredientesCliente"
+                                 class="text-danger mensaje-validacion-seccion">
+                            </div>
+
+                            <!-- Error enviado por el controlador -->
+                            @Html.ValidationMessage(
+                            "Ingredientes",
+                                                        "",
+                                                        new
+                                                        {
+                                                            @class = "text-danger mensaje-validacion-seccion d-block"
+                                                        })
+
+                        </section>
+
+                        <!-- IMÁGENES -->
+                        <section class="form-section"
+                                 id="seccionImagenes">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-images me-1"></i>
+                                Imágenes del producto
+                            </div>
+
+                            <div class="mb-3">
+
+                                <label for="imageFiles"
+                                       class="form-label">
+
+                                    Seleccione una o varias imágenes
+                                </label>
+
+                                <input type="file"
+                                       id="imageFiles"
+                                       name="imageFiles"
+                                       class="form-control"
+                                       accept="image/png,image/jpeg,image/webp"
+                                       multiple />
+
+                                <div class="form-text">
+                                    Puede seleccionar varias imágenes.
+                                    La primera será utilizada como imagen principal.
+                                    Tamaño máximo por imagen: 5 MB.
+                                </div>
+
+                            </div>
+
+                            <div id="vistaPreviaImagenes"
+                                 class="row g-3 mb-3">
+                            </div>
+
+                            <!-- Mensaje informativo cuando no hay imágenes -->
+                            <div id="mensajeSinImagenes"
+                                 class="alert alert-light border mb-0">
+
+                                No se han seleccionado imágenes.
+                            </div>
+
+                            <!-- Error del lado del cliente -->
+                            <div id="errorImagenesCliente"
+                                 class="text-danger mensaje-validacion-seccion">
+                            </div>
+
+                            <!-- Error enviado por el controlador -->
+                            @Html.ValidationMessage(
+                                                        "imageFiles",
+                                                        "",
+                                                        new
+                                                        {
+                                                            @class = "text-danger mensaje-validacion-seccion d-block"
+                                                        })
+
+                        </section>
+
+                        <!-- BOTONES -->
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a asp-controller="Producto"
+                               asp-action="Index"
+                               class="btn btn-secondary">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Cancelar
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-guardar-producto">
+
+                                <i class="bi bi-floppy me-1"></i>
+                                Guardar producto
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- PLANTILLA PARA AGREGAR INGREDIENTES -->
+<template id="plantillaIngrediente">
+
+    <div class="row align-items-end ingrediente-fila">
+
+        <div class="col-md-7 mb-2">
+
+            <label class="form-label">
+                Ingrediente
+            </label>
+
+            <select name="Ingredientes[__index__].IdIngrediente"
+                    class="form-select ingrediente-select">
+
+                <option value="">
+                    Seleccione un ingrediente
+                </option>
+
+                @foreach (var opcion in ingredientesDisponibles)
+                {
+                    <option value="@opcion.Value">
+                        @opcion.Text
+                    </option>
+                }
+
+            </select>
+
+        </div>
+
+        <div class="col-md-3 mb-2">
+
+            <label class="form-label">
+                Cantidad
+            </label>
+
+            <input name="Ingredientes[__index__].Cantidad"
+                   type="number"
+                   min="1"
+                   step="1"
+                   value="1"
+                   class="form-control ingrediente-cantidad" />
+
+        </div>
+
+        <div class="col-md-2 mb-2">
+
+            <button type="button"
+                    class="btn btn-outline-danger
+                           w-100
+                           btnEliminarIngrediente">
+
+                <i class="bi bi-trash me-1"></i>
+                Quitar
+            </button>
+
+        </div>
+
+    </div>
+
+</template>
+
+@section Scripts
+{
+    @{
+        await Html.RenderPartialAsync(
+            "_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                /*
+                 * ELEMENTOS GENERALES
+                 */
+                const formulario =
+                    document.getElementById(
+                        "formProducto"
+                    );
+
+                /*
+                 * ELEMENTOS DE INGREDIENTES
+                 */
+                const contenedorIngredientes =
+                    document.getElementById(
+                        "contenedorIngredientes"
+                    );
+
+                const plantillaIngrediente =
+                    document.getElementById(
+                        "plantillaIngrediente"
+                    );
+
+                const botonAgregarIngrediente =
+                    document.getElementById(
+                        "btnAgregarIngrediente"
+                    );
+
+                const mensajeSinIngredientes =
+                    document.getElementById(
+                        "mensajeSinIngredientes"
+                    );
+
+                const errorIngredientesCliente =
+                    document.getElementById(
+                        "errorIngredientesCliente"
+                    );
+
+                const inputNuevoIngrediente =
+                    document.getElementById(
+                        "nuevoIngredienteNombre"
+                    );
+
+                const botonCrearIngrediente =
+                    document.getElementById(
+                        "btnCrearIngrediente"
+                    );
+
+                const mensajeCrearIngrediente =
+                    document.getElementById(
+                        "mensajeCrearIngrediente"
+                    );
+
+                /*
+                 * ELEMENTOS DE IMÁGENES
+                 */
+                const inputImagenes =
+                    document.getElementById(
+                        "imageFiles"
+                    );
+
+                const vistaPreviaImagenes =
+                    document.getElementById(
+                        "vistaPreviaImagenes"
+                    );
+
+                const mensajeSinImagenes =
+                    document.getElementById(
+                        "mensajeSinImagenes"
+                    );
+
+                const errorImagenesCliente =
+                    document.getElementById(
+                        "errorImagenesCliente"
+                    );
+
+                let archivosSeleccionados = [];
+                let urlsTemporales = [];
+
+                /*
+                 * INGREDIENTES
+                 */
+                function obtenerFilasIngredientes() {
+
+                    return Array.from(
+                        contenedorIngredientes
+                            .querySelectorAll(
+                                ".ingrediente-fila"
+                            )
+                    );
+                }
+
+                function filaIngredienteValida(fila) {
+
+                    const selector =
+                        fila.querySelector(
+                            ".ingrediente-select"
+                        );
+
+                    const cantidad =
+                        fila.querySelector(
+                            ".ingrediente-cantidad"
+                        );
+
+                    return selector !== null &&
+                           cantidad !== null &&
+                           Number(selector.value) > 0 &&
+                           Number(cantidad.value) > 0;
+                }
+
+                function validarIngredientes(
+                    mostrarError = true) {
+
+                    const filas =
+                        obtenerFilasIngredientes();
+
+                    const tieneIngredienteValido =
+                        filas.some(
+                            filaIngredienteValida
+                        );
+
+                    const tieneFilasIncompletas =
+                        filas.some(function (fila) {
+                            return !filaIngredienteValida(
+                                fila
+                            );
+                        });
+
+                    if (!mostrarError) {
+
+                        if (
+                            tieneIngredienteValido &&
+                            !tieneFilasIncompletas
+                        ) {
+                            errorIngredientesCliente
+                                .textContent = "";
+                        }
+
+                        return tieneIngredienteValido &&
+                               !tieneFilasIncompletas;
+                    }
+
+                    if (filas.length === 0) {
+
+                        errorIngredientesCliente.textContent =
+                            "Debe agregar al menos un ingrediente.";
+
+                        return false;
+                    }
+
+                    if (!tieneIngredienteValido) {
+
+                        errorIngredientesCliente.textContent =
+                            "Debe seleccionar al menos un ingrediente.";
+
+                        return false;
+                    }
+
+                    if (tieneFilasIncompletas) {
+
+                        errorIngredientesCliente.textContent =
+                            "Complete o quite las filas de ingredientes vacías.";
+
+                        return false;
+                    }
+
+                    errorIngredientesCliente.textContent = "";
+
+                    return true;
+                }
+
+                function actualizarMensajeIngredientes() {
+
+                    const filas =
+                        obtenerFilasIngredientes();
+
+                    mensajeSinIngredientes.style.display =
+                        filas.length === 0
+                            ? "block"
+                            : "none";
+                }
+
+                function reindexarIngredientes() {
+
+                    const filas =
+                        obtenerFilasIngredientes();
+
+                    filas.forEach(function (
+                        fila,
+                        indice) {
+
+                        const selector =
+                            fila.querySelector(
+                                ".ingrediente-select"
+                            );
+
+                        const cantidad =
+                            fila.querySelector(
+                                ".ingrediente-cantidad"
+                            );
+
+                        selector.name =
+                            `Ingredientes[${indice}].IdIngrediente`;
+
+                        cantidad.name =
+                            `Ingredientes[${indice}].Cantidad`;
+                    });
+                }
+
+                function agregarFilaIngrediente(
+                    idSeleccionado = "") {
+
+                    const indice =
+                        obtenerFilasIngredientes().length;
+
+                    const contenido =
+                        plantillaIngrediente
+                            .innerHTML
+                            .replaceAll(
+                                "__index__",
+                                indice
+                            );
+
+                    contenedorIngredientes
+                        .insertAdjacentHTML(
+                            "beforeend",
+                            contenido
+                        );
+
+                    const filas =
+                        obtenerFilasIngredientes();
+
+                    const nuevaFila =
+                        filas[filas.length - 1];
+
+                    if (idSeleccionado !== "") {
+
+                        const selector =
+                            nuevaFila.querySelector(
+                                ".ingrediente-select"
+                            );
+
+                        selector.value =
+                            idSeleccionado.toString();
+                    }
+
+                    errorIngredientesCliente.textContent = "";
+
+                    actualizarMensajeIngredientes();
+                    reindexarIngredientes();
+                }
+
+                botonAgregarIngrediente.addEventListener(
+                    "click",
+                    function () {
+
+                        agregarFilaIngrediente();
+                    }
+                );
+
+                contenedorIngredientes.addEventListener(
+                    "click",
+                    function (evento) {
+
+                        const botonEliminar =
+                            evento.target.closest(
+                                ".btnEliminarIngrediente"
+                            );
+
+                        if (!botonEliminar) {
+                            return;
+                        }
+
+                        const fila =
+                            botonEliminar.closest(
+                                ".ingrediente-fila"
+                            );
+
+                        fila.remove();
+
+                        reindexarIngredientes();
+                        actualizarMensajeIngredientes();
+
+                        if (
+                            obtenerFilasIngredientes()
+                                .length > 0
+                        ) {
+                            validarIngredientes(false);
+                        }
+                    }
+                );
+
+                contenedorIngredientes.addEventListener(
+                    "change",
+                    function (evento) {
+
+                        const esSelector =
+                            evento.target.classList
+                                .contains(
+                                    "ingrediente-select"
+                                );
+
+                        const esCantidad =
+                            evento.target.classList
+                                .contains(
+                                    "ingrediente-cantidad"
+                                );
+
+                        if (esSelector || esCantidad) {
+
+                            validarIngredientes(false);
+                        }
+                    }
+                );
+
+                /*
+                 * CREACIÓN RÁPIDA DE INGREDIENTES
+                 */
+                botonCrearIngrediente.addEventListener(
+                    "click",
+                    async function () {
+
+                        const nombre =
+                            inputNuevoIngrediente
+                                .value
+                                .trim();
+
+                        if (nombre.length === 0) {
+
+                            mensajeCrearIngrediente
+                                .className =
+                                    "small mt-2 text-danger";
+
+                            mensajeCrearIngrediente
+                                .textContent =
+                                    "Ingrese el nombre del ingrediente.";
+
+                            return;
+                        }
+
+                        botonCrearIngrediente.disabled = true;
+
+                        mensajeCrearIngrediente.className =
+                            "small mt-2 text-muted";
+
+                        mensajeCrearIngrediente.textContent =
+                            "Creando ingrediente...";
+
+                        try {
+
+                            const token =
+                                document.querySelector(
+                                    'input[name="__RequestVerificationToken"]'
+                                ).value;
+
+                            const datos =
+                                new FormData();
+
+                            datos.append(
+                                "nombreIngrediente",
+                                nombre
+                            );
+
+                            datos.append(
+                                "__RequestVerificationToken",
+                                token
+                            );
+
+                            const respuesta =
+                                await fetch(
+                                    '@Url.Action(
+                                                                            "CrearIngredienteRapido",
+                                                                            "Producto")',
+                                {
+                                    method: "POST",
+                                    body: datos
+                                }
+                            );
+
+                            const resultado =
+                                await respuesta.json();
+
+                            if (
+                                !respuesta.ok ||
+                                !resultado.success
+                            ) {
+                                throw new Error(
+                                    resultado.message ||
+                                    "No se pudo crear el ingrediente."
+                                );
+                            }
+
+                            agregarOpcionIngrediente(
+                                resultado.id,
+                                resultado.nombre
+                            );
+
+                            agregarFilaIngrediente(
+                                resultado.id
+                            );
+
+                            inputNuevoIngrediente.value = "";
+
+                            mensajeCrearIngrediente.className =
+                                "small mt-2 text-success";
+
+                            mensajeCrearIngrediente.textContent =
+                                `Ingrediente "${resultado.nombre}" creado correctamente.`;
+                        }
+                        catch (error) {
+
+                            mensajeCrearIngrediente.className =
+                                "small mt-2 text-danger";
+
+                            mensajeCrearIngrediente.textContent =
+                                error.message;
+                        }
+                        finally {
+
+                            botonCrearIngrediente.disabled = false;
+                        }
+                    }
+                );
+
+                inputNuevoIngrediente.addEventListener(
+                    "keydown",
+                    function (evento) {
+
+                        if (evento.key === "Enter") {
+
+                            evento.preventDefault();
+
+                            botonCrearIngrediente.click();
+                        }
+                    }
+                );
+
+                function agregarOpcionIngrediente(
+                    id,
+                    nombre) {
+
+                    const valor =
+                        id.toString();
+
+                    const selectoresActuales =
+                        document.querySelectorAll(
+                            ".ingrediente-select"
+                        );
+
+                    selectoresActuales.forEach(
+                        function (selector) {
+
+                            const existe =
+                                Array.from(
+                                    selector.options
+                                ).some(
+                                    opcion =>
+                                        opcion.value === valor
+                                );
+
+                            if (!existe) {
+
+                                selector.add(
+                                    new Option(
+                                        nombre,
+                                        valor
+                                    )
+                                );
+                            }
+                        }
+                    );
+
+                    const selectorPlantilla =
+                        plantillaIngrediente
+                            .content
+                            .querySelector(
+                                ".ingrediente-select"
+                            );
+
+                    if (selectorPlantilla) {
+
+                        const existeEnPlantilla =
+                            Array.from(
+                                selectorPlantilla.options
+                            ).some(
+                                opcion =>
+                                    opcion.value === valor
+                            );
+
+                        if (!existeEnPlantilla) {
+
+                            selectorPlantilla.add(
+                                new Option(
+                                    nombre,
+                                    valor
+                                )
+                            );
+                        }
+                    }
+                }
+
+                /*
+                 * IMÁGENES
+                 */
+                inputImagenes.addEventListener(
+                    "change",
+                    function () {
+
+                        const nuevosArchivos =
+                            Array.from(
+                                inputImagenes.files
+                            );
+
+                        nuevosArchivos.forEach(
+                            function (archivo) {
+
+                                if (
+                                    !archivo.type
+                                        .startsWith(
+                                            "image/"
+                                        )
+                                ) {
+                                    return;
+                                }
+
+                                const yaExiste =
+                                    archivosSeleccionados
+                                        .some(
+                                            existente =>
+                                                existente.name ===
+                                                    archivo.name &&
+                                                existente.size ===
+                                                    archivo.size &&
+                                                existente.lastModified ===
+                                                    archivo.lastModified
+                                        );
+
+                                if (!yaExiste) {
+
+                                    archivosSeleccionados
+                                        .push(
+                                            archivo
+                                        );
+                                }
+                            }
+                        );
+
+                        sincronizarInputImagenes();
+                        mostrarImagenes();
+
+                        if (
+                            archivosSeleccionados.length > 0
+                        ) {
+                            errorImagenesCliente
+                                .textContent = "";
+                        }
+                    }
+                );
+
+                vistaPreviaImagenes.addEventListener(
+                    "click",
+                    function (evento) {
+
+                        const botonEliminar =
+                            evento.target.closest(
+                                ".btnEliminarImagen"
+                            );
+
+                        if (!botonEliminar) {
+                            return;
+                        }
+
+                        const indice =
+                            Number(
+                                botonEliminar.dataset.index
+                            );
+
+                        archivosSeleccionados.splice(
+                            indice,
+                            1
+                        );
+
+                        sincronizarInputImagenes();
+                        mostrarImagenes();
+                    }
+                );
+
+                function sincronizarInputImagenes() {
+
+                    const transferencia =
+                        new DataTransfer();
+
+                    archivosSeleccionados.forEach(
+                        function (archivo) {
+
+                            transferencia.items.add(
+                                archivo
+                            );
+                        }
+                    );
+
+                    inputImagenes.files =
+                        transferencia.files;
+                }
+
+                function liberarUrlsTemporales() {
+
+                    urlsTemporales.forEach(
+                        function (url) {
+
+                            URL.revokeObjectURL(
+                                url
+                            );
+                        }
+                    );
+
+                    urlsTemporales = [];
+                }
+
+                function mostrarImagenes() {
+
+                    liberarUrlsTemporales();
+
+                    vistaPreviaImagenes.innerHTML = "";
+
+                    mensajeSinImagenes.style.display =
+                        archivosSeleccionados.length === 0
+                            ? "block"
+                            : "none";
+
+                    if (
+                        archivosSeleccionados.length === 0
+                    ) {
+                        return;
+                    }
+
+                    archivosSeleccionados.forEach(
+                        function (
+                            archivo,
+                            indice) {
+
+                            const url =
+                                URL.createObjectURL(
+                                    archivo
+                                );
+
+                            urlsTemporales.push(
+                                url
+                            );
+
+                            const columna =
+                                document.createElement(
+                                    "div"
+                                );
+
+                            columna.className =
+                                "col-6 col-md-4 col-lg-3";
+
+                            const esPrincipal =
+                                indice === 0;
+
+                            columna.innerHTML = `
+                                <div class="imagen-preview-card">
+
+                                    <button type="button"
+                                            class="btn btn-danger
+                                                   btn-sm
+                                                   btn-eliminar-imagen
+                                                   btnEliminarImagen"
+                                            data-index="${indice}"
+                                            title="Quitar imagen"
+                                            aria-label="Quitar imagen">
+
+                                        <span class="imagen-x"
+                                              aria-hidden="true">
+                                            &times;
+                                        </span>
+                                    </button>
+
+                                    <img src="${url}"
+                                         class="imagen-preview"
+                                         alt="Vista previa de la imagen" />
+
+                                    <div class="imagen-preview-info">
+
+                                        <small class="d-block text-truncate"
+                                               title="${archivo.name}">
+
+                                            ${archivo.name}
+                                        </small>
+
+                                        ${
+                                            esPrincipal
+                                                ? `<span class="badge
+                                                               bg-primary
+                                                               mt-2">
+                                                       Imagen principal
+                                                   </span>`
+                                                : ""
+                                        }
+
+                                    </div>
+
+                                </div>
+                            `;
+
+                            vistaPreviaImagenes
+                                .appendChild(
+                                    columna
+                                );
+                        }
+                    );
+                }
+
+                /*
+                 * VALIDACIÓN DEL FORMULARIO
+                 */
+                formulario.addEventListener(
+                    "submit",
+                    function (evento) {
+
+                        const ingredientesValidos =
+                            validarIngredientes(true);
+
+                        const imagenesValidas =
+                            archivosSeleccionados.length > 0;
+
+                        if (!imagenesValidas) {
+
+                            errorImagenesCliente.textContent =
+                                "Debe ingresar al menos una imagen.";
+                        }
+                        else {
+
+                            errorImagenesCliente.textContent = "";
+                        }
+
+                        if (
+                            !ingredientesValidos ||
+                            !imagenesValidas
+                        ) {
+                            evento.preventDefault();
+
+                            if (!ingredientesValidos) {
+
+                                document
+                                    .getElementById(
+                                        "seccionIngredientes"
+                                    )
+                                    .scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "center"
+                                    });
+                            }
+                            else {
+
+                                document
+                                    .getElementById(
+                                        "seccionImagenes"
+                                    )
+                                    .scrollIntoView({
+                                        behavior: "smooth",
+                                        block: "center"
+                                    });
+                            }
+                        }
+                    }
+                );
+
+                /*
+                 * INICIALIZACIÓN
+                 */
+                actualizarMensajeIngredientes();
+                mostrarImagenes();
+            }
+        );
+    </script>
+}

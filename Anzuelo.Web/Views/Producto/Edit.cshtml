@@ -1,0 +1,148 @@
+﻿@model Anzuelo.Application.DTOs.ProductoDTO
+
+@using Anzuelo.Application.DTOs
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Collections.Generic
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Modificar producto";
+
+    var ingredientesDisponibles =
+        (ViewBag.ListIngredientes
+            as IEnumerable<SelectListItem>)?
+            .ToList()
+        ?? new List<SelectListItem>();
+
+    var ingredientesSeleccionados =
+        Model?.Ingredientes?.ToList()
+        ?? new List<IngredienteDTO>();
+
+    var imagenesExistentes =
+        Model?.Imagenes?
+            .Where(x =>
+                x.IdImagenProducto > 0 &&
+                x.Imagen != null &&
+                x.Imagen.Length > 0)
+            .ToList()
+        ?? new List<ImagenDTO>();
+
+    string ObtenerTipoImagen(
+        byte[] imagen)
+    {
+        if (
+            imagen.Length >= 8 &&
+            imagen[0] == 0x89 &&
+            imagen[1] == 0x50 &&
+            imagen[2] == 0x4E &&
+            imagen[3] == 0x47)
+        {
+            return "image/png";
+        }
+
+        if (
+            imagen.Length >= 3 &&
+            imagen[0] == 0xFF &&
+            imagen[1] == 0xD8 &&
+            imagen[2] == 0xFF)
+        {
+            return "image/jpeg";
+        }
+
+        if (
+            imagen.Length >= 12 &&
+            imagen[0] == 0x52 &&
+            imagen[1] == 0x49 &&
+            imagen[2] == 0x46 &&
+            imagen[3] == 0x46 &&
+            imagen[8] == 0x57 &&
+            imagen[9] == 0x45 &&
+            imagen[10] == 0x42 &&
+            imagen[11] == 0x50)
+        {
+            return "image/webp";
+        }
+
+        return "image/jpeg";
+    }
+}
+
+<style>
+    .edit-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10, 47, 90, .10);
+        overflow: hidden;
+    }
+
+    .edit-card-header {
+        background: var(--anzuelo-primary);
+        color: white;
+        padding: 1.25rem 1.5rem;
+    }
+
+        .edit-card-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .ingrediente-fila {
+        background: #f8f9fa;
+        border: 1px solid #e5e8eb;
+        border-radius: .55rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .imagen-preview-card {
+        border: 1px solid #dee2e6;
+        border-radius: .6rem;
+        overflow: hidden;
+        height: 100%;
+        background: white;
+        position: relative;
+    }
+
+    .imagen-preview {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #f5f5f5;
+    }
+
+    .btn-eliminar-imagen {
+        position: absolute;
+        top: .45rem;
+        right: .45rem;
+        z-index: 5;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 7px rgba(0, 0, 0, .25);
+    }
+
+    .imagen-x {
+        color: white;
+        font-size: 1.65rem;
+        font-weight: 700;
+        line-height: 1;
+        display: block

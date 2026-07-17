@@ -25,8 +25,11 @@ builder.Services.AddTransient<IRepositoryPreparacion, RepositoryPreparacion>();
 builder.Services.AddTransient<IRepositoryMenu, RepositoryMenu>();
 builder.Services.AddTransient<IRepositoryUsuario, RepositoryUsuario>();
 builder.Services.AddTransient<IRepositoryCategoriaCombo, RepositoryCategoriaCombo>();
+builder.Services.AddTransient<IRepositoryCategoriaProducto, RepositoryCategoriaProducto>();
 builder.Services.AddTransient<IRepositoryEstadoCombo, RepositoryEstadoCombo>();
+builder.Services.AddTransient<IRepositoryEstadoProducto, RepositoryEstadoProducto>();
 builder.Services.AddTransient<IRepositoryEstacionCocina, RepositoryEstacionCocina>();
+builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -35,8 +38,11 @@ builder.Services.AddTransient<IServicePreparacion, ServicePreparacion>();
 builder.Services.AddTransient<IServiceMenu, ServiceMenu>();
 builder.Services.AddTransient<IServiceUsuario, ServiceUsuario>();
 builder.Services.AddTransient<IServiceCategoriaCombo, ServiceCategoriaCombo>();
+builder.Services.AddTransient<IServiceCategoriaProducto, ServiceCategoriaProducto>();
 builder.Services.AddTransient<IServiceEstadoCombo, ServiceEstadoCombo>();
+builder.Services.AddTransient<IServiceEstadoProducto, ServiceEstadoProducto>();
 builder.Services.AddTransient<IServiceEstacionCocina, ServiceEstacionCocina>();
+builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -47,7 +53,9 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<MenuProfile>();
     config.AddProfile<UsuarioProfile>();
     config.AddProfile<CategoriaComboProfile>();
+    config.AddProfile<CategoriaProductoProfile>();
     config.AddProfile<EstadoComboProfile>();
+    config.AddProfile<EstadoProductoProfile>();
     config.AddProfile<EstacionCocinaProfile>();
 });
 

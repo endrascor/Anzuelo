@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,11 @@ namespace Anzuelo.Application.DTOs
 {
     public record ImagenDTO
     {
-        public int IdImagenProducto { get; init; }
-        public byte[] Imagen { get; init; } = null!;
+        [ValidateNever]
+        public int IdImagenProducto { get; set; }
+
+        [Display(Name = "Imagen")]
+        [ValidateNever]
+        public byte[]? Imagen { get; set; }
     }
 }

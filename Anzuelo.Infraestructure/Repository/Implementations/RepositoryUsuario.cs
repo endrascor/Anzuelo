@@ -33,5 +33,15 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .FirstOrDefaultAsync(x => x.IdUsuario == id);
             return @Object!;
         }
+        public async Task<string> AddAsync(Usuario entity)
+        {
+            await _context.Set<Usuario>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.Email;
+        }
+        public async Task UpdateAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
 }

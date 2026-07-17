@@ -10,6 +10,16 @@ namespace Anzuelo.Application.Services.Interfaces
     public interface IServiceProducto
     {
         Task<ICollection<ProductoDTO>> ListAync();
+
         Task<ProductoDTO> FindByIdAsync(int id);
+
+        Task<int> AddAsync(
+            ProductoDTO dto,
+            ICollection<byte[]> imagenes);
+
+        Task UpdateAsync(
+            int id,
+            ProductoDTO dto,
+            ICollection<byte[]> nuevasImagenes);
     }
 }

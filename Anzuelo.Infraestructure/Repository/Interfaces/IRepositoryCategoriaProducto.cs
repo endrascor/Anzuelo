@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace Anzuelo.Infraestructure.Repository.Interfaces
 {
-    public interface IRepositoryUsuario
+    public interface IRepositoryCategoriaProducto
     {
-        Task<ICollection<Usuario>> ListAsync();
-        Task<Usuario> FindByIdAsync(int id);
-        Task<string> AddAsync(Usuario entity);
-        Task UpdateAsync();
-
+        Task<ICollection<CategoriaProducto>> ListAsync();
     }
 }

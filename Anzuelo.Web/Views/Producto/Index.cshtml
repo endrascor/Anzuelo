@@ -10,6 +10,7 @@
         color: var(--anzuelo-primary);
         margin-bottom: 1.5rem;
     }
+
     .product-card {
         border: none;
         border-radius: .5rem;
@@ -32,6 +33,7 @@
         padding: .8rem;
         border-bottom: 1px solid #edf0f2;
     }
+
     .product-title {
         font-size: 1.05rem;
         font-weight: 700;
@@ -78,6 +80,22 @@
             color: #fff;
         }
 
+    .btn-crear-producto {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+        padding: .6rem 1.1rem;
+        border-radius: .4rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-crear-producto:hover {
+            background: transparent;
+            color: var(--anzuelo-accent);
+        }
+
     .product-card:hover .product-title {
         color: var(--anzuelo-accent);
     }
@@ -87,9 +105,26 @@
 
     <div class="page-hero">
         <div class="container">
-            <h1><i class="bi bi-box-seam me-2"></i>Productos</h1>
-            <p class="page-hero-sub">Listado de productos disponibles</p>
+            <h1>
+                <i class="bi bi-box-seam me-2"></i>
+                Productos
+            </h1>
+
+            <p class="page-hero-sub">
+                Listado de productos disponibles
+            </p>
         </div>
+    </div>
+
+    <!-- Botón para crear un producto -->
+    <div class="d-flex justify-content-end mb-4">
+        <a asp-controller="Producto"
+           asp-action="Create"
+           class="btn-crear-producto">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Crear producto
+        </a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -137,7 +172,14 @@
 
                             <i class="bi bi-eye me-1"></i>
                             Ver detalle
+                        </a>
 
+                        <a asp-action="Edit"
+                           asp-route-id="@item.IdProducto"
+                           class="btn btn-anzuelo btn-sm">
+
+                            <i class="bi bi-eye me-1"></i>
+                            Actualizar
                         </a>
 
                     </div>
