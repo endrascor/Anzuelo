@@ -1,0 +1,109 @@
+﻿@model Anzuelo.Application.DTOs.PreparacionDTO
+@{
+    ViewData["Title"] = "Crear Proceso de Preparación";
+}
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-diagram-3 me-2"></i>@ViewData["Title"]</h1>
+    </div>
+</div>
+
+<div class="container">
+    <form asp-action="Create" method="post" id="formPreparacion">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+        </div>
+
+        <hr class="my-4" />
+        <h5>Estaciones del proceso (orden de ejecución)</h5>
+        <table class="table" id="tablaEstaciones">
+            <thead><tr><th style="width:70px;">Orden</th><th>Estación</th><th style="width:150px;">Tiempo (min)</th><th></th></tr></thead>
+            <tbody>
+                @if (Model.Estaciones != null)
+                {
+                    foreach (var e in Model.Estaciones.OrderBy(x => x.NumeroOrden))
+                    {
+                        <tr>
+                            <td class="orden-label">@e.NumeroOrden</td>
+                            <td>
+                                <select class="form-select estacion-select">
+                                    @foreach (var opt in ViewBag.ListEstaciones)
+                                    {
+                                        <option value="@opt.IdEstacionCocina" selected="@(opt.IdEstacionCocina == e.IdEstacionCocina)">@opt.Descripcion</option>
+                                    }
+                                </select>
+                            </td>
+                            <td><input type="number" class="form-control tiempo-input" min="1" value="@e.TiempoEstimadoMinutos" /></td>
+                            <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <button type="button" id="btnAgregarEstacion" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-plus-lg"></i> Agregar estación
+        </button>
+        <div id="estacionesHidden"></div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Guardar</button>
+            <a asp-action="IndexAdmin" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const estacionesOptionsHtml = `@Html.Raw(string.Join("", ((IEnumerable<dynamic>)ViewBag.ListEstaciones).Select(item => $"<option value='{item.IdEstacionCocina}'>{item.Descripcion}</option>")))`;
+
+        function renumerar() {
+            document.querySelectorAll('#tablaEstaciones tbody tr').forEach((fila, i) => {
+                fila.querySelector('.orden-label').textContent = i + 1;
+            });
+        }
+
+        document.getElementById('btnAgregarEstacion').addEventListener('click', function () {
+            const tbody = document.querySelector('#tablaEstaciones tbody');
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td class="orden-label"></td>
+                <td><select class="form-select estacion-select">${estacionesOptionsHtml}</select></td>
+                <td><input type="number" class="form-control tiempo-input" min="1" value="5" /></td>
+                <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>`;
+            tbody.appendChild(fila);
+            renumerar();
+        });
+
+        document.querySelector('#tablaEstaciones').addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn-quitar');
+            if (btn) { btn.closest('tr').remove(); renumerar(); }
+        });
+
+        document.getElementById('formPreparacion').addEventListener('submit', function (e) {
+            const filas = document.querySelectorAll('#tablaEstaciones tbody tr');
+            if (filas.length === 0) {
+                e.preventDefault();
+                Swal.fire('Atención', 'Debe agregar al menos una estación.', 'warning');
+                return;
+            }
+            const contenedor = document.getElementById('estacionesHidden');
+            contenedor.innerHTML = '';
+            filas.forEach((fila, i) => {
+                const idEstacion = fila.querySelector('.estacion-select').value;
+                const tiempo = fila.querySelector('.tiempo-input').value;
+                contenedor.innerHTML += `
+                    <input type="hidden" name="selectedEstaciones" value="${idEstacion}" />
+                    <input type="hidden" name="selectedTiempos" value="${tiempo}" />`;
+            });
+        });
+    </script>
+}

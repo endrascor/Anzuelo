@@ -2,6 +2,7 @@
 using Anzuelo.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using X.PagedList.Extensions;
 
 namespace Anzuelo.Web.Controllers
@@ -22,7 +23,6 @@ namespace Anzuelo.Web.Controllers
             _logger = logger;
         }
 
-        // GET: ComboController
         public async Task<ActionResult> Index()
         {
             if (TempData.ContainsKey("Mensaje"))
@@ -34,14 +34,17 @@ namespace Anzuelo.Web.Controllers
             return View(collection);
         }
 
-        // GET: ComboController/IndexAdmin
         public async Task<ActionResult> IndexAdmin(int? page)
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
+
             var collection = await _serviceCombo.ListAync();
             return View(collection.ToPagedList(page ?? 1, 5));
         }
 
-        // GET: ComboController/Details/1
         public async Task<ActionResult> Details(int? id)
         {
             try
@@ -80,24 +83,26 @@ namespace Anzuelo.Web.Controllers
 
         private async Task CargarListasAsync()
         {
-            ViewBag.ListCategorias = await _ServiceCategoriaCombo.ListAync();
-            ViewBag.ListEstados = await _serviceEstadoCombo.ListAync();
-            ViewBag.ListProductos = await _serviceProducto.ListAync();
+            var categories = await _ServiceCategoriaCombo.ListAync();
+            var states = await _serviceEstadoCombo.ListAync();
+            var products = await _serviceProducto.ListAync();
+
+            ViewBag.Categorias = new SelectList(categories, "IdCategoriaCombo", "Descripcion");
+            ViewBag.Estados = new SelectList(states, "IdEstadoCombo", "Descripcion");
+            ViewBag.Productos = new SelectList(products, "IdProducto", "Nombre");
         }
 
-        // POST: ComboController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admnistrador")]
-        public async Task<IActionResult> Create(ComboDTO dto, IFormFile? imageFile, int[] selectedProductos, int[] selectedCantidades)
+        public async Task<IActionResult> Create(ComboDTO dto, IFormFile? imagenFile, int[] productosIds, int[] productosCantidades)
         {
             MemoryStream target = new MemoryStream();
 
             if (dto.Imagen == null)
             {
-                if (imageFile != null)
+                if (imagenFile != null)
                 {
-                    imageFile.OpenReadStream().CopyTo(target);
+                    imagenFile.OpenReadStream().CopyTo(target);
                     dto.Imagen = target.ToArray();
                     ModelState.Remove("Imagen");
                 }
@@ -113,7 +118,7 @@ namespace Anzuelo.Web.Controllers
                 }
             }
 
-            CargarProductosSeleccionados(dto, selectedProductos, selectedCantidades);
+            CargarProductosSeleccionados(dto, productosIds, productosCantidades);
 
             if (dto.Productos == null || !dto.Productos.Any())
             {
@@ -123,12 +128,12 @@ namespace Anzuelo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = string.Join("; ", ModelState.Values
-                                   .SelectMany(x => x.Errors)
-                                   .Select(x => x.ErrorMessage));
+                                           .SelectMany(x => x.Errors)
+                                           .Select(x => x.ErrorMessage));
 
-                ViewBag.NotificationMessage = Util.SweetAlertHelper.Mensaje(
+                TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
                     "Crear Combo",
-                    "Errores: " + errors.ToString(),
+                    "Errores: " + errors,
                     Util.SweetAlertMessageType.error);
 
                 await CargarListasAsync();
@@ -138,33 +143,39 @@ namespace Anzuelo.Web.Controllers
             var idCombo = await _serviceCombo.AddAsync(dto);
             TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
                 "Crear Combo",
-                "Combo creado " + idCombo.ToString(),
+                "Combo creado con éxito. ID: " + idCombo.ToString(),
                 Util.SweetAlertMessageType.success);
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexAdmin");
         }
 
-        // GET: ComboController/Create
-        [Authorize(Roles = "Admnistrador")]
         public async Task<IActionResult> Create()
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
+
             await CargarListasAsync();
-            return View(new ComboDTO());
+            var nuevoCombo = new ComboDTO
+            {
+                Productos = new List<ComboProductoDTO>()
+            };
+            return View(nuevoCombo);
         }
 
-        // POST: ComboController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ComboDTO dto, IFormFile? imageFile, int[] selectedProductos, int[] selectedCantidades)
+        public async Task<IActionResult> Edit(int id, ComboDTO dto, IFormFile? imagenFile, int[] productosIds, int[] productosCantidades)
         {
-            if (imageFile != null)
+            if (imagenFile != null)
             {
                 MemoryStream target = new MemoryStream();
-                imageFile.OpenReadStream().CopyTo(target);
+                imagenFile.OpenReadStream().CopyTo(target);
                 dto.Imagen = target.ToArray();
                 ModelState.Remove("Imagen");
             }
 
-            CargarProductosSeleccionados(dto, selectedProductos, selectedCantidades);
+            CargarProductosSeleccionados(dto, productosIds, productosCantidades);
 
             if (dto.Productos == null || !dto.Productos.Any())
             {
@@ -174,9 +185,14 @@ namespace Anzuelo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = string.Join("; ", ModelState.Values
-                                   .SelectMany(x => x.Errors)
-                                   .Select(x => x.ErrorMessage));
-                ViewBag.ErrorMessage = errors;
+                                           .SelectMany(x => x.Errors)
+                                           .Select(x => x.ErrorMessage));
+
+                TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
+                    "Editar Combo",
+                    "Errores: " + errors,
+                    Util.SweetAlertMessageType.error);
+
                 await CargarListasAsync();
                 return View(dto);
             }
@@ -191,15 +207,16 @@ namespace Anzuelo.Web.Controllers
             }
         }
 
-        // GET: ComboController/Edit/1
         public async Task<IActionResult> Edit(int id)
         {
+            if (TempData.ContainsKey("Mensaje"))
+            {
+                ViewBag.NotificationMessage = TempData["Mensaje"];
+            }
+
             var @object = await _serviceCombo.FindByIdAsync(id);
             await CargarListasAsync();
             return View(@object);
         }
-
-
-
     }
 }
