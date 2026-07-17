@@ -12,13 +12,6 @@
         (ViewBag.ListIngredientes as IEnumerable<SelectListItem>)?.ToList()
         ?? new List<SelectListItem>();
 
-    /*
-     * Solo se recuperan ingredientes válidos después
-     * de que el formulario haya sido enviado con errores.
-     *
-     * No se crea una fila automáticamente al abrir
-     * o recargar la página.
-     */
     var ingredientesSeleccionados =
         Model?.Ingredientes?
             .Where(x =>
@@ -163,7 +156,6 @@
 
                         @Html.AntiForgeryToken()
 
-                        <!-- INFORMACIÓN GENERAL -->
                         <section class="form-section">
 
                             <div class="form-section-title">
@@ -243,7 +235,6 @@
 
                         </section>
 
-                        <!-- CLASIFICACIÓN -->
                         <section class="form-section">
 
                             <div class="form-section-title">
@@ -323,7 +314,6 @@
 
                         </section>
 
-                        <!-- INGREDIENTES -->
                         <section class="form-section"
                                  id="seccionIngredientes">
 
@@ -332,7 +322,6 @@
                                 Ingredientes
                             </div>
 
-                            <!-- CREACIÓN RÁPIDA DE INGREDIENTE -->
                             <div class="card bg-light border-0 mb-4">
 
                                 <div class="card-body">
@@ -467,19 +456,16 @@
 
                             </div>
 
-                            <!-- Mensaje informativo cuando no hay filas -->
                             <div id="mensajeSinIngredientes"
                                  class="alert alert-light border mb-0">
 
                                 No se han agregado ingredientes.
                             </div>
 
-                            <!-- Error del lado del cliente -->
                             <div id="errorIngredientesCliente"
                                  class="text-danger mensaje-validacion-seccion">
                             </div>
 
-                            <!-- Error enviado por el controlador -->
                             @Html.ValidationMessage(
                             "Ingredientes",
                                                         "",
@@ -490,7 +476,6 @@
 
                         </section>
 
-                        <!-- IMÁGENES -->
                         <section class="form-section"
                                  id="seccionImagenes">
 
@@ -526,19 +511,16 @@
                                  class="row g-3 mb-3">
                             </div>
 
-                            <!-- Mensaje informativo cuando no hay imágenes -->
                             <div id="mensajeSinImagenes"
                                  class="alert alert-light border mb-0">
 
                                 No se han seleccionado imágenes.
                             </div>
 
-                            <!-- Error del lado del cliente -->
                             <div id="errorImagenesCliente"
                                  class="text-danger mensaje-validacion-seccion">
                             </div>
 
-                            <!-- Error enviado por el controlador -->
                             @Html.ValidationMessage(
                                                         "imageFiles",
                                                         "",
@@ -549,7 +531,6 @@
 
                         </section>
 
-                        <!-- BOTONES -->
                         <div class="d-flex justify-content-end gap-2">
 
                             <a asp-controller="Producto"
@@ -580,7 +561,6 @@
 
 </div>
 
-<!-- PLANTILLA PARA AGREGAR INGREDIENTES -->
 <template id="plantillaIngrediente">
 
     <div class="row align-items-end ingrediente-fila">
@@ -653,17 +633,11 @@
             "DOMContentLoaded",
             function () {
 
-                /*
-                 * ELEMENTOS GENERALES
-                 */
                 const formulario =
                     document.getElementById(
                         "formProducto"
                     );
 
-                /*
-                 * ELEMENTOS DE INGREDIENTES
-                 */
                 const contenedorIngredientes =
                     document.getElementById(
                         "contenedorIngredientes"
@@ -704,9 +678,6 @@
                         "mensajeCrearIngrediente"
                     );
 
-                /*
-                 * ELEMENTOS DE IMÁGENES
-                 */
                 const inputImagenes =
                     document.getElementById(
                         "imageFiles"
@@ -730,9 +701,6 @@
                 let archivosSeleccionados = [];
                 let urlsTemporales = [];
 
-                /*
-                 * INGREDIENTES
-                 */
                 function obtenerFilasIngredientes() {
 
                     return Array.from(
@@ -966,9 +934,6 @@
                     }
                 );
 
-                /*
-                 * CREACIÓN RÁPIDA DE INGREDIENTES
-                 */
                 botonCrearIngrediente.addEventListener(
                     "click",
                     async function () {
@@ -1152,9 +1117,6 @@
                     }
                 }
 
-                /*
-                 * IMÁGENES
-                 */
                 inputImagenes.addEventListener(
                     "change",
                     function () {
@@ -1365,9 +1327,6 @@
                     );
                 }
 
-                /*
-                 * VALIDACIÓN DEL FORMULARIO
-                 */
                 formulario.addEventListener(
                     "submit",
                     function (evento) {
@@ -1420,9 +1379,6 @@
                     }
                 );
 
-                /*
-                 * INICIALIZACIÓN
-                 */
                 actualizarMensajeIngredientes();
                 mostrarImagenes();
             }
