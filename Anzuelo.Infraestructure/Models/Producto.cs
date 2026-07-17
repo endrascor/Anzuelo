@@ -17,19 +17,17 @@ public partial class Producto
 
     public int IdEstadoProducto { get; set; }
 
-    public int IdPreparacion { get; set; }
-
     public virtual ICollection<ComboProducto> ComboProducto { get; set; } = new List<ComboProducto>();
 
     public virtual CategoriaProducto IdCategoriaProductoNavigation { get; set; } = null!;
 
     public virtual EstadoProducto IdEstadoProductoNavigation { get; set; } = null!;
 
-    public virtual Preparacion IdPreparacionNavigation { get; set; } = null!;
-
     public virtual ICollection<ImagenProducto> ImagenProducto { get; set; } = new List<ImagenProducto>();
 
     public virtual ICollection<MenuProducto> MenuProducto { get; set; } = new List<MenuProducto>();
+
+    public virtual Preparacion? Preparacion { get; set; }
 
     public virtual ICollection<ProductoIngrediente> ProductoIngrediente { get; set; } = new List<ProductoIngrediente>();
 }

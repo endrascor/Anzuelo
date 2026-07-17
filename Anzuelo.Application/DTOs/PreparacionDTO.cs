@@ -10,14 +10,18 @@ namespace Anzuelo.Application.DTOs
         [ValidateNever]
         public int IdPreparacion { get; set; }
 
+        [Display(Name = "Producto")]
+        [Required(ErrorMessage = "{0} es un dato requerido")]
+        public int IdProducto { get; set; }
+
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [StringLength(45, ErrorMessage = "{0} no puede superar los {1} caracteres")]
         public string Descripcion { get; set; } = null!;
 
-        [Display(Name = "Productos que la utilizan")]
+        [Display(Name = "Producto")]
         [ValidateNever]
-        public List<string> NombresProductos { get; set; } = new();
+        public string NombreProducto { get; set; } = string.Empty;
 
         [Display(Name = "Estaciones")]
         [ValidateNever]

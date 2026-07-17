@@ -14,6 +14,15 @@
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <div class="row g-3">
+            @* NUEVO: Selector de Producto exigido para mapear la relación *@
+            <div class="col-md-6">
+                <label asp-for="IdProducto" class="form-label">Producto</label>
+                <select asp-for="IdProducto" class="form-select" asp-items="@(new SelectList(ViewBag.ListProductos, "IdProducto", "Nombre"))">
+                    <option value="">-- Seleccione un Producto --</option>
+                </select>
+                <span asp-validation-for="IdProducto" class="text-danger"></span>
+            </div>
+
             <div class="col-md-6">
                 <label asp-for="Descripcion" class="form-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
@@ -24,7 +33,14 @@
         <hr class="my-4" />
         <h5>Estaciones del proceso (orden de ejecución)</h5>
         <table class="table" id="tablaEstaciones">
-            <thead><tr><th style="width:70px;">Orden</th><th>Estación</th><th style="width:150px;">Tiempo (min)</th><th></th></tr></thead>
+            <thead>
+                <tr>
+                    <th style="width:70px;">Orden</th>
+                    <th>Estación</th>
+                    <th style="width:150px;">Tiempo (min)</th>
+                    <th></th>
+                </tr>
+            </thead>
             <tbody>
                 @if (Model.Estaciones != null)
                 {

@@ -17,6 +17,8 @@ public partial class Combo
 
     public int IdEstadoCombo { get; set; }
 
+    public byte[]? Imagen { get; set; }
+
     public virtual ICollection<ComboProducto> ComboProducto { get; set; } = new List<ComboProducto>();
 
     public virtual CategoriaCombo IdCategoriaComboNavigation { get; set; } = null!;
@@ -24,5 +26,4 @@ public partial class Combo
     public virtual EstadoCombo IdEstadoComboNavigation { get; set; } = null!;
 
     public virtual ICollection<MenuCombo> MenuCombo { get; set; } = new List<MenuCombo>();
-    public byte[]? Imagen { get; set; }
 }

@@ -9,7 +9,9 @@ public partial class Preparacion
 
     public string Descripcion { get; set; } = null!;
 
-    public virtual ICollection<PreparacionEstacion> PreparacionEstacion { get; set; } = new List<PreparacionEstacion>();
+    public int IdProducto { get; set; }
 
-    public virtual ICollection<Producto> Producto { get; set; } = new List<Producto>();
+    public virtual Producto IdProductoNavigation { get; set; } = null!;
+
+    public virtual ICollection<PreparacionEstacion> PreparacionEstacion { get; set; } = new List<PreparacionEstacion>();
 }
