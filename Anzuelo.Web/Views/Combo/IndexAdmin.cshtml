@@ -1,0 +1,103 @@
+﻿@using X.PagedList
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<Anzuelo.Application.DTOs.ComboDTO>
+@{
+    ViewData["Title"] = "Administrar Combos";
+}
+
+<div class="page-hero">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div>
+            <h1><i class="bi bi-bag-heart me-2"></i>Administrar Combos</h1>
+            <p class="page-hero-sub">Crear, editar y consultar combos</p>
+        </div>
+        <a asp-action="Create" class="btn btn-light fw-bold">
+            <i class="bi bi-plus-circle me-1"></i>Nuevo Combo
+        </a>
+    </div>
+</div>
+
+<div class="container">
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({ icon: 'success', title: '¡Listo!', text: '@TempData["Success"]', timer: 2200, showConfirmButton: false });
+            });
+        </script>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-inbox" style="font-size:3rem;opacity:.4;"></i>
+            <h5 class="mt-3">No hay combos registrados aún</h5>
+        </div>
+    }
+    else
+    {
+        <div class="admin-table-wrap">
+            <table class="table admin-table mb-0">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th class="text-end">Precio</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.NombreCategoria</td>
+                            <td>@item.NombreEstado</td>
+                            <td class="text-end">₡@item.PrecioTotal.ToString("N2")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdCombo" class="btn-anzuelo">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn-anzuelo ms-1">
+                                    <i class="bi bi-eye"></i> Ver
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .admin-table-wrap {
+        background: #fff;
+        border-radius: .5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+    }
+
+    .admin-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .9rem 1.2rem;
+    }
+
+    .admin-table td {
+        padding: .85rem 1.2rem;
+        vertical-align: middle;
+        border: none;
+        border-bottom: 1px solid #edf0f2;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+}

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Anzuelo.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
 </head>
 <body style="min-height:100vh; display:flex; flex-direction:column;">
     <header>
@@ -55,10 +56,11 @@
 
                         <li class="nav-item mx-3">
                             <a class="nav-link text-white fs-5"
-                               asp-controller="Usuario"
+                               asp-controller="Menu"
                                asp-action="Index">
-                                Usuarios
+                                Menu
                             </a>
+                        </li>
 
                         <li class="nav-item mx-3">
                             <a class="nav-link text-white fs-5"
@@ -78,26 +80,52 @@
 
                         <li class="nav-item mx-3">
                             <a class="nav-link text-white fs-5"
-                               asp-controller="Producto"
-                               asp-action="IndexAdmin">
-                                Admin Productos
-                            </a>
-                        </li>
-
-                        <li class="nav-item mx-3">
-                            <a class="nav-link text-white fs-5"
                                asp-controller="Preparacion"
                                asp-action="Index">
                                 Preparación
                             </a>
                         </li>
 
-                        <li class="nav-item mx-3">
-                            <a class="nav-link text-white fs-5"
-                               asp-controller="Menu"
-                               asp-action="Index">
-                                Menu
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle text-white fs-5"
+                               href="#"
+                               id="navbarDropdownAdmin"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Administración
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Usuario"
+                                       asp-action="Index">
+                                        Usuarios
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Combo"
+                                       asp-action="IndexAdmin">
+                                        Combos Admin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Producto"
+                                       asp-action="IndexAdmin">
+                                        Productos Admin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Preparacion"
+                                       asp-action="IndexAdmin">
+                                        Preparación Admin
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                     </ul>
@@ -149,7 +177,23 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (ViewBag.NotificationMessage != null)
+    {
+        <script>
+            (function () {
+                const msg = `@Html.Raw(ViewBag.NotificationMessage)`;
+                const lastMsg = sessionStorage.getItem('lastNotification');
+
+                if (lastMsg !== msg) {
+                    @Html.Raw(ViewBag.NotificationMessage)
+                    sessionStorage.setItem('lastNotification', msg);
+                }
+            })();
+        </script>
+    }
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
