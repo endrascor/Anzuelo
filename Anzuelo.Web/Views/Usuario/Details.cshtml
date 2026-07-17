@@ -1,66 +1,102 @@
 ﻿@model Anzuelo.Application.DTOs.UsuarioDTO
+
 @{
-    ViewData["Title"] = "Detalle del Usuario";
+    ViewData["Title"] = "Detalle Usuario";
 }
 
 <style>
-    .detail-card {
-        border: none;
-        border-left: 4px solid var(--anzuelo-accent);
-        border-radius: .5rem;
-        background: #fff;
+    .user-card {
+        background: #fffdf8;
+        border-radius: .9rem;
+        box-shadow: 0 6px 22px rgba(10,47,90,.12);
+        overflow: hidden;
+        margin-bottom: 2rem;
     }
 
-    .detail-label {
-        font-size: .78rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .05em;
-        color: var(--anzuelo-primary);
-        margin-bottom: .2rem;
+    .user-header {
+        background: linear-gradient(135deg, var(--anzuelo-primary), #184f8a);
+        color: white;
+        padding: 1.8rem;
+        text-align: center;
     }
 
-    .detail-value {
+    .user-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .user-sub {
+        margin-top: .4rem;
+        opacity: .9;
         font-size: 1rem;
-        color: #333;
-        margin-bottom: 1.2rem;
     }
 
-    .badge-rol {
-        background: var(--anzuelo-primary);
-        color: #fff;
-        font-size: .8rem;
-        font-weight: 600;
-        padding: .3em .8em;
-        border-radius: 2rem;
+    .user-info {
+        background: #f8f9fa;
+        padding: 1rem;
+        font-size: .95rem;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        font-weight: 500;
     }
 
-    .badge-estado {
-        font-size: .8rem;
-        font-weight: 600;
-        padding: .3em .8em;
-        border-radius: 2rem;
+    .user-body {
+        padding: 2rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .info-box {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: .6rem;
+        padding: 1rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+
+    .info-label {
+        font-size: .75rem;
+        color: #777;
         text-transform: uppercase;
-        letter-spacing: .03em;
+        font-weight: 700;
     }
 
-    .badge-estado-activo {
-        background: #e6f4ea;
-        color: #1e7e34;
+    .info-value {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-top: .3rem;
     }
 
-    .badge-estado-inactivo {
-        background: #f8d7da;
-        color: #a71d2a;
+    .badge-activo {
+        background: var(--anzuelo-success);
+        color: #fff;
+        padding: .3rem .8rem;
+        border-radius: 2rem;
+        font-size: .8rem;
+        font-weight: 700;
+    }
+
+    .badge-inactivo {
+        background: #6c757d;
+        color: #fff;
+        padding: .3rem .8rem;
+        border-radius: 2rem;
+        font-size: .8rem;
+        font-weight: 700;
     }
 
     .btn-back {
         background: transparent;
         border: 2px solid var(--anzuelo-accent);
         color: var(--anzuelo-accent);
-        font-weight: 600;
+        font-weight: 700;
         border-radius: .4rem;
-        padding: .45rem 1rem;
+        padding: .55rem 1.2rem;
         text-decoration: none;
         display: inline-flex;
         align-items: center;
@@ -74,56 +110,70 @@
         }
 </style>
 
-<div class="page-hero">
-    <div class="container">
-        <h1><i class="bi bi-person-badge me-2"></i>Detalle del Usuario</h1>
-    </div>
-</div>
-
 <div class="container">
-    <div class="card detail-card shadow-sm">
-        <div class="card-body p-4">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="detail-label">Id Usuario</div>
-                    <div class="detail-value">@Model.IdUsuario</div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-label">Nombre completo</div>
-                    <div class="detail-value">@Model.Nombre @Model.Apellido1 @Model.Apellido2</div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-label">Correo</div>
-                    <div class="detail-value">@Model.Email</div>
-                </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="detail-label">Rol</div>
-                    <div class="detail-value">
-                        <span class="badge-rol">@Model.NombreRol</span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-label">Estado</div>
-                    <div class="detail-value">
-                        <span class="badge-estado @(Model.NombreEstado.ToLower() == "activo" ? "badge-estado-activo" : "badge-estado-inactivo")">
-                            @Model.NombreEstado
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="detail-label">Fecha de registro</div>
-                    <div class="detail-value">@Model.FechaRegistro.ToString("dd/MM/yyyy")</div>
-                </div>
+    <div class="user-card">
+
+        <div class="user-header">
+            <h2 class="user-title">
+                @Model.Nombre @Model.Apellido1 @Model.Apellido2
+            </h2>
+            <div class="user-sub">
+                Usuario del sistema
             </div>
         </div>
+
+        <div class="user-info">
+            <strong>Código:</strong> @Model.IdUsuario |
+            <strong>Cédula:</strong> @Model.Cedula
+        </div>
+
+        <div class="user-body">
+
+            <div class="info-grid">
+
+                <div class="info-box">
+                    <div class="info-label">Nombre completo</div>
+                    <div class="info-value">
+                        @Model.Nombre @Model.Apellido1 @Model.Apellido2
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Rol</div>
+                    <div class="info-value">@Model.NombreRol</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Estado</div>
+                    <div class="info-value">
+                        @if (Model.NombreEstado == "Activo")
+                        {
+                            <span class="badge-activo">@Model.NombreEstado</span>
+                        }
+                        else
+                        {
+                            <span class="badge-inactivo">@Model.NombreEstado</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Cédula</div>
+                    <div class="info-value">@Model.Cedula</div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="mt-4">
-        <a href="javascript:history.back()" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver
+    <div class="text-center">
+        <a asp-action="Index" class="btn-back">
+            <i class="bi bi-arrow-left"></i>
+            Volver
         </a>
     </div>
+
 </div>
