@@ -117,6 +117,7 @@ public partial class AnzueloContext : DbContext
                 .HasColumnName("descripcion");
             entity.Property(e => e.IdCategoriaCombo).HasColumnName("idCategoriaCombo");
             entity.Property(e => e.IdEstadoCombo).HasColumnName("idEstadoCombo");
+            entity.Property(e => e.Imagen).HasColumnName("imagen");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -138,7 +139,7 @@ public partial class AnzueloContext : DbContext
 
         modelBuilder.Entity<ComboProducto>(entity =>
         {
-            entity.HasKey(e => new { e.IdCombo, e.IdProducto }).HasName("PK__ComboPro__7F7D8DD28F62042A");
+            entity.HasKey(e => new { e.IdCombo, e.IdProducto }).HasName("PK__ComboPro__7F7D8DD22AF8FECC");
 
             entity.Property(e => e.IdCombo).HasColumnName("idCombo");
             entity.Property(e => e.IdProducto).HasColumnName("idProducto");
@@ -344,14 +345,11 @@ public partial class AnzueloContext : DbContext
 
         modelBuilder.Entity<ImagenProducto>(entity =>
         {
-            entity.HasKey(e => e.IdImagenProducto).HasName("PK__ImagenPr__7027B7708E445C49");
+            entity.HasKey(e => e.IdImagenProducto).HasName("PK__ImagenPr__7027B7700F2B4136");
 
             entity.Property(e => e.IdImagenProducto).HasColumnName("idImagenProducto");
             entity.Property(e => e.IdProducto).HasColumnName("idProducto");
-            entity.Property(e => e.Imagen)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("imagen");
+            entity.Property(e => e.Imagen).HasColumnName("imagen");
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.ImagenProducto)
                 .HasForeignKey(d => d.IdProducto)
@@ -403,7 +401,7 @@ public partial class AnzueloContext : DbContext
 
         modelBuilder.Entity<MenuCombo>(entity =>
         {
-            entity.HasKey(e => new { e.IdMenu, e.IdCombo }).HasName("PK__MenuComb__C69AD8FF2C0141D2");
+            entity.HasKey(e => new { e.IdMenu, e.IdCombo }).HasName("PK__MenuComb__C69AD8FFB2E66252");
 
             entity.Property(e => e.IdMenu).HasColumnName("idMenu");
             entity.Property(e => e.IdCombo).HasColumnName("idCombo");
@@ -424,7 +422,7 @@ public partial class AnzueloContext : DbContext
 
         modelBuilder.Entity<MenuProducto>(entity =>
         {
-            entity.HasKey(e => new { e.IdMenu, e.IdProducto }).HasName("PK__MenuProd__F215BE90172E74A1");
+            entity.HasKey(e => new { e.IdMenu, e.IdProducto }).HasName("PK__MenuProd__F215BE90CFDEE47A");
 
             entity.Property(e => e.IdMenu).HasColumnName("idMenu");
             entity.Property(e => e.IdProducto).HasColumnName("idProducto");
@@ -588,16 +586,24 @@ public partial class AnzueloContext : DbContext
         {
             entity.HasKey(e => e.IdPreparacion).HasName("PK__Preparac__7590B0A4C7DCC877");
 
+            entity.HasIndex(e => e.IdProducto, "UQ_Preparacion_Producto").IsUnique();
+
             entity.Property(e => e.IdPreparacion).HasColumnName("idPreparacion");
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(45)
                 .IsUnicode(false)
                 .HasColumnName("descripcion");
+            entity.Property(e => e.IdProducto).HasColumnName("idProducto");
+
+            entity.HasOne(d => d.IdProductoNavigation).WithOne(p => p.Preparacion)
+                .HasForeignKey<Preparacion>(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Preparacion_Producto");
         });
 
         modelBuilder.Entity<PreparacionEstacion>(entity =>
         {
-            entity.HasKey(e => new { e.IdPreparacion, e.IdEstacionCocina }).HasName("PK__Preparac__69A61E5B195EBA84");
+            entity.HasKey(e => new { e.IdPreparacion, e.IdEstacionCocina }).HasName("PK__Preparac__69A61E5B6415487C");
 
             entity.Property(e => e.IdPreparacion).HasColumnName("idPreparacion");
             entity.Property(e => e.IdEstacionCocina).HasColumnName("idEstacionCocina");
@@ -628,7 +634,6 @@ public partial class AnzueloContext : DbContext
                 .HasColumnName("descripcion");
             entity.Property(e => e.IdCategoriaProducto).HasColumnName("idCategoriaProducto");
             entity.Property(e => e.IdEstadoProducto).HasColumnName("idEstadoProducto");
-            entity.Property(e => e.IdPreparacion).HasColumnName("idPreparacion");
             entity.Property(e => e.Nombre)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -646,11 +651,6 @@ public partial class AnzueloContext : DbContext
                 .HasForeignKey(d => d.IdEstadoProducto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Producto_Estado");
-
-            entity.HasOne(d => d.IdPreparacionNavigation).WithMany(p => p.Producto)
-                .HasForeignKey(d => d.IdPreparacion)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Producto_Preparacion");
         });
 
         modelBuilder.Entity<ProductoIngrediente>(entity =>

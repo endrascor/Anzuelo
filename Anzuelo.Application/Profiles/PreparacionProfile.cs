@@ -1,7 +1,6 @@
 ﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Infraestructure.Models;
 using AutoMapper;
-using System.Linq;
 
 namespace Anzuelo.Application.Profiles
 {
@@ -12,8 +11,8 @@ namespace Anzuelo.Application.Profiles
             CreateMap<Preparacion, PreparacionDTO>()
                 .ForMember(dest => dest.Estaciones,
                     orig => orig.MapFrom(o => o.PreparacionEstacion))
-                .ForMember(dest => dest.NombresProductos,
-                    orig => orig.MapFrom(o => o.Producto != null ? o.Producto.Select(p => p.Nombre).ToList() : new System.Collections.Generic.List<string>()))
+                .ForMember(dest => dest.NombreProducto,
+                    orig => orig.MapFrom(o => o.IdProductoNavigation != null ? o.IdProductoNavigation.Nombre : string.Empty))
                 .ReverseMap();
 
             CreateMap<PreparacionEstacion, PreparacionEstacionDTO>()

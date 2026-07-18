@@ -32,12 +32,9 @@ namespace Anzuelo.Application.DTOs
         [Display(Name = "Precio")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [Range(
-            0.01,
-            999999999,
-            ErrorMessage = "{0} debe ser mayor que cero")]
-        [DisplayFormat(
-            ApplyFormatInEditMode = true,
-            DataFormatString = "{0:C0}")]
+    0.01,
+    999999999,
+    ErrorMessage = "{0} debe ser mayor que cero")]
         public decimal Precio { get; set; }
 
         /*

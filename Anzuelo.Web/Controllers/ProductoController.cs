@@ -142,9 +142,6 @@ namespace Anzuelo.Web.Controllers
                     .ToList();
         }
 
-        /*
-         * CREATE
-         */
         [HttpGet]
         public async Task<IActionResult>
             Create()
@@ -190,12 +187,8 @@ namespace Anzuelo.Web.Controllers
                 nameof(Index));
         }
 
-        /*
-         * EDIT
-         */
         [HttpGet]
-        public async Task<IActionResult>
-            Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id <= 0)
             {
@@ -203,11 +196,14 @@ namespace Anzuelo.Web.Controllers
             }
 
             var producto =
-                await _serviceProducto
-                    .FindByIdAsync(id);
+                await _serviceProducto.FindByIdAsync(id);
 
-            await CargarListasAsync(
-                producto);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            await CargarListasAsync(producto);
 
             return View(producto);
         }
@@ -287,14 +283,6 @@ namespace Anzuelo.Web.Controllers
             }
         }
 
-        /*
-         * Cuando falla la validación del Edit,
-         * el navegador solamente envía los IDs de
-         * las imágenes existentes.
-         *
-         * Este método vuelve a cargar sus bytes
-         * para poder mostrarlas en la vista.
-         */
         private async Task
             RestaurarImagenesParaVistaAsync(
                 int id,
@@ -321,9 +309,6 @@ namespace Anzuelo.Web.Controllers
                     .ToList();
         }
 
-        /*
-         * CREACIÓN RÁPIDA DE INGREDIENTES
-         */
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult>

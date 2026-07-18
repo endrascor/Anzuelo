@@ -81,9 +81,27 @@ namespace Anzuelo.Web.Controllers
             }
         }
 
-        private async Task CargarListasAsync()
+        private async Task CargarListasCrearAsync()
         {
-            ViewBag.ListProductos = await _serviceProducto.ListAync();
+            var preparaciones = await _servicePreparacion.ListAync();
+            var idsOcupados = preparaciones.Select(p => p.IdProducto).ToList();
+            var todosProductos = await _serviceProducto.ListAync();
+
+            ViewBag.ListProductos = todosProductos.Where(p => !idsOcupados.Contains(p.IdProducto)).ToList();
+            ViewBag.ListEstaciones = await _serviceEstacionCocina.ListAync();
+        }
+
+        private async Task CargarListasEditarAsync(int idProductoActual)
+        {
+            var preparaciones = await _servicePreparacion.ListAync();
+            var idsOcupadosPorOtros = preparaciones
+                .Select(p => p.IdProducto)
+                .Where(id => id != idProductoActual)
+                .ToList();
+
+            var todosProductos = await _serviceProducto.ListAync();
+
+            ViewBag.ListProductos = todosProductos.Where(p => !idsOcupadosPorOtros.Contains(p.IdProducto)).ToList();
             ViewBag.ListEstaciones = await _serviceEstacionCocina.ListAync();
         }
 
@@ -119,15 +137,15 @@ namespace Anzuelo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = string.Join("; ", ModelState.Values
-                                   .SelectMany(x => x.Errors)
-                                   .Select(x => x.ErrorMessage));
+                                           .SelectMany(x => x.Errors)
+                                           .Select(x => x.ErrorMessage));
 
                 ViewBag.NotificationMessage = Util.SweetAlertHelper.Mensaje(
                     "Crear Proceso de Preparación",
                     "Errores: " + errors.ToString(),
                     Util.SweetAlertMessageType.error);
 
-                await CargarListasAsync();
+                await CargarListasCrearAsync();
                 return View(dto);
             }
 
@@ -143,7 +161,7 @@ namespace Anzuelo.Web.Controllers
         //[Authorize(Roles = "Admnistrador")]
         public async Task<IActionResult> Create()
         {
-            await CargarListasAsync();
+            await CargarListasCrearAsync();
             return View(new PreparacionDTO());
         }
 
@@ -171,15 +189,15 @@ namespace Anzuelo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 string errors = string.Join("; ", ModelState.Values
-                                   .SelectMany(x => x.Errors)
-                                   .Select(x => x.ErrorMessage));
+                                           .SelectMany(x => x.Errors)
+                                           .Select(x => x.ErrorMessage));
 
                 ViewBag.NotificationMessage = Util.SweetAlertHelper.Mensaje(
                     "Editar Proceso de Preparación",
                     "Errores: " + errors,
                     Util.SweetAlertMessageType.error);
 
-                await CargarListasAsync();
+                await CargarListasEditarAsync(dto.IdProducto);
                 return View(dto);
             }
             else
@@ -197,7 +215,7 @@ namespace Anzuelo.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var @object = await _servicePreparacion.FindByIdAsync(id);
-            await CargarListasAsync();
+            await CargarListasEditarAsync(@object.IdProducto);
             return View(@object);
         }
     }

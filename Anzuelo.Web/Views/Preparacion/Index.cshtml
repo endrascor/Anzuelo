@@ -103,7 +103,7 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@string.Join(", ", item.NombresProductos)</td>
+                            <td>@item.NombreProducto</td>
                             <td class="text-center">
                                 <span class="badge-pasos">@item.Estaciones.Count</span>
                             </td>

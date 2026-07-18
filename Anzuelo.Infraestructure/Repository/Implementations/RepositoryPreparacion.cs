@@ -21,22 +21,20 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         public async Task<ICollection<Preparacion>> ListAsync()
         {
             var collection = await _context.Preparacion
-            .Include(x => x.PreparacionEstacion)
-            .ThenInclude(x => x.IdEstacionCocinaNavigation)
-            .Include(x => x.Producto)
-            .ToListAsync();
-
+                .Include(x => x.PreparacionEstacion)
+                    .ThenInclude(x => x.IdEstacionCocinaNavigation)
+                .Include(x => x.IdProductoNavigation)   
+                .ToListAsync();
             return collection;
         }
 
         public async Task<Preparacion> FindByIdAsync(int id)
         {
             var @Object = await _context.Preparacion
-            .Include(x => x.PreparacionEstacion)
-                .ThenInclude(x => x.IdEstacionCocinaNavigation)
-            .Include(x => x.Producto)
-            .FirstOrDefaultAsync(x => x.IdPreparacion == id);
-
+                .Include(x => x.PreparacionEstacion)
+                    .ThenInclude(x => x.IdEstacionCocinaNavigation)
+                .Include(x => x.IdProductoNavigation)  
+                .FirstOrDefaultAsync(x => x.IdPreparacion == id);
             return @Object;
         }
         public async Task<int> AddAsync(Preparacion entity)

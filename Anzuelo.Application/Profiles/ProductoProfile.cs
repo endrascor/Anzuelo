@@ -34,13 +34,6 @@ namespace Anzuelo.Application.Profiles
                             : string.Empty))
 
                 .ForMember(
-                    dest => dest.NombrePreparacion,
-                    opt => opt.MapFrom(src =>
-                        src.IdPreparacionNavigation != null
-                            ? src.IdPreparacionNavigation.Descripcion
-                            : string.Empty))
-
-                .ForMember(
                     dest => dest.Imagen,
                     opt => opt.MapFrom(src =>
                         src.ImagenProducto
@@ -77,10 +70,6 @@ namespace Anzuelo.Application.Profiles
 
                 .ForMember(
                     dest => dest.IdEstadoProductoNavigation,
-                    opt => opt.Ignore())
-
-                .ForMember(
-                    dest => dest.IdPreparacionNavigation,
                     opt => opt.Ignore())
 
                 /*

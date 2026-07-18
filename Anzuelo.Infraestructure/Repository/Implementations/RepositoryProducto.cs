@@ -22,7 +22,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             var collection = await _context.Set<Producto>()
                 .Include(x => x.IdCategoriaProductoNavigation)
                 .Include(x => x.IdEstadoProductoNavigation)
-                .Include(x => x.IdPreparacionNavigation)
                 .Include(x => x.ImagenProducto)
                 .OrderBy(x => x.Nombre)
                 .ToListAsync();
@@ -35,7 +34,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             var @Object = await _context.Set<Producto>()
                 .Include(x => x.IdCategoriaProductoNavigation)
         .Include(x => x.IdEstadoProductoNavigation)
-        .Include(x => x.IdPreparacionNavigation)
 
         .Include(x => x.ImagenProducto)
 
@@ -91,9 +89,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             productoExistente.IdEstadoProducto =
                 entity.IdEstadoProducto;
-
-            productoExistente.IdPreparacion =
-                entity.IdPreparacion;
 
             ActualizarIngredientes(
                 productoExistente,
