@@ -5,13 +5,142 @@
     ViewData["Title"] = "Administrar Combos";
 }
 
+<style>
+    .prod-table-wrap {
+        background: #fff;
+        border-radius: .5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+    }
+
+    .prod-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .9rem 1.2rem;
+    }
+
+    .prod-table tbody tr {
+        border-bottom: 1px solid #edf0f2;
+        transition: background .15s;
+    }
+
+        .prod-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .prod-table tbody tr:hover {
+            background: #fff5ee;
+        }
+
+    .prod-table td {
+        padding: .85rem 1.2rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .acciones-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+    }
+
+    .btn-ver-prod {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .8rem;
+        font-weight: 600;
+        line-height: 1;
+        padding: .45rem .85rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-ver-prod:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+
+    .badge-categoria {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 600;
+        padding: .25em .7em;
+        border-radius: 2rem;
+    }
+
+    .badge-estado {
+        background: #28a745;
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 600;
+        padding: .25em .7em;
+        border-radius: 2rem;
+    }
+
+    .precio-col {
+        font-weight: 700;
+        color: var(--anzuelo-accent);
+    }
+
+
+    .btn-crear-admin {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+        padding: .6rem 1.1rem;
+        border-radius: .4rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-crear-admin:hover {
+            background: transparent;
+            color: var(--anzuelo-accent);
+            border-color: var(--anzuelo-accent);
+        }
+
+    .pagination .page-link {
+        color: var(--anzuelo-primary);
+        border-color: #dee2e6;
+        font-size: .85rem;
+        padding: .35rem .75rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--anzuelo-primary);
+        border-color: var(--anzuelo-primary);
+        color: #fff;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #fff5ee;
+        color: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+    }
+</style>
+
 <div class="page-hero">
     <div class="container d-flex justify-content-between align-items-center">
         <div>
             <h1><i class="bi bi-bag-heart me-2"></i>Administrar Combos</h1>
             <p class="page-hero-sub">Crear, editar y consultar combos</p>
         </div>
-        <a asp-action="Create" class="btn btn-light fw-bold">
+        <a asp-action="Create" class="btn-crear-admin">
             <i class="bi bi-plus-circle me-1"></i>Nuevo Combo
         </a>
     </div>
@@ -36,14 +165,14 @@
     }
     else
     {
-        <div class="admin-table-wrap">
-            <table class="table admin-table mb-0">
+        <div class="prod-table-wrap">
+            <table class="table prod-table mb-0">
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Categoría</th>
                         <th>Estado</th>
-                        <th class="text-end">Precio</th>
+                        <th>Precio</th>
                         <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
@@ -51,52 +180,43 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Nombre</td>
-                            <td>@item.NombreCategoria</td>
-                            <td>@item.NombreEstado</td>
-                            <td class="text-end">₡@item.PrecioTotal.ToString("N2")</td>
-                            <td class="text-center">
-                                <a asp-action="Edit" asp-route-id="@item.IdCombo" class="btn-anzuelo">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn-anzuelo ms-1">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
+                            <td><strong>@item.Nombre</strong></td>
+                            <td><span class="badge-categoria">@item.NombreCategoria</span></td>
+                            <td><span class="badge-estado">@item.NombreEstado</span></td>
+                            <td class="precio-col">₡@item.PrecioTotal.ToString("N2")</td>
+                            <td>
+                                <div class="acciones-cell">
+                                    <a asp-action="Edit" asp-route-id="@item.IdCombo" class="btn-ver-prod">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.IdCombo" class="btn-ver-prod">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
                 </tbody>
-            </table>
-        </div>
-    }
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <div class="d-flex justify-content-end">
+                                @Html.PagedListPager((IPagedList)Model, page =>
+                                Url.Action("IndexAdmin", new { page }), new PagedListRenderOptions
+                                {
+                                    Display = PagedListDisplayMode.Always,
+                                    MaximumPageNumbersToDisplay = 5,
+                                    LiElementClasses = new String[] { "page-item" },
+                                    PageClasses = new String[] { "page-link" }
+                                })
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+        }
 </div>
-
-<style>
-    .admin-table-wrap {
-        background: #fff;
-        border-radius: .5rem;
-        overflow: hidden;
-        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
-    }
-
-    .admin-table thead th {
-        background-color: var(--anzuelo-primary);
-        color: #fff;
-        font-size: .76rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: .06em;
-        border: none;
-        padding: .9rem 1.2rem;
-    }
-
-    .admin-table td {
-        padding: .85rem 1.2rem;
-        vertical-align: middle;
-        border: none;
-        border-bottom: 1px solid #edf0f2;
-    }
-</style>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
