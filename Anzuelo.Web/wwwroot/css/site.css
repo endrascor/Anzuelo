@@ -8,31 +8,27 @@ html {
         font-size: 16px;
     }
 }
-
 /* Paleta Anzuelo */
 :root {
     --anzuelo-primary: #0A2F5A;
     --anzuelo-secondary: #1E5F9E;
     --anzuelo-accent: #E67E22;
     --anzuelo-success: #6BA539;
-    --anzuelo-bg: #FFFFFF;
+    --anzuelo-bg: #F4F6F8;
     --anzuelo-text: #1C2733;
 }
-
 /* Layout principal */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #FFFFFF;
+    background-color: var(--anzuelo-bg);
     color: var(--anzuelo-text);
 }
-
 /* Hace que el contenido empuje el footer hacia abajo */
 main {
     flex: 1;
 }
-
 /* Bootstrap Focus */
 .btn:focus,
 .btn:active:focus,
@@ -41,7 +37,6 @@ main {
 .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
-
 /* Floating Labels */
 .form-floating > .form-control-plaintext::placeholder,
 .form-floating > .form-control::placeholder {
@@ -53,7 +48,6 @@ main {
 .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
-
 /* Navbar */
 .navbar-brand {
     font-weight: bold;
@@ -66,23 +60,37 @@ main {
     .nav-link:hover {
         color: var(--anzuelo-accent) !important;
     }
-
 /* Cards */
 .card {
     border-radius: 12px;
 }
-
 /* Footer */
 footer {
     margin-top: auto;
 }
 
+.logo-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #FFFFFF;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+    flex-shrink: 0;
+}
+
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
 /* =====================================
    RESPONSIVE - MENÚ HAMBURGUESA
 ===================================== */
-
 @media (max-width: 991px) {
-
     .navbar-collapse {
         margin-top: 10px;
     }
