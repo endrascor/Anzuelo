@@ -51,12 +51,15 @@ namespace Anzuelo.Web.Controllers
          */
 
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? page)
         {
             var collection =
                 await _serviceMenu.ListAync();
 
-            return View(collection);
+            return View(
+                collection.ToPagedList(
+                    page ?? 1,
+                    5));
         }
 
         /*
@@ -222,6 +225,9 @@ namespace Anzuelo.Web.Controllers
 
             await _serviceMenu.AddAsync(dto);
 
+            TempData["MensajeExito"] =
+        "El menú se guardó correctamente.";
+
             return RedirectToAction(
                 nameof(IndexAdmin));
         }
@@ -273,21 +279,11 @@ namespace Anzuelo.Web.Controllers
             dto.IdMenu =
                 id;
 
-            /*
-             * Evita conservar un valor anterior
-             * dentro de ModelState.
-             */
             ModelState.Remove(
                 nameof(MenuDTO.IdMenu));
 
             NormalizarColecciones(dto);
 
-            /*
-             * Convierte correctamente valores como:
-             *
-             * 10.00
-             * 10,00
-             */
             CorregirDescuentosDesdeFormulario(
                 dto);
 
@@ -303,6 +299,9 @@ namespace Anzuelo.Web.Controllers
             await _serviceMenu.UpdateAsync(
                 id,
                 dto);
+
+            TempData["MensajeExito"] =
+        "El menú se actualizo correctamente.";
 
             return RedirectToAction(
                 nameof(IndexAdmin));

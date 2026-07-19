@@ -3,7 +3,7 @@
 @model IPagedList<Anzuelo.Application.DTOs.MenuDTO>
 
 @{
-    ViewData["Title"] = "Menús";
+    ViewData["Title"] = "Administrar Menús";
 }
 
 <style>
@@ -30,13 +30,13 @@
         transition: background .15s;
     }
 
-    .menu-table tbody tr:last-child {
-        border-bottom: none;
-    }
+        .menu-table tbody tr:last-child {
+            border-bottom: none;
+        }
 
-    .menu-table tbody tr:hover {
-        background: #fff5ee;
-    }
+        .menu-table tbody tr:hover {
+            background: #fff5ee;
+        }
 
     .menu-table td {
         padding: .85rem 1.2rem;
@@ -69,6 +69,26 @@
         background: #6c757d;
     }
 
+    .btn-accion-menu {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .8rem;
+        font-weight: 600;
+        padding: .28rem .85rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-accion-menu:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+
     .top-actions {
         display: flex;
         justify-content: flex-end;
@@ -91,10 +111,29 @@
         transition: opacity .2s;
     }
 
-    .btn-menu-principal:hover {
-        opacity: .85;
-        color: #fff;
+        .btn-menu-principal:hover {
+            opacity: .85;
+            color: #fff;
+        }
+
+    .btn-menu-secundario {
+        background: transparent;
+        color: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        padding: .55rem 1rem;
+        border-radius: .4rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: background .2s, color .2s;
     }
+
+        .btn-menu-secundario:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
 
     .fecha-columna,
     .horario-columna {
@@ -105,24 +144,24 @@
         margin-bottom: 0;
     }
 
-    .pagination .page-link {
-        color: var(--anzuelo-primary);
-        border-color: #dee2e6;
-        font-size: .85rem;
-        padding: .35rem .75rem;
-    }
+        .pagination .page-link {
+            color: var(--anzuelo-primary);
+            border-color: #dee2e6;
+            font-size: .85rem;
+            padding: .35rem .75rem;
+        }
 
-    .pagination .page-item.active .page-link {
-        background-color: var(--anzuelo-primary);
-        border-color: var(--anzuelo-primary);
-        color: #fff;
-    }
+        .pagination .page-item.active .page-link {
+            background-color: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
 
-    .pagination .page-link:hover {
-        background-color: #fff5ee;
-        color: var(--anzuelo-accent);
-        border-color: var(--anzuelo-accent);
-    }
+        .pagination .page-link:hover {
+            background-color: #fff5ee;
+            color: var(--anzuelo-accent);
+            border-color: var(--anzuelo-accent);
+        }
 </style>
 
 <div class="page-hero">
@@ -131,11 +170,11 @@
 
         <h1>
             <i class="bi bi-journal-text me-2"></i>
-            Menús
+            Administrar Menús
         </h1>
 
         <p class="page-hero-sub">
-            Menús registrados en el sistema
+            Gestión de menús registrados en el sistema
         </p>
 
     </div>
@@ -148,10 +187,19 @@
 
         <a asp-controller="Menu"
            asp-action="Details"
-           class="btn-menu-principal">
+           class="btn-menu-secundario">
 
             <i class="bi bi-eye"></i>
             Ver menú disponible
+
+        </a>
+
+        <a asp-controller="Menu"
+           asp-action="Create"
+           class="btn-menu-principal">
+
+            <i class="bi bi-plus-circle"></i>
+            Crear menú
 
         </a>
 
@@ -187,6 +235,7 @@
                             <th>Disponibilidad</th>
                             <th>Horario</th>
                             <th class="text-center">Estado</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
 
                     </thead>
@@ -195,8 +244,15 @@
 
                         @foreach (var item in Model)
                         {
+                            /*
+                            * El estado se obtiene directamente
+                            * del estado guardado en la base de datos.
+                            *
+                            * 1 = Activo
+                            * 2 = Inactivo
+                            */
                             bool estadoActivo =
-                                item.IdEstadoMenu == 1;
+                            item.IdEstadoMenu == 1;
 
                             <tr>
 
@@ -243,7 +299,7 @@
                                         <span class="badge-activo">
 
                                             @if (!string.IsNullOrWhiteSpace(
-                                                item.NombreEstado))
+                                                                            item.NombreEstado))
                                             {
                                                 @item.NombreEstado
                                             }
@@ -259,7 +315,7 @@
                                         <span class="badge-inactivo">
 
                                             @if (!string.IsNullOrWhiteSpace(
-                                                item.NombreEstado))
+                                                                            item.NombreEstado))
                                             {
                                                 @item.NombreEstado
                                             }
@@ -273,6 +329,20 @@
 
                                 </td>
 
+                                <td class="text-center">
+
+                                    <a asp-controller="Menu"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.IdMenu"
+                                       class="btn-accion-menu">
+
+                                        <i class="bi bi-pencil-square"></i>
+                                        Actualizar
+
+                                    </a>
+
+                                </td>
+
                             </tr>
                         }
 
@@ -282,53 +352,73 @@
 
                         <tr>
 
-                            <td colspan="5">
+                            <td colspan="6">
 
                                 <div class="d-flex justify-content-end">
 
                                     @Html.PagedListPager(
-                                        Model,
-                                        page => Url.Action(
-                                            "Index",
-                                            "Menu",
-                                            new
-                                            {
-                                                page
-                                            }),
-                                        new PagedListRenderOptions
-                                        {
-                                            Display =
-                                                PagedListDisplayMode.Always,
+                                    Model,
+                                                                page => Url.Action(
+                                                                "IndexAdmin",
+                                                                "Menu",
+                                                                new
+                                                                {
+                                                                    page
+                                                                }),
+                                                                new PagedListRenderOptions
+                                                                {
+                                                                    Display =
+                                                                PagedListDisplayMode.Always,
 
-                                            MaximumPageNumbersToDisplay =
-                                                5,
+                                                                    MaximumPageNumbersToDisplay =
+                                                                5,
 
-                                            LiElementClasses =
-                                                new[]
-                                                {
-                                                    "page-item"
-                                                },
+                                                                    LiElementClasses =
+                                                                new[]
+                                                                {
+                                                                "page-item"
+                                                                },
 
-                                            PageClasses =
-                                                new[]
-                                                {
-                                                    "page-link"
-                                                }
-                                        })
+                                                                    PageClasses =
+                                                                new[]
+                                                                {
+                                                                "page-link"
+                                                                }
+                                                                })
 
-                                </div>
+                            </div>
 
-                            </td>
+                        </td>
 
-                        </tr>
+                    </tr>
 
-                    </tfoot>
+                </tfoot>
 
-                </table>
-
-            </div>
+            </table>
 
         </div>
-    }
+
+    </div>
+        }
 
 </div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: @Html.Raw(
+                                System.Text.Json.JsonSerializer.Serialize(
+                                        TempData["MensajeExito"]?.ToString()
+                                )
+                        ),
+        confirmButtonText: "Aceptar"
+    });
+</script>
+    }
+}

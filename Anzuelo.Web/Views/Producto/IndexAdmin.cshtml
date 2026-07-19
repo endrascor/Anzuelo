@@ -95,6 +95,22 @@
         color: var(--anzuelo-accent);
         border-color: var(--anzuelo-accent);
     }
+
+    .btn-crear-producto {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+        padding: .6rem 1.1rem;
+        border-radius: .4rem;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-crear-producto:hover {
+            background: transparent;
+            color: var(--anzuelo-accent);
+        }
 </style>
 
 <div class="page-hero">
@@ -102,6 +118,15 @@
         <h1><i class="bi bi-box-seam me-2"></i>Administrar Productos</h1>
         <p class="page-hero-sub">Gestión de productos registrados en el sistema</p>
     </div>
+</div>
+<div class="d-flex justify-content-end mb-4">
+    <a asp-controller="Producto"
+       asp-action="Create"
+       class="btn-crear-producto">
+
+        <i class="bi bi-plus-circle me-1"></i>
+        Crear producto
+    </a>
 </div>
 
 <div class="container">
@@ -123,6 +148,7 @@
                         <th>Categoría</th>
                         <th>Precio</th>
                         <th class="text-center">Detalle</th>
+                        <th class="text-center">Actualizar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -137,6 +163,12 @@
                                 <a asp-action="Details" asp-route-id="@item.IdProducto"
                                    class="btn-ver-prod">
                                     Ver detalle <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a asp-action="Edit" asp-route-id="@item.IdProducto"
+                                   class="btn-ver-prod">
+                                    Actualizar producto <i class="bi bi-arrow-right"></i>
                                 </a>
                             </td>
                         </tr>
@@ -162,3 +194,22 @@
     </div>
         }
 </div>
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if (TempData["MensajeExito"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: @Html.Raw(
+                                System.Text.Json.JsonSerializer.Serialize(
+                                        TempData["MensajeExito"]?.ToString()
+                                )
+                        ),
+        confirmButtonText: "Aceptar"
+    });
+</script>
+    }
+}

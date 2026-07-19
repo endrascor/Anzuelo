@@ -163,8 +163,11 @@ namespace Anzuelo.Web.Controllers
                 dto,
                 imagenes);
 
+            TempData["MensajeExito"] =
+        "El producto se guardó correctamente.";
+
             return RedirectToAction(
-                nameof(Index));
+                nameof(IndexAdmin));
         }
 
         [HttpGet]
@@ -241,7 +244,8 @@ namespace Anzuelo.Web.Controllers
                 id,
                 dto,
                 nuevasImagenes);
-
+            TempData["MensajeExito"] =
+        "El producto se actualizo correctamente.";
             return RedirectToAction(
                 nameof(IndexAdmin));
         }
