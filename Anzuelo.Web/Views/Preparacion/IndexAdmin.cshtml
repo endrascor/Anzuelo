@@ -1,9 +1,123 @@
-﻿@model X.PagedList.IPagedList<Anzuelo.Application.DTOs.PreparacionDTO>
+﻿@using X.PagedList
 @using X.PagedList.Mvc.Core
-
+@model X.PagedList.IPagedList<Anzuelo.Application.DTOs.PreparacionDTO>
 @{
     ViewData["Title"] = "Administrar Procesos de Preparación";
 }
+
+<style>
+    .prod-table-wrap {
+        background: #fff;
+        border-radius: .5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+    }
+
+    .prod-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .9rem 1.2rem;
+    }
+
+    .prod-table tbody tr {
+        border-bottom: 1px solid #edf0f2;
+        transition: background .15s;
+    }
+
+        .prod-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .prod-table tbody tr:hover {
+            background: #fff5ee;
+        }
+
+    .prod-table td {
+        padding: .85rem 1.2rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .acciones-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: .5rem;
+    }
+
+    .btn-ver-prod {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-size: .8rem;
+        font-weight: 600;
+        line-height: 1;
+        padding: .45rem .85rem;
+        border-radius: .35rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-ver-prod:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+
+    .badge-pasos {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 600;
+        padding: .25em .8em;
+        border-radius: 2rem;
+    }
+
+    .btn-crear-admin {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+        padding: .6rem 1.1rem;
+        border-radius: .4rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: background .2s, color .2s;
+    }
+
+        .btn-crear-admin:hover {
+            background: transparent;
+            color: var(--anzuelo-accent);
+            border-color: var(--anzuelo-accent);
+        }
+
+    .pagination .page-link {
+        color: var(--anzuelo-primary);
+        border-color: #dee2e6;
+        font-size: .85rem;
+        padding: .35rem .75rem;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--anzuelo-primary);
+        border-color: var(--anzuelo-primary);
+        color: #fff;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #fff5ee;
+        color: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+    }
+</style>
 
 <div class="page-hero">
     <div class="container d-flex justify-content-between align-items-center">
@@ -11,7 +125,7 @@
             <h1><i class="bi bi-diagram-3 me-2"></i>Administrar Preparación</h1>
             <p class="page-hero-sub">Crear, editar y consultar procesos de preparación</p>
         </div>
-        <a asp-action="Create" class="btn btn-light fw-bold">
+        <a asp-action="Create" class="btn-crear-admin">
             <i class="bi bi-plus-circle me-1"></i>Nuevo Proceso
         </a>
     </div>
@@ -27,8 +141,8 @@
     }
     else
     {
-        <div class="prep-table-wrap">
-            <table class="table prep-table mb-0">
+        <div class="prod-table-wrap">
+            <table class="table prod-table mb-0">
                 <thead>
                     <tr>
                         <th>Producto</th>
@@ -41,40 +155,50 @@
                     {
                         <tr>
                             <td>
-                                <strong>@item.NombreProducto</strong> 
+                                <strong>@item.NombreProducto</strong>
                                 @if (!string.IsNullOrEmpty(item.Descripcion))
                                 {
                                     <span class="text-muted d-block small">@item.Descripcion</span>
                                 }
                             </td>
                             <td class="text-center"><span class="badge-pasos">@item.Estaciones.Count</span></td>
-                            <td class="text-center">
-                                <a asp-action="Edit" asp-route-id="@item.IdPreparacion" class="btn-ver-prep">
-                                    <i class="bi bi-pencil-square"></i> Editar
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.IdPreparacion" class="btn-ver-prep ms-1">
-                                    <i class="bi bi-eye"></i> Ver
-                                </a>
+                            <td>
+                                <div class="acciones-cell">
+                                    <a asp-action="Edit" asp-route-id="@item.IdPreparacion" class="btn-ver-prod">
+                                        <i class="bi bi-pencil-square"></i> Editar
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.IdPreparacion" class="btn-ver-prod">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
                 </tbody>
-            </table>
-        </div>
-
-        <div class="d-flex justify-content-center mt-4">
-            @Html.PagedListPager(Model, page => Url.Action("IndexAdmin", new { page }), 
-                new PagedListRenderOptions {
-                    LiElementClasses = new string[] { "page-item" },
-                    PageClasses = new string[] { "page-link" }
-                })
-        </div>
-    }
+                <tfoot>
+                    <tr>
+                        <td colspan="3">
+                            <div class="d-flex justify-content-end">
+                                @Html.PagedListPager((IPagedList)Model, page =>
+                                Url.Action("IndexAdmin", new { page }), new PagedListRenderOptions
+                                {
+                                    Display = PagedListDisplayMode.Always,
+                                    MaximumPageNumbersToDisplay = 5,
+                                    LiElementClasses = new String[] { "page-item" },
+                                    PageClasses = new String[] { "page-link" }
+                                })
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+        }
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     @if (ViewBag.NotificationMessage != null)
     {
         @Html.Raw(ViewBag.NotificationMessage)

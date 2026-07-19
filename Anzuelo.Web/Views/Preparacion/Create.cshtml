@@ -1,119 +1,213 @@
 ﻿@model Anzuelo.Application.DTOs.PreparacionDTO
 @{
-    ViewData["Title"] = "Crear Proceso de Preparación";
+    ViewData["Title"] = "Crear proceso de preparación";
 }
 
-<div class="page-hero">
-    <div class="container">
-        <h1><i class="bi bi-diagram-3 me-2"></i>@ViewData["Title"]</h1>
+<style>
+    .create-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10,47,90,.10);
+        overflow: hidden;
+    }
+
+    .create-card-header {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        padding: 1.25rem 1.5rem;
+    }
+
+        .create-card-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .estacion-fila {
+        background: #f8f9fa;
+        border: 1px solid #e5e8eb;
+        border-radius: .55rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-guardar-preparacion {
+        background: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .btn-guardar-preparacion:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    .mensaje-validacion-seccion {
+        font-weight: 600;
+        margin-top: .65rem;
+    }
+
+    .orden-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        background: var(--anzuelo-primary);
+        color: #fff;
+        border-radius: 50%;
+        font-weight: 700;
+        font-size: .85rem;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card create-card">
+                <div class="create-card-header">
+                    <h2><i class="bi bi-diagram-3 me-2"></i>Crear proceso de preparación</h2>
+                    <p class="mb-0 mt-1">Complete la información y las estaciones del proceso.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" id="formPreparacion">
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                        <section class="form-section">
+                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>Información general</div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="IdProducto" class="form-label">Producto</label>
+                                    <select asp-for="IdProducto" class="form-select" asp-items="@(new SelectList(ViewBag.ListProductos, "IdProducto", "Nombre"))">
+                                        <option value="">-- Seleccione un producto --</option>
+                                    </select>
+                                    <span asp-validation-for="IdProducto" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Descripcion" class="form-label"></label>
+                                    <input asp-for="Descripcion" class="form-control" placeholder="Descripción del proceso" />
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="form-section" id="seccionEstaciones">
+                            <div class="form-section-title"><i class="bi bi-list-ol me-1"></i>Estaciones del proceso</div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <p class="text-muted mb-0">Defina el orden de ejecución de cada estación.</p>
+                                <button type="button" id="btnAgregarEstacion" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i>Agregar estación
+                                </button>
+                            </div>
+
+                            <div id="contenedorEstaciones"></div>
+                            <div id="mensajeSinEstaciones" class="alert alert-light border mb-0">No se han agregado estaciones.</div>
+                            <div id="errorEstacionesCliente" class="text-danger mensaje-validacion-seccion"></div>
+                            <div id="estacionesHidden"></div>
+                        </section>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="IndexAdmin" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Cancelar</a>
+                            <button type="submit" class="btn btn-guardar-preparacion"><i class="bi bi-floppy me-1"></i>Guardar proceso</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="container">
-    <form asp-action="Create" method="post" id="formPreparacion">
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
-
-        <div class="row g-3">
-            @* NUEVO: Selector de Producto exigido para mapear la relación *@
-            <div class="col-md-6">
-                <label asp-for="IdProducto" class="form-label">Producto</label>
-                <select asp-for="IdProducto" class="form-select" asp-items="@(new SelectList(ViewBag.ListProductos, "IdProducto", "Nombre"))">
-                    <option value="">-- Seleccione un Producto --</option>
-                </select>
-                <span asp-validation-for="IdProducto" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-6">
-                <label asp-for="Descripcion" class="form-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
+<template id="plantillaEstacion">
+    <div class="row align-items-end estacion-fila">
+        <div class="col-md-1 mb-2 text-center">
+            <label class="form-label d-block">&nbsp;</label>
+            <span class="orden-badge orden-label"></span>
         </div>
-
-        <hr class="my-4" />
-        <h5>Estaciones del proceso (orden de ejecución)</h5>
-        <table class="table" id="tablaEstaciones">
-            <thead>
-                <tr>
-                    <th style="width:70px;">Orden</th>
-                    <th>Estación</th>
-                    <th style="width:150px;">Tiempo (min)</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Estaciones != null)
+        <div class="col-md-6 mb-2">
+            <label class="form-label">Estación</label>
+            <select class="form-select estacion-select">
+                @foreach (var opt in ViewBag.ListEstaciones)
                 {
-                    foreach (var e in Model.Estaciones.OrderBy(x => x.NumeroOrden))
-                    {
-                        <tr>
-                            <td class="orden-label">@e.NumeroOrden</td>
-                            <td>
-                                <select class="form-select estacion-select">
-                                    @foreach (var opt in ViewBag.ListEstaciones)
-                                    {
-                                        <option value="@opt.IdEstacionCocina" selected="@(opt.IdEstacionCocina == e.IdEstacionCocina)">@opt.Descripcion</option>
-                                    }
-                                </select>
-                            </td>
-                            <td><input type="number" class="form-control tiempo-input" min="1" value="@e.TiempoEstimadoMinutos" /></td>
-                            <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>
-                        </tr>
-                    }
+                    <option value="@opt.IdEstacionCocina">@opt.Descripcion</option>
                 }
-            </tbody>
-        </table>
-        <button type="button" id="btnAgregarEstacion" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-plus-lg"></i> Agregar estación
-        </button>
-        <div id="estacionesHidden"></div>
-
-        <div class="mt-4">
-            <button type="submit" class="btn btn-primary"><i class="bi bi-check-circle me-1"></i>Guardar</button>
-            <a asp-action="IndexAdmin" class="btn btn-outline-secondary">Cancelar</a>
+            </select>
         </div>
-    </form>
-</div>
+        <div class="col-md-3 mb-2">
+            <label class="form-label">Tiempo (min)</label>
+            <input type="number" class="form-control tiempo-input" min="1" value="5" />
+        </div>
+        <div class="col-md-2 mb-2">
+            <button type="button" class="btn btn-outline-danger w-100 btn-quitar">
+                <i class="bi bi-trash me-1"></i>Quitar
+            </button>
+        </div>
+    </div>
+</template>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const estacionesOptionsHtml = `@Html.Raw(string.Join("", ((IEnumerable<dynamic>)ViewBag.ListEstaciones).Select(item => $"<option value='{item.IdEstacionCocina}'>{item.Descripcion}</option>")))`;
+        const contenedorEstaciones = document.getElementById('contenedorEstaciones');
+        const plantillaEstacion = document.getElementById('plantillaEstacion');
+        const mensajeSinEstaciones = document.getElementById('mensajeSinEstaciones');
+        const errorEstacionesCliente = document.getElementById('errorEstacionesCliente');
+
+        function obtenerFilasEstaciones() {
+            return Array.from(contenedorEstaciones.querySelectorAll('.estacion-fila'));
+        }
 
         function renumerar() {
-            document.querySelectorAll('#tablaEstaciones tbody tr').forEach((fila, i) => {
+            obtenerFilasEstaciones().forEach((fila, i) => {
                 fila.querySelector('.orden-label').textContent = i + 1;
             });
         }
 
+        function actualizarMensajeEstaciones() {
+            mensajeSinEstaciones.style.display = obtenerFilasEstaciones().length === 0 ? 'block' : 'none';
+        }
+
         document.getElementById('btnAgregarEstacion').addEventListener('click', function () {
-            const tbody = document.querySelector('#tablaEstaciones tbody');
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-                <td class="orden-label"></td>
-                <td><select class="form-select estacion-select">${estacionesOptionsHtml}</select></td>
-                <td><input type="number" class="form-control tiempo-input" min="1" value="5" /></td>
-                <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>`;
-            tbody.appendChild(fila);
+            contenedorEstaciones.insertAdjacentHTML('beforeend', plantillaEstacion.innerHTML);
             renumerar();
+            errorEstacionesCliente.textContent = '';
+            actualizarMensajeEstaciones();
         });
 
-        document.querySelector('#tablaEstaciones').addEventListener('click', function (e) {
+        contenedorEstaciones.addEventListener('click', function (e) {
             const btn = e.target.closest('.btn-quitar');
-            if (btn) { btn.closest('tr').remove(); renumerar(); }
+            if (btn) { btn.closest('.estacion-fila').remove(); renumerar(); actualizarMensajeEstaciones(); }
         });
 
         document.getElementById('formPreparacion').addEventListener('submit', function (e) {
-            const filas = document.querySelectorAll('#tablaEstaciones tbody tr');
+            const filas = obtenerFilasEstaciones();
             if (filas.length === 0) {
                 e.preventDefault();
-                Swal.fire('Atención', 'Debe agregar al menos una estación.', 'warning');
+                errorEstacionesCliente.textContent = 'Debe agregar al menos una estación.';
+                document.getElementById('seccionEstaciones').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
+            errorEstacionesCliente.textContent = '';
+
             const contenedor = document.getElementById('estacionesHidden');
             contenedor.innerHTML = '';
-            filas.forEach((fila, i) => {
+            filas.forEach(fila => {
                 const idEstacion = fila.querySelector('.estacion-select').value;
                 const tiempo = fila.querySelector('.tiempo-input').value;
                 contenedor.innerHTML += `
@@ -121,5 +215,7 @@
                     <input type="hidden" name="selectedTiempos" value="${tiempo}" />`;
             });
         });
+
+        actualizarMensajeEstaciones();
     </script>
 }

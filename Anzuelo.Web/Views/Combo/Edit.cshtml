@@ -1,121 +1,275 @@
 ﻿@model Anzuelo.Application.DTOs.ComboDTO
-
 @{
-    ViewData["Title"] = "Editar";
+    ViewData["Title"] = "Editar combo";
 }
 
-<h1>Editar</h1>
+<style>
+    .edit-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10,47,90,.10);
+        overflow: hidden;
+    }
 
-<h4>Combo</h4>
-<hr />
-<div>
-    <form asp-action="Edit" asp-antiforgery="true" class="row" enctype="multipart/form-data" id="formCombo">
-        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    .edit-card-header {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        padding: 1.25rem 1.5rem;
+    }
 
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                <label asp-for="IdCombo" class="control-label"></label>
-                <input asp-for="IdCombo" class="form-control" readonly />
-                <span asp-validation-for="IdCombo" class="text-danger"></span>
-            </div>
+        .edit-card-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
 
-            <div class="form-group mb-3">
-                <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
-                <span asp-validation-for="Nombre" class="text-danger"></span>
-            </div>
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="PrecioTotal" class="control-label"></label>
-                <input asp-for="PrecioTotal" class="form-control" type="number" step="0.01" />
-                <span asp-validation-for="PrecioTotal" class="text-danger"></span>
-            </div>
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <textarea asp-for="Descripcion" class="form-control" rows="2"></textarea>
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
+    .producto-fila {
+        background: #f8f9fa;
+        border: 1px solid #e5e8eb;
+        border-radius: .55rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .imagen-preview-card {
+        border: 1px solid #dee2e6;
+        border-radius: .6rem;
+        overflow: hidden;
+        height: 100%;
+        background: #fff;
+        position: relative;
+        max-width: 260px;
+    }
+
+    .imagen-preview {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #f5f5f5;
+    }
+
+    .btn-eliminar-imagen {
+        position: absolute;
+        top: .45rem;
+        right: .45rem;
+        z-index: 5;
+        width: 36px;
+        height: 36px;
+        padding: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 7px rgba(0,0,0,.25);
+    }
+
+    .imagen-x {
+        color: #fff;
+        font-size: 1.65rem;
+        font-weight: 700;
+        line-height: 1;
+        display: block;
+        transform: translateY(-1px);
+    }
+
+    .imagen-preview-info {
+        padding: .7rem;
+    }
+
+    .btn-guardar-combo {
+        background: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .btn-guardar-combo:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    .mensaje-validacion-seccion {
+        font-weight: 600;
+        margin-top: .65rem;
+    }
+</style>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card edit-card">
+                <div class="edit-card-header">
+                    <h2><i class="bi bi-pencil-square me-2"></i>Editar combo</h2>
+                    <p class="mb-0 mt-1">Modifique la información, la imagen y los productos incluidos.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" asp-antiforgery="true" enctype="multipart/form-data" id="formCombo">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input asp-for="IdCombo" type="hidden" />
+
+                        <section class="form-section">
+                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>Información general</div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="Nombre" class="form-label"></label>
+                                    <input asp-for="Nombre" class="form-control" />
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="PrecioTotal" class="form-label"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">₡</span>
+                                        <input asp-for="PrecioTotal" class="form-control" type="number" step="0.01" />
+                                    </div>
+                                    <span asp-validation-for="PrecioTotal" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="Descripcion" class="form-label"></label>
+                                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                                <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            </div>
+                        </section>
+
+                        <section class="form-section">
+                            <div class="form-section-title"><i class="bi bi-tags me-1"></i>Clasificación</div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="IdCategoriaCombo" class="form-label"></label>
+                                    @Html.DropDownListFor(m => m.IdCategoriaCombo, (SelectList)ViewBag.Categorias, new { @class = "form-select" })
+                                    <span asp-validation-for="IdCategoriaCombo" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="IdEstadoCombo" class="form-label"></label>
+                                    @Html.DropDownListFor(m => m.IdEstadoCombo, (SelectList)ViewBag.Estados, new { @class = "form-select" })
+                                    <span asp-validation-for="IdEstadoCombo" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="form-section" id="seccionImagen">
+                            <div class="form-section-title"><i class="bi bi-image me-1"></i>Imagen del combo</div>
+
+                            <input type="hidden" asp-for="Imagen" />
+                            <input type="hidden" id="imagenEliminada" name="imagenEliminada" value="false" />
+
+                            @if (Model.Imagen != null)
+                            {
+                                <div id="imagenActualContenedor" class="mb-3">
+                                    <p class="text-muted mb-2">Imagen actual</p>
+                                    <div class="imagen-preview-card">
+                                        <button type="button" class="btn btn-danger btn-sm btn-eliminar-imagen" id="btnEliminarImagenActual" title="Quitar imagen">
+                                            <span class="imagen-x">&times;</span>
+                                        </button>
+                                        <img src="data:image/png;base64,@Convert.ToBase64String(Model.Imagen)" class="imagen-preview" alt="Imagen actual del combo" />
+                                        <div class="imagen-preview-info">
+                                            <small class="text-muted">Imagen guardada</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <div class="mb-3">
+                                <label class="form-label">Cambiar imagen</label>
+                                <input type="file" id="imagenFile" name="imagenFile" class="form-control" accept="image/*" />
+                                <div class="form-text">Deje este campo vacío para conservar la imagen actual, o suba una nueva para reemplazarla.</div>
+                            </div>
+
+                            <div id="vistaPreviaImagenNueva"></div>
+                            <div id="errorImagenCliente" class="text-danger mensaje-validacion-seccion"></div>
+                        </section>
+
+                        <section class="form-section" id="seccionProductos">
+                            <div class="form-section-title"><i class="bi bi-basket me-1"></i>Productos del combo</div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <p class="text-muted mb-0">Modifique, agregue o quite productos del combo.</p>
+                                <button type="button" id="btnAgregarProducto" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-plus-lg me-1"></i>Agregar producto
+                                </button>
+                            </div>
+
+                            <div id="contenedorProductos">
+                                @if (Model.Productos != null)
+                                {
+                                    foreach (var p in Model.Productos)
+                                    {
+                                        <div class="row align-items-end producto-fila">
+                                            <div class="col-md-7 mb-2">
+                                                <label class="form-label">Producto</label>
+                                                <select class="form-select producto-select">
+                                                    @foreach (var opt in (SelectList)ViewBag.Productos)
+                                                    {
+                                                        <option value="@opt.Value" selected="@(opt.Value == p.IdProducto.ToString())">@opt.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Cantidad</label>
+                                                <input type="number" class="form-control cantidad-input" min="1" value="@p.Cantidad" />
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <button type="button" class="btn btn-outline-danger w-100 btnEliminarProducto">
+                                                    <i class="bi bi-trash me-1"></i>Quitar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+
+                            <div id="mensajeSinProductos" class="alert alert-light border mb-0">No se han agregado productos.</div>
+                            <div id="errorProductosCliente" class="text-danger mensaje-validacion-seccion"></div>
+                            <div id="productosHidden"></div>
+                        </section>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-action="IndexAdmin" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Cancelar</a>
+                            <button type="submit" class="btn btn-guardar-combo"><i class="bi bi-floppy me-1"></i>Guardar cambios</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="form-group mb-3">
-                <label asp-for="IdCategoriaCombo" class="control-label"></label>
-                @Html.DropDownListFor(m => m.IdCategoriaCombo,
-                (SelectList)ViewBag.Categorias,
-                                new { @class = "form-select" })
-                <span asp-validation-for="IdCategoriaCombo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label asp-for="IdEstadoCombo" class="control-label"></label>
-                @Html.DropDownListFor(m => m.IdEstadoCombo,
-                                (SelectList)ViewBag.Estados,
-                                new { @class = "form-select" })
-                <span asp-validation-for="IdEstadoCombo" class="text-danger"></span>
-            </div>
-
-            <div class="form-group mb-3">
-                <label class="control-label">Imagen actual</label>
-                <input type="hidden" asp-for="Imagen" />
-                @if (Model.Imagen != null)
-                {
-                    <div class="mb-2">
-                        <img src="data:image/png;base64,@Convert.ToBase64String(Model.Imagen)" style="max-height:150px;" class="rounded img-thumbnail" />
-                    </div>
-                }
-                <label class="control-label">Cambiar Imagen</label>
-                <input type="file" name="imagenFile" class="form-control" accept="image/*" />
-            </div>
-        </div>
-
-        <hr class="my-4" />
-
-        <div class="col-12">
-            <h5>Productos del Combo</h5>
-            <table class="table" id="tablaProductos">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th style="width:120px;">Cantidad</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Productos != null)
-                    {
-                        foreach (var p in Model.Productos)
-                        {
-                            <tr>
-                                <td>
-                                    <select class="form-select producto-select">
-                                        @foreach (var opt in (SelectList)ViewBag.Productos)
-                                        {
-                                            <option value="@opt.Value" selected="@(opt.Value == p.IdProducto.ToString())">@opt.Text</option>
-                                        }
-                                    </select>
-                                </td>
-                                <td><input type="number" class="form-control cantidad-input" min="1" value="@p.Cantidad" /></td>
-                                <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-            <button type="button" id="btnAgregarProducto" class="btn btn-outline-secondary btn-sm mb-3">
-                <i class="bi bi-plus-lg"></i> Agregar producto
-            </button>
-            <div id="productosHidden"></div>
-        </div>
-
-        <div class="form-group row mt-3">
-            <div class="btn-group" role="group">
-                <a asp-action="IndexAdmin" class="btn btn-dark">Regresar al listado</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
+
+<template id="plantillaProducto">
+    <div class="row align-items-end producto-fila">
+        <div class="col-md-7 mb-2">
+            <label class="form-label">Producto</label>
+            <select class="form-select producto-select">
+                @foreach (var opcion in (SelectList)ViewBag.Productos)
+                {
+                    <option value="@opcion.Value">@opcion.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3 mb-2">
+            <label class="form-label">Cantidad</label>
+            <input type="number" class="form-control cantidad-input" min="1" value="1" />
+        </div>
+        <div class="col-md-2 mb-2">
+            <button type="button" class="btn btn-outline-danger w-100 btnEliminarProducto">
+                <i class="bi bi-trash me-1"></i>Quitar
+            </button>
+        </div>
+    </div>
+</template>
 
 @section Scripts {
     @{
@@ -123,30 +277,93 @@
     }
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        const productosOptionsHtml = `@Html.Raw(((SelectList)ViewBag.Productos).Aggregate("", (acc, item) => acc + $"<option value='{item.Value}'>{item.Text}</option>"))`;
+        const contenedorProductos = document.getElementById('contenedorProductos');
+        const plantillaProducto = document.getElementById('plantillaProducto');
+        const mensajeSinProductos = document.getElementById('mensajeSinProductos');
+        const errorProductosCliente = document.getElementById('errorProductosCliente');
+
+        function obtenerFilasProductos() {
+            return Array.from(contenedorProductos.querySelectorAll('.producto-fila'));
+        }
+
+        function actualizarMensajeProductos() {
+            mensajeSinProductos.style.display = obtenerFilasProductos().length === 0 ? 'block' : 'none';
+        }
 
         document.getElementById('btnAgregarProducto').addEventListener('click', function () {
-            const tbody = document.querySelector('#tablaProductos tbody');
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-                <td><select class="form-select producto-select">${productosOptionsHtml}</select></td>
-                <td><input type="number" class="form-control cantidad-input" min="1" value="1" /></td>
-                <td><button type="button" class="btn btn-outline-danger btn-quitar"><i class="bi bi-trash"></i></button></td>`;
-            tbody.appendChild(fila);
+            contenedorProductos.insertAdjacentHTML('beforeend', plantillaProducto.innerHTML);
+            errorProductosCliente.textContent = '';
+            actualizarMensajeProductos();
         });
 
-        document.querySelector('#tablaProductos').addEventListener('click', function (e) {
-            const btn = e.target.closest('.btn-quitar');
-            if (btn) btn.closest('tr').remove();
+        contenedorProductos.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btnEliminarProducto');
+            if (btn) { btn.closest('.producto-fila').remove(); actualizarMensajeProductos(); }
+        });
+
+        // Equis para quitar la imagen actual
+        const imagenEliminadaInput = document.getElementById('imagenEliminada');
+        const btnEliminarImagenActual = document.getElementById('btnEliminarImagenActual');
+        if (btnEliminarImagenActual) {
+            btnEliminarImagenActual.addEventListener('click', function () {
+                document.getElementById('imagenActualContenedor').remove();
+                imagenEliminadaInput.value = 'true';
+            });
+        }
+
+        // Vista previa de la imagen nueva
+        const inputImagen = document.getElementById('imagenFile');
+        const vistaPreviaImagenNueva = document.getElementById('vistaPreviaImagenNueva');
+        const errorImagenCliente = document.getElementById('errorImagenCliente');
+        let urlTemporal = null;
+
+        inputImagen.addEventListener('change', function () {
+            vistaPreviaImagenNueva.innerHTML = '';
+            if (urlTemporal) { URL.revokeObjectURL(urlTemporal); urlTemporal = null; }
+            const archivo = inputImagen.files[0];
+            if (!archivo) return;
+
+            urlTemporal = URL.createObjectURL(archivo);
+            vistaPreviaImagenNueva.innerHTML = `
+                <div class="imagen-preview-card">
+                    <button type="button" class="btn btn-danger btn-sm btn-eliminar-imagen" id="btnQuitarImagenNueva" title="Quitar imagen">
+                        <span class="imagen-x">&times;</span>
+                    </button>
+                    <img src="${urlTemporal}" class="imagen-preview" alt="Vista previa" />
+                    <div class="imagen-preview-info">
+                        <small class="d-block text-truncate">${archivo.name}</small>
+                        <span class="badge bg-success mt-2">Imagen nueva</span>
+                    </div>
+                </div>`;
+
+            document.getElementById('btnQuitarImagenNueva').addEventListener('click', function () {
+                inputImagen.value = '';
+                vistaPreviaImagenNueva.innerHTML = '';
+            });
+
+            errorImagenCliente.textContent = '';
         });
 
         document.getElementById('formCombo').addEventListener('submit', function (e) {
-            const filas = document.querySelectorAll('#tablaProductos tbody tr');
+            const filas = obtenerFilasProductos();
+            let valido = true;
+
             if (filas.length === 0) {
-                e.preventDefault();
-                Swal.fire('Atención', 'Debe agregar al menos un producto al combo.', 'warning');
-                return;
+                errorProductosCliente.textContent = 'Debe agregar al menos un producto al combo.';
+                valido = false;
+            } else {
+                errorProductosCliente.textContent = '';
             }
+
+            const quedaImagenActual = document.getElementById('imagenActualContenedor') !== null;
+            const hayImagenNueva = inputImagen.files.length > 0;
+            if (!quedaImagenActual && !hayImagenNueva) {
+                errorImagenCliente.textContent = 'El combo debe conservar o tener al menos una imagen.';
+                valido = false;
+            }
+
+            if (!valido) { e.preventDefault(); return; }
+
             const contenedor = document.getElementById('productosHidden');
             contenedor.innerHTML = '';
             filas.forEach(fila => {
@@ -159,5 +376,7 @@
                 }
             });
         });
+
+        actualizarMensajeProductos();
     </script>
 }
