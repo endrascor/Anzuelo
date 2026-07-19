@@ -19,9 +19,6 @@ namespace Anzuelo.Web.Controllers
         private readonly IServiceEstadoProducto
             _serviceEstadoProducto;
 
-        private readonly IServicePreparacion
-            _servicePreparacion;
-
         private readonly IServiceIngrediente
             _serviceIngrediente;
 
@@ -31,8 +28,6 @@ namespace Anzuelo.Web.Controllers
                 serviceCategoriaProducto,
             IServiceEstadoProducto
                 serviceEstadoProducto,
-            IServicePreparacion
-                servicePreparacion,
             IServiceIngrediente
                 serviceIngrediente)
         {
@@ -44,9 +39,6 @@ namespace Anzuelo.Web.Controllers
 
             _serviceEstadoProducto =
                 serviceEstadoProducto;
-
-            _servicePreparacion =
-                servicePreparacion;
 
             _serviceIngrediente =
                 serviceIngrediente;
@@ -95,10 +87,6 @@ namespace Anzuelo.Web.Controllers
                 await _serviceEstadoProducto
                     .ListAync();
 
-            var preparaciones =
-                await _servicePreparacion
-                    .ListAync();
-
             var ingredientes =
                 await _serviceIngrediente
                     .ListAsync();
@@ -118,14 +106,6 @@ namespace Anzuelo.Web.Controllers
                     "Descripcion",
                     producto?
                         .IdEstadoProducto);
-
-            ViewBag.ListPreparaciones =
-                new SelectList(
-                    preparaciones,
-                    "IdPreparacion",
-                    "Descripcion",
-                    producto?
-                        .IdPreparacion);
 
             ViewBag.ListIngredientes =
                 ingredientes

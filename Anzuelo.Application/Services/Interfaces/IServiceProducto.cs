@@ -13,13 +13,8 @@ namespace Anzuelo.Application.Services.Interfaces
 
         Task<ProductoDTO> FindByIdAsync(int id);
 
-        Task<int> AddAsync(
-            ProductoDTO dto,
-            ICollection<byte[]> imagenes);
+        Task<int> AddAsync(ProductoDTO dto,ICollection<byte[]> imagenes);
 
-        Task UpdateAsync(
-            int id,
-            ProductoDTO dto,
-            ICollection<byte[]> nuevasImagenes);
+        Task UpdateAsync(int id,ProductoDTO dto,ICollection<byte[]> nuevasImagenes);
     }
 }

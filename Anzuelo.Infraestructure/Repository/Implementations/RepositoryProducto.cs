@@ -171,10 +171,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             ICollection<ImagenProducto>
                 imagenesRecibidas)
         {
-            /*
-             * IDs de las imágenes existentes que
-             * el usuario decidió conservar.
-             */
             var idsConservados =
                 imagenesRecibidas
                     .Where(x =>
@@ -183,10 +179,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                         x.IdImagenProducto)
                     .ToHashSet();
 
-            /*
-             * Eliminar las imágenes que ya no
-             * fueron enviadas desde el Edit.
-             */
             var imagenesAEliminar =
                 productoExistente
                     .ImagenProducto
@@ -198,9 +190,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             _context.Set<ImagenProducto>()
                 .RemoveRange(imagenesAEliminar);
 
-            /*
-             * Agregar las imágenes nuevas.
-             */
             var imagenesNuevas =
                 imagenesRecibidas
                     .Where(x =>

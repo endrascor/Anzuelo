@@ -10,7 +10,14 @@ namespace Anzuelo.Application.Services.Interfaces
 {
     public interface IServiceMenu
     {
-        Task<ICollection<MenuDTO>> ListAync();
-        Task<MenuDTO> GetMenuDisponibleAsync();
+        Task<ICollection<MenuDTO>>ListAync();
+
+        Task<MenuDTO?> FindByIdAsync(int id);
+
+        Task<MenuDTO?> GetMenuDisponibleAsync();
+
+        Task<int> AddAsync(MenuDTO dto);
+
+        Task UpdateAsync(int id,MenuDTO dto);
     }
 }

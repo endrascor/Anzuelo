@@ -1,0 +1,1225 @@
+﻿@model Anzuelo.Application.DTOs.MenuDTO
+
+@using Anzuelo.Application.DTOs
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Collections.Generic
+@using System.Globalization
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Crear menú";
+
+    var productosDisponibles =
+        (ViewBag.ListProductos as IEnumerable<SelectListItem>)?.ToList()
+        ?? new List<SelectListItem>();
+
+    var combosDisponibles =
+        (ViewBag.ListCombos as IEnumerable<SelectListItem>)?.ToList()
+        ?? new List<SelectListItem>();
+
+    var productosSeleccionados =
+        Model.Productos?.ToList()
+        ?? new List<MenuProductoDTO>();
+
+    var combosSeleccionados =
+        Model.Combos?.ToList()
+        ?? new List<MenuComboDTO>();
+}
+
+<style>
+    .menu-form-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10, 47, 90, .10);
+        overflow: hidden;
+    }
+
+    .menu-form-header {
+        background: var(--anzuelo-primary);
+        color: white;
+        padding: 1.25rem 1.5rem;
+    }
+
+        .menu-form-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: white;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .menu-table {
+        vertical-align: middle;
+    }
+
+        .menu-table thead {
+            background: #f8f9fa;
+        }
+
+    .numero-fila {
+        text-align: center;
+        font-weight: 700;
+        color: var(--anzuelo-primary);
+    }
+
+    .mensaje-vacio {
+        padding: .85rem;
+        border: 1px solid #dee2e6;
+        border-radius: .5rem;
+        color: #6c757d;
+        background: #f8f9fa;
+    }
+
+    .mensaje-validacion-seccion {
+        font-weight: 600;
+        margin-top: .75rem;
+    }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+
+        <h1>
+            <i class="bi bi-journal-plus me-2"></i>
+            @ViewData["Title"]
+        </h1>
+
+    </div>
+</div>
+
+<div class="container py-4">
+
+    <div class="card menu-form-card">
+
+        <div class="menu-form-header">
+
+            <h2>
+                <i class="bi bi-card-list me-2"></i>
+                Información del menú
+            </h2>
+
+            <p class="mb-0 mt-1">
+                Complete la información, disponibilidad, productos y combos.
+            </p>
+
+        </div>
+
+        <div class="card-body p-4">
+
+            <form asp-controller="Menu"
+                  asp-action="Create"
+                  method="post"
+                  id="formMenu">
+
+                @Html.AntiForgeryToken()
+
+                <input asp-for="IdMenu"
+                       type="hidden" />
+
+                <input asp-for="IdDisponibilidad"
+                       type="hidden" />
+
+                <!-- INFORMACIÓN GENERAL -->
+                <section class="form-section">
+
+                    <div class="form-section-title">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Información general
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label asp-for="NombreMenu"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="NombreMenu"
+                                   class="form-control"
+                                   maxlength="50"
+                                   placeholder="Nombre del menú" />
+
+                            <span asp-validation-for="NombreMenu"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="IdEstadoMenu"
+                                   class="form-label">
+                                Estado
+                            </label>
+
+                            <select asp-for="IdEstadoMenu"
+                                    asp-items="ViewBag.ListEstados"
+                                    class="form-select">
+
+                                <option value="0">
+                                    -- Seleccione un estado --
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="IdEstadoMenu"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label asp-for="Descripcion"
+                                   class="form-label">
+                            </label>
+
+                            <textarea asp-for="Descripcion"
+                                      class="form-control"
+                                      rows="4"
+                                      maxlength="200"
+                                      placeholder="Descripción del menú"></textarea>
+
+                            <span asp-validation-for="Descripcion"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- DISPONIBILIDAD -->
+                <section class="form-section">
+
+                    <div class="form-section-title">
+                        <i class="bi bi-calendar-week me-1"></i>
+                        Disponibilidad
+                    </div>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label asp-for="FechaInicio"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="FechaInicio"
+                                   asp-format="{0:yyyy-MM-dd}"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="FechaInicio"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="FechaFinal"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="FechaFinal"
+                                   asp-format="{0:yyyy-MM-dd}"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="FechaFinal"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="HoraInicio"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="HoraInicio"
+                                   asp-format="{0:HH:mm}"
+                                   type="time"
+                                   class="form-control" />
+
+                            <span asp-validation-for="HoraInicio"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="HoraFinal"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="HoraFinal"
+                                   asp-format="{0:HH:mm}"
+                                   type="time"
+                                   class="form-control" />
+
+                            <span asp-validation-for="HoraFinal"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="IdDisponibilidadDia"
+                                   class="form-label">
+                                Día disponible
+                            </label>
+
+                            <select asp-for="IdDisponibilidadDia"
+                                    asp-items="ViewBag.ListDias"
+                                    class="form-select">
+
+                                <option value="0">
+                                    -- Seleccione un día --
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="IdDisponibilidadDia"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="DescripcionDisponibilidad"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="DescripcionDisponibilidad"
+                                   class="form-control"
+                                   maxlength="100"
+                                   placeholder="Ejemplo: menú disponible para almuerzo" />
+
+                            <span asp-validation-for="DescripcionDisponibilidad"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <!-- PRODUCTOS -->
+                <section class="form-section"
+                         id="seccionProductos">
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <div class="form-section-title mb-0">
+                            <i class="bi bi-box-seam me-1"></i>
+                            Productos del menú
+                        </div>
+
+                        <button type="button"
+                                id="btnAgregarProducto"
+                                class="btn btn-outline-primary btn-sm">
+
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Agregar producto
+                        </button>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table menu-table"
+                               id="tablaProductos">
+
+                            <thead>
+
+                                <tr>
+                                    <th style="width: 70px;">
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Producto
+                                    </th>
+
+                                    <th style="width: 180px;">
+                                        Descuento %
+                                    </th>
+
+                                    <th style="width: 80px;">
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @for (int i = 0;
+                                                                i < productosSeleccionados.Count;
+                                                                i++)
+                                {
+                                    var producto =
+                                    productosSeleccionados[i];
+
+                                    <tr class="producto-fila">
+
+                                        <td class="numero-fila">
+                                            @(i + 1)
+                                        </td>
+
+                                        <td>
+
+                                            <select name="Productos[@i].IdProducto"
+                                                    class="form-select producto-select">
+
+                                                <option value="">
+                                                    -- Seleccione un producto --
+                                                </option>
+
+                                                @foreach (var opcion
+                                                                                            in productosDisponibles)
+                                                {
+                                                    if (opcion.Value ==
+                                                    producto.IdProducto.ToString())
+                                                    {
+                                                        <option value="@opcion.Value"
+                                                                selected>
+
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@opcion.Value">
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </td>
+
+                                        <td>
+
+                                            <input name="Productos[@i].Descuento"
+                                                   type="number"
+                                                   min="0"
+                                                   max="100"
+                                                   step="0.01"
+                                                   value="@producto.Descuento.ToString(CultureInfo.InvariantCulture)"
+                                                   class="form-control producto-descuento" />
+
+                                        </td>
+
+                                        <td>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btnQuitarProducto"
+                                                    title="Quitar producto">
+
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div id="mensajeSinProductos"
+                         class="mensaje-vacio">
+
+                        No se han agregado productos.
+                    </div>
+
+                </section>
+
+                <!-- COMBOS -->
+                <section class="form-section"
+                         id="seccionCombos">
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <div class="form-section-title mb-0">
+                            <i class="bi bi-collection me-1"></i>
+                            Combos del menú
+                        </div>
+
+                        <button type="button"
+                                id="btnAgregarCombo"
+                                class="btn btn-outline-primary btn-sm">
+
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Agregar combo
+                        </button>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table menu-table"
+                               id="tablaCombos">
+
+                            <thead>
+
+                                <tr>
+                                    <th style="width: 70px;">
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Combo
+                                    </th>
+
+                                    <th style="width: 180px;">
+                                        Descuento %
+                                    </th>
+
+                                    <th style="width: 80px;">
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @for (int i = 0;
+                                                                i < combosSeleccionados.Count;
+                                                                i++)
+                                {
+                                    var combo =
+                                    combosSeleccionados[i];
+
+                                    <tr class="combo-fila">
+
+                                        <td class="numero-fila">
+                                            @(i + 1)
+                                        </td>
+
+                                        <td>
+
+                                            <select name="Combos[@i].IdCombo"
+                                                    class="form-select combo-select">
+
+                                                <option value="">
+                                                    -- Seleccione un combo --
+                                                </option>
+
+                                                @foreach (var opcion
+                                                                                            in combosDisponibles)
+                                                {
+                                                    if (opcion.Value ==
+                                                    combo.IdCombo.ToString())
+                                                    {
+                                                        <option value="@opcion.Value"
+                                                                selected>
+
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@opcion.Value">
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </td>
+
+                                        <td>
+
+                                            <input name="Combos[@i].Descuento"
+                                                   type="number"
+                                                   min="0"
+                                                   max="100"
+                                                   step="0.01"
+                                                   value="@combo.Descuento.ToString(CultureInfo.InvariantCulture)"
+                                                   class="form-control combo-descuento" />
+
+                                        </td>
+
+                                        <td>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btnQuitarCombo"
+                                                    title="Quitar combo">
+
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <div id="mensajeSinCombos"
+                         class="mensaje-vacio">
+
+                        No se han agregado combos.
+                    </div>
+
+                </section>
+
+                <div id="errorElementosCliente"
+                     class="text-danger mensaje-validacion-seccion">
+                </div>
+
+                @Html.ValidationMessage(
+                "ElementosMenu",
+                                "",
+                                new
+                                {
+                                    @class =
+                                "text-danger mensaje-validacion-seccion d-block"
+                                })
+
+                <div class="mt-4 d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Guardar
+                    </button>
+
+                    <a asp-controller="Menu"
+                       asp-action="IndexAdmin"
+                       class="btn btn-outline-secondary">
+
+                        Cancelar
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PLANTILLA PRODUCTO -->
+<template id="plantillaProducto">
+
+    <tr class="producto-fila">
+
+        <td class="numero-fila">
+        </td>
+
+        <td>
+
+            <select name="Productos[__index__].IdProducto"
+                    class="form-select producto-select">
+
+                <option value="">
+                    -- Seleccione un producto --
+                </option>
+
+                @foreach (var opcion
+                                in productosDisponibles)
+                {
+                    <option value="@opcion.Value">
+                        @opcion.Text
+                    </option>
+                }
+
+            </select>
+
+        </td>
+
+        <td>
+
+            <input name="Productos[__index__].Descuento"
+                   type="number"
+                   min="0"
+                   max="100"
+                   step="0.01"
+                   value="0"
+                   class="form-control producto-descuento" />
+
+        </td>
+
+        <td>
+
+            <button type="button"
+                    class="btn btn-outline-danger btnQuitarProducto">
+
+                <i class="bi bi-trash"></i>
+            </button>
+
+        </td>
+
+    </tr>
+
+</template>
+
+<!-- PLANTILLA COMBO -->
+<template id="plantillaCombo">
+
+    <tr class="combo-fila">
+
+        <td class="numero-fila">
+        </td>
+
+        <td>
+
+            <select name="Combos[__index__].IdCombo"
+                    class="form-select combo-select">
+
+                <option value="">
+                    -- Seleccione un combo --
+                </option>
+
+                @foreach (var opcion
+                                in combosDisponibles)
+                {
+                    <option value="@opcion.Value">
+                        @opcion.Text
+                    </option>
+                }
+
+            </select>
+
+        </td>
+
+        <td>
+
+            <input name="Combos[__index__].Descuento"
+                   type="number"
+                   min="0"
+                   max="100"
+                   step="0.01"
+                   value="0"
+                   class="form-control combo-descuento" />
+
+        </td>
+
+        <td>
+
+            <button type="button"
+                    class="btn btn-outline-danger btnQuitarCombo">
+
+                <i class="bi bi-trash"></i>
+            </button>
+
+        </td>
+
+    </tr>
+
+</template>
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const formulario =
+                    document.getElementById(
+                        "formMenu"
+                    );
+
+                const tablaProductos =
+                    document.getElementById(
+                        "tablaProductos"
+                    );
+
+                const tablaCombos =
+                    document.getElementById(
+                        "tablaCombos"
+                    );
+
+                const cuerpoProductos =
+                    tablaProductos.querySelector(
+                        "tbody"
+                    );
+
+                const cuerpoCombos =
+                    tablaCombos.querySelector(
+                        "tbody"
+                    );
+
+                const plantillaProducto =
+                    document.getElementById(
+                        "plantillaProducto"
+                    );
+
+                const plantillaCombo =
+                    document.getElementById(
+                        "plantillaCombo"
+                    );
+
+                const mensajeSinProductos =
+                    document.getElementById(
+                        "mensajeSinProductos"
+                    );
+
+                const mensajeSinCombos =
+                    document.getElementById(
+                        "mensajeSinCombos"
+                    );
+
+                const errorElementosCliente =
+                    document.getElementById(
+                        "errorElementosCliente"
+                    );
+
+                function filasProductos() {
+
+                    return Array.from(
+                        cuerpoProductos
+                            .querySelectorAll(
+                                ".producto-fila"
+                            )
+                    );
+                }
+
+                function filasCombos() {
+
+                    return Array.from(
+                        cuerpoCombos
+                            .querySelectorAll(
+                                ".combo-fila"
+                            )
+                    );
+                }
+
+                function reindexarProductos() {
+
+                    filasProductos().forEach(
+                        function (fila, indice) {
+
+                            fila.querySelector(
+                                ".numero-fila"
+                            ).textContent =
+                                indice + 1;
+
+                            fila.querySelector(
+                                ".producto-select"
+                            ).name =
+                                `Productos[${indice}].IdProducto`;
+
+                            fila.querySelector(
+                                ".producto-descuento"
+                            ).name =
+                                `Productos[${indice}].Descuento`;
+                        }
+                    );
+                }
+
+                function reindexarCombos() {
+
+                    filasCombos().forEach(
+                        function (fila, indice) {
+
+                            fila.querySelector(
+                                ".numero-fila"
+                            ).textContent =
+                                indice + 1;
+
+                            fila.querySelector(
+                                ".combo-select"
+                            ).name =
+                                `Combos[${indice}].IdCombo`;
+
+                            fila.querySelector(
+                                ".combo-descuento"
+                            ).name =
+                                `Combos[${indice}].Descuento`;
+                        }
+                    );
+                }
+
+                function actualizarMensajes() {
+
+                    mensajeSinProductos.style.display =
+                        filasProductos().length === 0
+                            ? "block"
+                            : "none";
+
+                    mensajeSinCombos.style.display =
+                        filasCombos().length === 0
+                            ? "block"
+                            : "none";
+                }
+
+                document
+                    .getElementById(
+                        "btnAgregarProducto"
+                    )
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            const indice =
+                                filasProductos().length;
+
+                            const contenido =
+                                plantillaProducto
+                                    .innerHTML
+                                    .replaceAll(
+                                        "__index__",
+                                        indice
+                                    );
+
+                            cuerpoProductos
+                                .insertAdjacentHTML(
+                                    "beforeend",
+                                    contenido
+                                );
+
+                            reindexarProductos();
+                            actualizarMensajes();
+
+                            errorElementosCliente
+                                .textContent = "";
+                        }
+                    );
+
+                document
+                    .getElementById(
+                        "btnAgregarCombo"
+                    )
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            const indice =
+                                filasCombos().length;
+
+                            const contenido =
+                                plantillaCombo
+                                    .innerHTML
+                                    .replaceAll(
+                                        "__index__",
+                                        indice
+                                    );
+
+                            cuerpoCombos
+                                .insertAdjacentHTML(
+                                    "beforeend",
+                                    contenido
+                                );
+
+                            reindexarCombos();
+                            actualizarMensajes();
+
+                            errorElementosCliente
+                                .textContent = "";
+                        }
+                    );
+
+                tablaProductos.addEventListener(
+                    "click",
+                    function (evento) {
+
+                        const boton =
+                            evento.target.closest(
+                                ".btnQuitarProducto"
+                            );
+
+                        if (!boton) {
+                            return;
+                        }
+
+                        boton.closest(
+                            ".producto-fila"
+                        ).remove();
+
+                        reindexarProductos();
+                        actualizarMensajes();
+                    }
+                );
+
+                tablaCombos.addEventListener(
+                    "click",
+                    function (evento) {
+
+                        const boton =
+                            evento.target.closest(
+                                ".btnQuitarCombo"
+                            );
+
+                        if (!boton) {
+                            return;
+                        }
+
+                        boton.closest(
+                            ".combo-fila"
+                        ).remove();
+
+                        reindexarCombos();
+                        actualizarMensajes();
+                    }
+                );
+
+                function valoresProductos() {
+
+                    return filasProductos().map(
+                        function (fila) {
+
+                            return {
+                                id: Number(
+                                    fila.querySelector(
+                                        ".producto-select"
+                                    ).value
+                                ),
+
+                                descuento: Number(
+                                    fila.querySelector(
+                                        ".producto-descuento"
+                                    ).value
+                                )
+                            };
+                        }
+                    );
+                }
+
+                function valoresCombos() {
+
+                    return filasCombos().map(
+                        function (fila) {
+
+                            return {
+                                id: Number(
+                                    fila.querySelector(
+                                        ".combo-select"
+                                    ).value
+                                ),
+
+                                descuento: Number(
+                                    fila.querySelector(
+                                        ".combo-descuento"
+                                    ).value
+                                )
+                            };
+                        }
+                    );
+                }
+
+                function tieneDuplicados(
+                    elementos) {
+
+                    const ids =
+                        elementos
+                            .map(x => x.id)
+                            .filter(x => x > 0);
+
+                    return new Set(ids).size !==
+                           ids.length;
+                }
+
+                formulario.addEventListener(
+                    "submit",
+                    function (evento) {
+
+                        reindexarProductos();
+                        reindexarCombos();
+
+                        errorElementosCliente
+                            .textContent = "";
+
+                        const fechaInicio =
+                            document.getElementById(
+                                "FechaInicio"
+                            ).value;
+
+                        const fechaFinal =
+                            document.getElementById(
+                                "FechaFinal"
+                            ).value;
+
+                        const horaInicio =
+                            document.getElementById(
+                                "HoraInicio"
+                            ).value;
+
+                        const horaFinal =
+                            document.getElementById(
+                                "HoraFinal"
+                            ).value;
+
+                        if (
+                            fechaInicio &&
+                            fechaFinal &&
+                            fechaFinal < fechaInicio
+                        ) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "La fecha final no puede ser anterior a la fecha inicial.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        if (
+                            horaInicio &&
+                            horaFinal &&
+                            horaFinal <= horaInicio
+                        ) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "La hora final debe ser posterior a la hora inicial.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        const productos =
+                            valoresProductos();
+
+                        const combos =
+                            valoresCombos();
+
+                        if (
+                            productos.some(x => x.id <= 0)
+                        ) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "Complete o quite las filas de productos vacías.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        if (
+                            combos.some(x => x.id <= 0)
+                        ) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "Complete o quite las filas de combos vacías.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        const descuentoInvalido =
+                            productos.some(x =>
+                                Number.isNaN(x.descuento) ||
+                                x.descuento < 0 ||
+                                x.descuento > 100
+                            )
+                            ||
+                            combos.some(x =>
+                                Number.isNaN(x.descuento) ||
+                                x.descuento < 0 ||
+                                x.descuento > 100
+                            );
+
+                        if (descuentoInvalido) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "Los descuentos deben estar entre 0 y 100.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        if (tieneDuplicados(productos)) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "No puede agregar el mismo producto más de una vez.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        if (tieneDuplicados(combos)) {
+                            evento.preventDefault();
+
+                            Swal.fire(
+                                "Atención",
+                                "No puede agregar el mismo combo más de una vez.",
+                                "warning"
+                            );
+
+                            return;
+                        }
+
+                        if (
+                            productos.length === 0 &&
+                            combos.length === 0
+                        ) {
+                            evento.preventDefault();
+
+                            errorElementosCliente
+                                .textContent =
+                                    "Debe agregar al menos un producto o un combo.";
+
+                            Swal.fire(
+                                "Atención",
+                                "Debe agregar al menos un producto o un combo.",
+                                "warning"
+                            );
+                        }
+                    }
+                );
+
+                reindexarProductos();
+                reindexarCombos();
+                actualizarMensajes();
+            }
+        );
+    </script>
+}

@@ -10,6 +10,13 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
     public interface IRepositoryMenu
     {
         Task<ICollection<Menu>> ListAsync();
-        Task<Menu> GetMenuDisponibleAsync();
+
+        Task<Menu?> FindByIdAsync(int id);
+
+        Task<Menu?> GetMenuDisponibleAsync();
+
+        Task<int> AddAsync(Menu entity);
+
+        Task UpdateAsync(Menu entity);
     }
 }

@@ -28,8 +28,10 @@ builder.Services.AddTransient<IRepositoryCategoriaCombo, RepositoryCategoriaComb
 builder.Services.AddTransient<IRepositoryCategoriaProducto, RepositoryCategoriaProducto>();
 builder.Services.AddTransient<IRepositoryEstadoCombo, RepositoryEstadoCombo>();
 builder.Services.AddTransient<IRepositoryEstadoProducto, RepositoryEstadoProducto>();
+builder.Services.AddTransient<IRepositoryEstadoMenu, RepositoryEstadoMenu>();
 builder.Services.AddTransient<IRepositoryEstacionCocina, RepositoryEstacionCocina>();
 builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
+builder.Services.AddTransient<IRepositoryDisponibilidadDia, RepositoryDisponibilidadDia>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -41,8 +43,10 @@ builder.Services.AddTransient<IServiceCategoriaCombo, ServiceCategoriaCombo>();
 builder.Services.AddTransient<IServiceCategoriaProducto, ServiceCategoriaProducto>();
 builder.Services.AddTransient<IServiceEstadoCombo, ServiceEstadoCombo>();
 builder.Services.AddTransient<IServiceEstadoProducto, ServiceEstadoProducto>();
+builder.Services.AddTransient<IServiceEstadoMenu, ServiceEstadoMenu>();
 builder.Services.AddTransient<IServiceEstacionCocina, ServiceEstacionCocina>();
 builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
+builder.Services.AddTransient<IServiceDisponibilidadDia, ServiceDisponibilidadDia>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -56,7 +60,9 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<CategoriaProductoProfile>();
     config.AddProfile<EstadoComboProfile>();
     config.AddProfile<EstadoProductoProfile>();
+    config.AddProfile<EstadoMenuProfile>();
     config.AddProfile<EstacionCocinaProfile>();
+    config.AddProfile<DisponibilidadDiaProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 

@@ -16,28 +16,197 @@ namespace Anzuelo.Application.Services.Implementations
     {
         private readonly IRepositoryMenu _repository;
         private readonly IMapper _mapper;
-
         private readonly ILogger<ServiceMenu> _logger;
-        public ServiceMenu(IRepositoryMenu repository, IMapper mapper,
-                            ILogger<ServiceMenu> logger)
+
+        public ServiceMenu(
+            IRepositoryMenu repository,
+            IMapper mapper,
+            ILogger<ServiceMenu> logger)
         {
             _repository = repository;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<ICollection<MenuDTO>> ListAync()
+        public async Task<ICollection<MenuDTO>>
+            ListAync()
         {
-            var list = await _repository.ListAsync();
-            var collection = _mapper.Map<ICollection<MenuDTO>>(list);
-            return collection;
+            var lista =
+                await _repository.ListAsync();
+
+            return _mapper.Map<
+                ICollection<MenuDTO>>(lista);
         }
 
-        public async Task<MenuDTO> GetMenuDisponibleAsync()
+        public async Task<MenuDTO?>
+            FindByIdAsync(int id)
         {
-            var @object = await _repository.GetMenuDisponibleAsync();
-            var objectMapped = _mapper.Map<MenuDTO>(@object);
-            return objectMapped;
+            var menu =
+                await _repository
+                    .FindByIdAsync(id);
+
+            if (menu == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<MenuDTO>(
+                menu);
+        }
+
+        public async Task<MenuDTO?>
+            GetMenuDisponibleAsync()
+        {
+            var menu =
+                await _repository
+                    .GetMenuDisponibleAsync();
+
+            if (menu == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<MenuDTO>(
+                menu);
+        }
+
+        public async Task<int> AddAsync(
+            MenuDTO dto)
+        {
+            var menu =
+                _mapper.Map<Menu>(dto);
+
+            menu.IdDisponibilidad = 0;
+
+            menu.IdDisponibilidadNavigation =
+                CrearDisponibilidad(dto);
+
+            menu.MenuProducto =
+                CrearProductos(
+                    dto.Productos);
+
+            menu.MenuCombo =
+                CrearCombos(
+                    dto.Combos);
+
+            return await _repository
+                .AddAsync(menu);
+        }
+
+        public async Task UpdateAsync(
+            int id,
+            MenuDTO dto)
+        {
+            var menu =
+                _mapper.Map<Menu>(dto);
+
+            menu.IdMenu =
+                id;
+
+            menu.IdDisponibilidadNavigation =
+                CrearDisponibilidad(dto);
+
+            menu.MenuProducto =
+                CrearProductos(
+                    dto.Productos);
+
+            menu.MenuCombo =
+                CrearCombos(
+                    dto.Combos);
+
+            await _repository.UpdateAsync(
+                menu);
+        }
+
+        private static Disponibilidad
+            CrearDisponibilidad(
+                MenuDTO dto)
+        {
+            return new Disponibilidad
+            {
+                IdDisponibilidad =
+                    dto.IdDisponibilidad,
+
+                FechaInicio =
+                    dto.FechaInicio.Date,
+
+                FechaFinal =
+                    dto.FechaFinal.Date,
+
+                HoraInicio =
+                    dto.HoraInicio,
+
+                HoraFinal =
+                    dto.HoraFinal,
+
+                Descripcion =
+                    dto.DescripcionDisponibilidad,
+
+                IdDisponibilidadDia =
+                    dto.IdDisponibilidadDia
+            };
+        }
+
+        private static ICollection<MenuProducto>
+            CrearProductos(
+                ICollection<MenuProductoDTO>?
+                    productos)
+        {
+            if (productos == null)
+            {
+                return new List<MenuProducto>();
+            }
+
+            return productos
+
+                .Where(producto =>
+                    producto.IdProducto > 0)
+
+                .GroupBy(producto =>
+                    producto.IdProducto)
+
+                .Select(grupo =>
+                    new MenuProducto
+                    {
+                        IdProducto =
+                            grupo.Key,
+
+                        Descuento =
+                            grupo.Last().Descuento
+                    })
+
+                .ToList();
+        }
+
+        private static ICollection<MenuCombo>
+            CrearCombos(
+                ICollection<MenuComboDTO>?
+                    combos)
+        {
+            if (combos == null)
+            {
+                return new List<MenuCombo>();
+            }
+
+            return combos
+
+                .Where(combo =>
+                    combo.IdCombo > 0)
+
+                .GroupBy(combo =>
+                    combo.IdCombo)
+
+                .Select(grupo =>
+                    new MenuCombo
+                    {
+                        IdCombo =
+                            grupo.Key,
+
+                        Descuento =
+                            grupo.Last().Descuento
+                    })
+
+                .ToList();
         }
     }
 }

@@ -37,10 +37,6 @@ namespace Anzuelo.Application.DTOs
     ErrorMessage = "{0} debe ser mayor que cero")]
         public decimal Precio { get; set; }
 
-        /*
-         * Llaves foráneas utilizadas en Create y Update.
-         */
-
         [DisplayName("Categoría")]
         [Range(
             1,
@@ -55,17 +51,6 @@ namespace Anzuelo.Application.DTOs
             ErrorMessage = "Debe seleccionar un estado")]
         public int IdEstadoProducto { get; set; }
 
-        [DisplayName("Preparación")]
-        [Range(
-            1,
-            int.MaxValue,
-            ErrorMessage = "Debe seleccionar una preparación")]
-        public int IdPreparacion { get; set; }
-
-        /*
-         * Propiedades utilizadas para listado y detalle.
-         */
-
         [Display(Name = "Imagen")]
         [ValidateNever]
         public byte[]? Imagen { get; set; }
@@ -77,15 +62,6 @@ namespace Anzuelo.Application.DTOs
         [Display(Name = "Estado")]
         [ValidateNever]
         public string NombreEstado { get; set; } = null!;
-
-        [Display(Name = "Preparación")]
-        [ValidateNever]
-        public string NombrePreparacion { get; set; } = null!;
-
-        /*
-         * Colecciones utilizadas para las imágenes
-         * y los ingredientes del producto.
-         */
 
         [ValidateNever]
         public ICollection<ImagenDTO> Imagenes { get; set; }

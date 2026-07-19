@@ -13,10 +13,7 @@ namespace Anzuelo.Application.Profiles
     {
         public ProductoProfile()
         {
-            /*
-             * Producto hacia ProductoDTO.
-             * Utilizado para listado y detalle.
-             */
+
             CreateMap<Producto, ProductoDTO>()
 
                 .ForMember(
@@ -50,16 +47,8 @@ namespace Anzuelo.Application.Profiles
                     opt => opt.MapFrom(src =>
                         src.ProductoIngrediente));
 
-            /*
-             * ProductoDTO hacia Producto.
-             * Utilizado en Create y Update.
-             */
             CreateMap<ProductoDTO, Producto>()
 
-                /*
-                 * En Create lo genera SQL Server.
-                 * En Update se conserva el ID de la entidad encontrada.
-                 */
                 .ForMember(
                     dest => dest.IdProducto,
                     opt => opt.Ignore())
@@ -72,10 +61,6 @@ namespace Anzuelo.Application.Profiles
                     dest => dest.IdEstadoProductoNavigation,
                     opt => opt.Ignore())
 
-                /*
-                 * Estas colecciones se construyen manualmente
-                 * en ServiceProducto.
-                 */
                 .ForMember(
                     dest => dest.ImagenProducto,
                     opt => opt.Ignore())
@@ -92,9 +77,6 @@ namespace Anzuelo.Application.Profiles
                     dest => dest.MenuProducto,
                     opt => opt.Ignore());
 
-            /*
-             * Relaciones hacia los DTO.
-             */
             CreateMap<ProductoIngrediente, IngredienteDTO>()
                 .ForMember(
                     dest => dest.IdIngrediente,
