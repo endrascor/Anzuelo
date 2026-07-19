@@ -29,7 +29,5 @@ public partial class Producto
 
     public virtual ICollection<MenuProducto> MenuProducto { get; set; } = new List<MenuProducto>();
 
-    public virtual Preparacion? Preparacion { get; set; }
-
     public virtual ICollection<ProductoIngrediente> ProductoIngrediente { get; set; } = new List<ProductoIngrediente>();
 }
