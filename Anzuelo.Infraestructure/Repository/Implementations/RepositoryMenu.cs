@@ -215,22 +215,42 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<int> AddAsync(
-            Menu entity)
+        public async Task<int> AddAsync(Menu entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
+
+            if (entity.IdDisponibilidadNavigation == null)
+            {
+                throw new InvalidOperationException(
+                    "El menú debe contener una disponibilidad.");
+            }
+
             await using var transaccion =
-                await _context.Database
-                    .BeginTransactionAsync();
+                await _context.Database.BeginTransactionAsync();
 
             try
             {
-                /*
-                 * Al agregar el grafo, Entity Framework
-                 * inserta primero Disponibilidad y después
-                 * Menu, MenuProducto y MenuCombo.
-                 */
-                await _context.Menu.AddAsync(
-                    entity);
+
+                entity.IdMenu = 0;
+                entity.IdDisponibilidad = 0;
+
+                entity
+                    .IdDisponibilidadNavigation
+                    .IdDisponibilidad = 0;
+
+                foreach (var producto in entity.MenuProducto)
+                {
+                    producto.IdMenu = 0;
+                    producto.IdMenuNavigation = entity;
+                }
+
+                foreach (var combo in entity.MenuCombo)
+                {
+                    combo.IdMenu = 0;
+                    combo.IdMenuNavigation = entity;
+                }
+
+                await _context.Menu.AddAsync(entity);
 
                 await _context.SaveChangesAsync();
 
@@ -241,7 +261,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             catch
             {
                 await transaccion.RollbackAsync();
-
                 throw;
             }
         }
@@ -277,9 +296,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                         $"No se encontró el menú con ID {entity.IdMenu}.");
                 }
 
-                /*
-                 * Datos principales.
-                 */
                 existente.NombreMenu =
                     entity.NombreMenu;
 
@@ -289,9 +305,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 existente.IdEstadoMenu =
                     entity.IdEstadoMenu;
 
-                /*
-                 * Disponibilidad.
-                 */
                 if (
                     existente
                         .IdDisponibilidadNavigation ==

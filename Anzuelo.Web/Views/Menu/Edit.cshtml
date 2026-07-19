@@ -1,25 +1,31 @@
 ﻿@model Anzuelo.Application.DTOs.MenuDTO
 
-@using Anzuelo.Application.DTOs@using Microsoft.AspNetCore.Mvc.Rendering@using System.Collections.Generic@using System.Globalization@using System.Linq
+@using Anzuelo.Application.DTOs
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Collections.Generic
+@using System.Globalization
+@using System.Linq
 
-@{ViewData["Title"] = "Modificar menú";
+@{
+    ViewData["Title"] = "Modificar menú";
 
-var productosDisponibles =
-    (ViewBag.ListProductos as IEnumerable<SelectListItem>)?.ToList()
-    ?? new List<SelectListItem>();
+    var productosDisponibles =
+        (ViewBag.ListProductos
+            as IEnumerable<SelectListItem>)?.ToList()
+        ?? new List<SelectListItem>();
 
-var combosDisponibles =
-    (ViewBag.ListCombos as IEnumerable<SelectListItem>)?.ToList()
-    ?? new List<SelectListItem>();
+    var combosDisponibles =
+        (ViewBag.ListCombos
+            as IEnumerable<SelectListItem>)?.ToList()
+        ?? new List<SelectListItem>();
 
-var productosSeleccionados =
-    Model.Productos?.ToList()
-    ?? new List<MenuProductoDTO>();
+    var productosSeleccionados =
+        Model.Productos?.ToList()
+        ?? new List<MenuProductoDTO>();
 
-var combosSeleccionados =
-    Model.Combos?.ToList()
-    ?? new List<MenuComboDTO>();
-
+    var combosSeleccionados =
+        Model.Combos?.ToList()
+        ?? new List<MenuComboDTO>();
 }
 
 <style>
@@ -77,534 +83,558 @@ var combosSeleccionados =
         color: #6c757d;
         background: #f8f9fa;
     }
-
-    .mensaje-validacion-seccion {
-        font-weight: 600;
-        margin-top: .75rem;
-    }
 </style>
 
 <div class="page-hero">
+
     <div class="container">
 
-    <h1>
-        <i class="bi bi-pencil-square me-2"></i>
-        @ViewData["Title"]
-    </h1>
+        <h1>
+            <i class="bi bi-pencil-square me-2"></i>
+            @ViewData["Title"]
+        </h1>
 
-</div>
+    </div>
 
 </div>
 
 <div class="container py-4">
 
-<div class="card menu-form-card">
+    <div class="card menu-form-card">
 
-    <div class="menu-form-header">
+        <div class="menu-form-header">
 
-        <h2>
-            <i class="bi bi-card-list me-2"></i>
-            Información del menú
-        </h2>
+            <h2>
+                <i class="bi bi-card-list me-2"></i>
+                Información del menú
+            </h2>
 
-        <p class="mb-0 mt-1">
-            Modifique la información, disponibilidad, productos y combos.
-        </p>
+            <p class="mb-0 mt-1">
+                Modifique la información, disponibilidad,
+                productos y combos.
+            </p>
 
-    </div>
+        </div>
 
-    <div class="card-body p-4">
+        <div class="card-body p-4">
 
-        <form asp-controller="Menu"
-              asp-action="Edit"
-              asp-route-id="@Model.IdMenu"
-              method="post"
-              id="formMenu">
+            <form asp-controller="Menu"
+                  asp-action="Edit"
+                  asp-route-id="@Model.IdMenu"
+                  method="post"
+                  id="formMenu">
 
-            @Html.AntiForgeryToken()
+                @Html.AntiForgeryToken()
 
-            <input asp-for="IdMenu"
-                   type="hidden" />
+                <input asp-for="IdMenu"
+                       type="hidden" />
 
-            <input asp-for="IdDisponibilidad"
-                   type="hidden" />
+                <input asp-for="IdDisponibilidad"
+                       type="hidden" />
 
-            <!-- INFORMACIÓN GENERAL -->
-            <section class="form-section">
-
-                <div class="form-section-title">
-                    <i class="bi bi-info-circle me-1"></i>
-                    Información general
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
                 </div>
 
-                <div class="row g-3">
+                <!-- INFORMACIÓN GENERAL -->
 
-                    <div class="col-md-6">
+                <section class="form-section">
 
-                        <label asp-for="NombreMenu"
-                               class="form-label">
-                        </label>
+                    <div class="form-section-title">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Información general
+                    </div>
 
-                        <input asp-for="NombreMenu"
-                               class="form-control"
-                               maxlength="50"
-                               placeholder="Nombre del menú" />
+                    <div class="row g-3">
 
-                        <span asp-validation-for="NombreMenu"
-                              class="text-danger">
-                        </span>
+                        <div class="col-md-6">
+
+                            <label asp-for="NombreMenu"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="NombreMenu"
+                                   class="form-control"
+                                   maxlength="50" />
+
+                            <span asp-validation-for="NombreMenu"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="IdEstadoMenu"
+                                   class="form-label">
+                                Estado
+                            </label>
+
+                            <select asp-for="IdEstadoMenu"
+                                    asp-items="ViewBag.ListEstados"
+                                    class="form-select">
+
+                                <option value="0">
+                                    -- Seleccione un estado --
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="IdEstadoMenu"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-12">
+
+                            <label asp-for="Descripcion"
+                                   class="form-label">
+                            </label>
+
+                            <textarea asp-for="Descripcion"
+                                      class="form-control"
+                                      rows="4"
+                                      maxlength="200"></textarea>
+
+                            <span asp-validation-for="Descripcion"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
 
                     </div>
 
-                    <div class="col-md-6">
+                </section>
 
-                        <label asp-for="IdEstadoMenu"
-                               class="form-label">
-                            Estado
-                        </label>
+                <!-- DISPONIBILIDAD -->
 
-                        <select asp-for="IdEstadoMenu"
-                                asp-items="ViewBag.ListEstados"
-                                class="form-select">
+                <section class="form-section">
 
-                            <option value="0">
-                                -- Seleccione un estado --
-                            </option>
+                    <div class="form-section-title">
+                        <i class="bi bi-calendar-week me-1"></i>
+                        Disponibilidad
+                    </div>
 
-                        </select>
+                    <div class="row g-3">
 
-                        <span asp-validation-for="IdEstadoMenu"
-                              class="text-danger">
-                        </span>
+                        <div class="col-md-6">
+
+                            <label asp-for="FechaInicio"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="FechaInicio"
+                                   asp-format="{0:yyyy-MM-dd}"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="FechaInicio"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="FechaFinal"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="FechaFinal"
+                                   asp-format="{0:yyyy-MM-dd}"
+                                   type="date"
+                                   class="form-control" />
+
+                            <span asp-validation-for="FechaFinal"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="HoraInicio"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="HoraInicio"
+                                   asp-format="{0:HH:mm}"
+                                   type="time"
+                                   class="form-control" />
+
+                            <span asp-validation-for="HoraInicio"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="HoraFinal"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="HoraFinal"
+                                   asp-format="{0:HH:mm}"
+                                   type="time"
+                                   class="form-control" />
+
+                            <span asp-validation-for="HoraFinal"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="IdDisponibilidadDia"
+                                   class="form-label">
+                                Día disponible
+                            </label>
+
+                            <select asp-for="IdDisponibilidadDia"
+                                    asp-items="ViewBag.ListDias"
+                                    class="form-select">
+
+                                <option value="0">
+                                    -- Seleccione un día --
+                                </option>
+
+                            </select>
+
+                            <span asp-validation-for="IdDisponibilidadDia"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label asp-for="DescripcionDisponibilidad"
+                                   class="form-label">
+                            </label>
+
+                            <input asp-for="DescripcionDisponibilidad"
+                                   class="form-control"
+                                   maxlength="100" />
+
+                            <span asp-validation-for="DescripcionDisponibilidad"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
 
                     </div>
 
-                    <div class="col-12">
+                </section>
 
-                        <label asp-for="Descripcion"
-                               class="form-label">
-                        </label>
+                <!-- PRODUCTOS -->
 
-                        <textarea asp-for="Descripcion"
-                                  class="form-control"
-                                  rows="4"
-                                  maxlength="200"
-                                  placeholder="Descripción del menú"></textarea>
+                <section class="form-section">
 
-                        <span asp-validation-for="Descripcion"
-                              class="text-danger">
-                        </span>
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
 
-                    </div>
+                        <div class="form-section-title mb-0">
+                            <i class="bi bi-box-seam me-1"></i>
+                            Productos del menú
+                        </div>
 
-                </div>
+                        <button type="button"
+                                id="btnAgregarProducto"
+                                class="btn btn-outline-primary btn-sm">
 
-            </section>
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Agregar producto
 
-            <!-- DISPONIBILIDAD -->
-            <section class="form-section">
-
-                <div class="form-section-title">
-                    <i class="bi bi-calendar-week me-1"></i>
-                    Disponibilidad
-                </div>
-
-                <div class="row g-3">
-
-                    <div class="col-md-6">
-
-                        <label asp-for="FechaInicio"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="FechaInicio"
-                               asp-format="{0:yyyy-MM-dd}"
-                               type="date"
-                               class="form-control" />
-
-                        <span asp-validation-for="FechaInicio"
-                              class="text-danger">
-                        </span>
+                        </button>
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="table-responsive">
 
-                        <label asp-for="FechaFinal"
-                               class="form-label">
-                        </label>
+                        <table class="table menu-table"
+                               id="tablaProductos">
 
-                        <input asp-for="FechaFinal"
-                               asp-format="{0:yyyy-MM-dd}"
-                               type="date"
-                               class="form-control" />
+                            <thead>
 
-                        <span asp-validation-for="FechaFinal"
-                              class="text-danger">
-                        </span>
+                                <tr>
+                                    <th style="width:70px">#</th>
+                                    <th>Producto</th>
+
+                                    <th style="width:180px">
+                                        Descuento %
+                                    </th>
+
+                                    <th style="width:80px"></th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @for (
+                                                                int i = 0;
+                                                                i < productosSeleccionados.Count;
+                                                                i++)
+                                {
+                                    var producto =
+                                    productosSeleccionados[i];
+
+                                    <tr class="producto-fila">
+
+                                        <td class="numero-fila">
+                                            @(i + 1)
+                                        </td>
+
+                                        <td>
+
+                                            <select name="Productos[@i].IdProducto"
+                                                    class="form-select producto-select"
+                                                    required>
+
+                                                <option value="">
+                                                    -- Seleccione un producto --
+                                                </option>
+
+                                                @foreach (
+                                                                                            var opcion
+                                                                                            in productosDisponibles)
+                                                {
+                                                    if (
+                                                    opcion.Value ==
+                                                    producto.IdProducto.ToString())
+                                                    {
+                                                        <option value="@opcion.Value"
+                                                                selected>
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@opcion.Value">
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </td>
+
+                                        <td>
+
+                                            <input name="Productos[@i].Descuento"
+                                                   type="number"
+                                                   min="0"
+                                                   max="100"
+                                                   step="0.01"
+                                                   required
+                                                   value="@producto.Descuento.ToString("0.00", CultureInfo.InvariantCulture)"
+                                                   class="form-control producto-descuento" />
+
+                                        </td>
+
+                                        <td>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btnQuitarProducto">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div id="mensajeSinProductos"
+                         class="mensaje-vacio">
 
-                        <label asp-for="HoraInicio"
-                               class="form-label">
-                        </label>
-
-                        <input asp-for="HoraInicio"
-                               asp-format="{0:HH:mm}"
-                               type="time"
-                               class="form-control" />
-
-                        <span asp-validation-for="HoraInicio"
-                              class="text-danger">
-                        </span>
+                        No se han agregado productos.
 
                     </div>
 
-                    <div class="col-md-6">
+                </section>
 
-                        <label asp-for="HoraFinal"
-                               class="form-label">
-                        </label>
+                <!-- COMBOS -->
 
-                        <input asp-for="HoraFinal"
-                               asp-format="{0:HH:mm}"
-                               type="time"
-                               class="form-control" />
+                <section class="form-section">
 
-                        <span asp-validation-for="HoraFinal"
-                              class="text-danger">
-                        </span>
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
 
-                    </div>
+                        <div class="form-section-title mb-0">
+                            <i class="bi bi-collection me-1"></i>
+                            Combos del menú
+                        </div>
 
-                    <div class="col-md-6">
+                        <button type="button"
+                                id="btnAgregarCombo"
+                                class="btn btn-outline-primary btn-sm">
 
-                        <label asp-for="IdDisponibilidadDia"
-                               class="form-label">
-                            Día disponible
-                        </label>
+                            <i class="bi bi-plus-lg me-1"></i>
+                            Agregar combo
 
-                        <select asp-for="IdDisponibilidadDia"
-                                asp-items="ViewBag.ListDias"
-                                class="form-select">
-
-                            <option value="0">
-                                -- Seleccione un día --
-                            </option>
-
-                        </select>
-
-                        <span asp-validation-for="IdDisponibilidadDia"
-                              class="text-danger">
-                        </span>
+                        </button>
 
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="table-responsive">
 
-                        <label asp-for="DescripcionDisponibilidad"
-                               class="form-label">
-                        </label>
+                        <table class="table menu-table"
+                               id="tablaCombos">
 
-                        <input asp-for="DescripcionDisponibilidad"
-                               class="form-control"
-                               maxlength="100"
-                               placeholder="Ejemplo: menú disponible para almuerzo" />
+                            <thead>
 
-                        <span asp-validation-for="DescripcionDisponibilidad"
-                              class="text-danger">
-                        </span>
+                                <tr>
+                                    <th style="width:70px">#</th>
+                                    <th>Combo</th>
+
+                                    <th style="width:180px">
+                                        Descuento %
+                                    </th>
+
+                                    <th style="width:80px"></th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @for (
+                                                                int i = 0;
+                                                                i < combosSeleccionados.Count;
+                                                                i++)
+                                {
+                                    var combo =
+                                    combosSeleccionados[i];
+
+                                    <tr class="combo-fila">
+
+                                        <td class="numero-fila">
+                                            @(i + 1)
+                                        </td>
+
+                                        <td>
+
+                                            <select name="Combos[@i].IdCombo"
+                                                    class="form-select combo-select"
+                                                    required>
+
+                                                <option value="">
+                                                    -- Seleccione un combo --
+                                                </option>
+
+                                                @foreach (
+                                                                                            var opcion
+                                                                                            in combosDisponibles)
+                                                {
+                                                    if (
+                                                    opcion.Value ==
+                                                    combo.IdCombo.ToString())
+                                                    {
+                                                        <option value="@opcion.Value"
+                                                                selected>
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@opcion.Value">
+                                                            @opcion.Text
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </td>
+
+                                        <td>
+
+                                            <input name="Combos[@i].Descuento"
+                                                   type="number"
+                                                   min="0"
+                                                   max="100"
+                                                   step="0.01"
+                                                   required
+                                                   value="@combo.Descuento.ToString("0.00", CultureInfo.InvariantCulture)"
+                                                   class="form-control combo-descuento" />
+
+                                        </td>
+
+                                        <td>
+
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btnQuitarCombo">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
 
                     </div>
 
-                </div>
+                    <div id="mensajeSinCombos"
+                         class="mensaje-vacio">
 
-            </section>
+                        No se han agregado combos.
 
-            <!-- PRODUCTOS -->
-            <section class="form-section">
-
-                <div class="d-flex justify-content-between
-                            align-items-center mb-3">
-
-                    <div class="form-section-title mb-0">
-                        <i class="bi bi-box-seam me-1"></i>
-                        Productos del menú
                     </div>
 
-                    <button type="button"
-                            id="btnAgregarProducto"
-                            class="btn btn-outline-primary btn-sm">
+                </section>
 
-                        <i class="bi bi-plus-lg me-1"></i>
-                        Agregar producto
+                @Html.ValidationMessage(
+                "ElementosMenu",
+                                "",
+                                new
+                                {
+                                    @class =
+                                "text-danger d-block mb-3"
+                                })
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Guardar cambios
+
                     </button>
 
-                </div>
+                    <a asp-controller="Menu"
+                       asp-action="Index"
+                       class="btn btn-outline-secondary">
 
-                <div class="table-responsive">
+                        Cancelar
 
-                    <table class="table menu-table"
-                           id="tablaProductos">
-
-                        <thead>
-
-                            <tr>
-                                <th style="width: 70px;">#</th>
-                                <th>Producto</th>
-                                <th style="width: 180px;">Descuento %</th>
-                                <th style="width: 80px;"></th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @for (int i = 0;
-                                                            i < productosSeleccionados.Count;
-                                                            i++)
-                            {
-                                var producto =
-                                productosSeleccionados[i];
-
-                                <tr class="producto-fila">
-
-                                    <td class="numero-fila">
-                                        @(i + 1)
-                                    </td>
-
-                                    <td>
-
-                                        <select name="Productos[@i].IdProducto"
-                                                class="form-select producto-select">
-
-                                            <option value="">
-                                                -- Seleccione un producto --
-                                            </option>
-
-                                            @foreach (var opcion
-                                                                                        in productosDisponibles)
-                                            {
-                                                if (opcion.Value ==
-                                                producto.IdProducto.ToString())
-                                                {
-                                                    <option value="@opcion.Value"
-                                                            selected>
-                                                        @opcion.Text
-                                                    </option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@opcion.Value">
-                                                        @opcion.Text
-                                                    </option>
-                                                }
-                                            }
-
-                                        </select>
-
-                                    </td>
-
-                                    <td>
-
-                                        <input name="Productos[@i].Descuento"
-                                               type="number"
-                                               min="0"
-                                               max="100"
-                                               step="0.01"
-                                               value="@producto.Descuento.ToString(CultureInfo.InvariantCulture)"
-                                               class="form-control producto-descuento" />
-
-                                    </td>
-
-                                    <td>
-
-                                        <button type="button"
-                                                class="btn btn-outline-danger btnQuitarProducto">
-
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
+                    </a>
 
                 </div>
 
-                <div id="mensajeSinProductos"
-                     class="mensaje-vacio">
+            </form>
 
-                    No se han agregado productos.
-                </div>
-
-            </section>
-
-            <!-- COMBOS -->
-            <section class="form-section">
-
-                <div class="d-flex justify-content-between
-                            align-items-center mb-3">
-
-                    <div class="form-section-title mb-0">
-                        <i class="bi bi-collection me-1"></i>
-                        Combos del menú
-                    </div>
-
-                    <button type="button"
-                            id="btnAgregarCombo"
-                            class="btn btn-outline-primary btn-sm">
-
-                        <i class="bi bi-plus-lg me-1"></i>
-                        Agregar combo
-                    </button>
-
-                </div>
-
-                <div class="table-responsive">
-
-                    <table class="table menu-table"
-                           id="tablaCombos">
-
-                        <thead>
-
-                            <tr>
-                                <th style="width: 70px;">#</th>
-                                <th>Combo</th>
-                                <th style="width: 180px;">Descuento %</th>
-                                <th style="width: 80px;"></th>
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            @for (int i = 0;
-                                                            i < combosSeleccionados.Count;
-                                                            i++)
-                            {
-                                var combo =
-                                combosSeleccionados[i];
-
-                                <tr class="combo-fila">
-
-                                    <td class="numero-fila">
-                                        @(i + 1)
-                                    </td>
-
-                                    <td>
-
-                                        <select name="Combos[@i].IdCombo"
-                                                class="form-select combo-select">
-
-                                            <option value="">
-                                                -- Seleccione un combo --
-                                            </option>
-
-                                            @foreach (var opcion
-                                                                                        in combosDisponibles)
-                                            {
-                                                if (opcion.Value ==
-                                                combo.IdCombo.ToString())
-                                                {
-                                                    <option value="@opcion.Value"
-                                                            selected>
-                                                        @opcion.Text
-                                                    </option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@opcion.Value">
-                                                        @opcion.Text
-                                                    </option>
-                                                }
-                                            }
-
-                                        </select>
-
-                                    </td>
-
-                                    <td>
-
-                                        <input name="Combos[@i].Descuento"
-                                               type="number"
-                                               min="0"
-                                               max="100"
-                                               step="0.01"
-                                               value="@combo.Descuento.ToString(CultureInfo.InvariantCulture)"
-                                               class="form-control combo-descuento" />
-
-                                    </td>
-
-                                    <td>
-
-                                        <button type="button"
-                                                class="btn btn-outline-danger btnQuitarCombo">
-
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-
-                                    </td>
-
-                                </tr>
-                            }
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-                <div id="mensajeSinCombos"
-                     class="mensaje-vacio">
-
-                    No se han agregado combos.
-                </div>
-
-            </section>
-
-            <div id="errorElementosCliente"
-                 class="text-danger mensaje-validacion-seccion">
-            </div>
-
-            @Html.ValidationMessage(
-            "ElementosMenu",
-                            "",
-                            new
-                            {
-                                @class =
-                            "text-danger mensaje-validacion-seccion d-block"
-                            })
-
-            <div class="mt-4 d-flex gap-2">
-
-                <button type="submit"
-                        class="btn btn-primary">
-
-                    <i class="bi bi-check-circle me-1"></i>
-                    Guardar cambios
-                </button>
-
-                <a asp-controller="Menu"
-                   asp-action="Index"
-                   class="btn btn-outline-secondary">
-
-                    Cancelar
-                </a>
-
-            </div>
-
-        </form>
+        </div>
 
     </div>
-
-</div>
 
 </div>
 
@@ -612,54 +642,58 @@ var combosSeleccionados =
 
 <template id="plantillaProducto">
 
-<tr class="producto-fila">
+    <tr class="producto-fila">
 
-    <td class="numero-fila"></td>
+        <td class="numero-fila"></td>
 
-    <td>
+        <td>
 
-        <select name="Productos[__index__].IdProducto"
-                class="form-select producto-select">
+            <select name="Productos[__index__].IdProducto"
+                    class="form-select producto-select"
+                    required>
 
-            <option value="">
-                -- Seleccione un producto --
-            </option>
-
-            @foreach (var opcion
-                            in productosDisponibles)
-            {
-                <option value="@opcion.Value">
-                    @opcion.Text
+                <option value="">
+                    -- Seleccione un producto --
                 </option>
-            }
 
-        </select>
+                @foreach (
+                                var opcion
+                                in productosDisponibles)
+                {
+                    <option value="@opcion.Value">
+                        @opcion.Text
+                    </option>
+                }
 
-    </td>
+            </select>
 
-    <td>
+        </td>
 
-        <input name="Productos[__index__].Descuento"
-               type="number"
-               min="0"
-               max="100"
-               step="0.01"
-               value="0"
-               class="form-control producto-descuento" />
+        <td>
 
-    </td>
+            <input name="Productos[__index__].Descuento"
+                   type="number"
+                   min="0"
+                   max="100"
+                   step="0.01"
+                   required
+                   value="0.00"
+                   class="form-control producto-descuento" />
 
-    <td>
+        </td>
 
-        <button type="button"
-                class="btn btn-outline-danger btnQuitarProducto">
+        <td>
 
-            <i class="bi bi-trash"></i>
-        </button>
+            <button type="button"
+                    class="btn btn-outline-danger btnQuitarProducto">
 
-    </td>
+                <i class="bi bi-trash"></i>
 
-</tr>
+            </button>
+
+        </td>
+
+    </tr>
 
 </template>
 
@@ -667,446 +701,280 @@ var combosSeleccionados =
 
 <template id="plantillaCombo">
 
-<tr class="combo-fila">
+    <tr class="combo-fila">
 
-    <td class="numero-fila"></td>
+        <td class="numero-fila"></td>
 
-    <td>
+        <td>
 
-        <select name="Combos[__index__].IdCombo"
-                class="form-select combo-select">
+            <select name="Combos[__index__].IdCombo"
+                    class="form-select combo-select"
+                    required>
 
-            <option value="">
-                -- Seleccione un combo --
-            </option>
-
-            @foreach (var opcion
-                            in combosDisponibles)
-            {
-                <option value="@opcion.Value">
-                    @opcion.Text
+                <option value="">
+                    -- Seleccione un combo --
                 </option>
-            }
 
-        </select>
+                @foreach (
+                                var opcion
+                                in combosDisponibles)
+                {
+                    <option value="@opcion.Value">
+                        @opcion.Text
+                    </option>
+                }
 
-    </td>
+            </select>
 
-    <td>
+        </td>
 
-        <input name="Combos[__index__].Descuento"
-               type="number"
-               min="0"
-               max="100"
-               step="0.01"
-               value="0"
-               class="form-control combo-descuento" />
+        <td>
 
-    </td>
+            <input name="Combos[__index__].Descuento"
+                   type="number"
+                   min="0"
+                   max="100"
+                   step="0.01"
+                   required
+                   value="0.00"
+                   class="form-control combo-descuento" />
 
-    <td>
+        </td>
 
-        <button type="button"
-                class="btn btn-outline-danger btnQuitarCombo">
+        <td>
 
-            <i class="bi bi-trash"></i>
-        </button>
+            <button type="button"
+                    class="btn btn-outline-danger btnQuitarCombo">
 
-    </td>
+                <i class="bi bi-trash"></i>
 
-</tr>
+            </button>
+
+        </td>
+
+    </tr>
 
 </template>
 
-@section Scripts{<partial name="_ValidationScriptsPartial" />
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
-<script>
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
+                const cuerpoProductos =
+                    document.querySelector(
+                        "#tablaProductos tbody"
+                    );
 
-            const formulario =
-                document.getElementById("formMenu");
+                const cuerpoCombos =
+                    document.querySelector(
+                        "#tablaCombos tbody"
+                    );
 
-            const cuerpoProductos =
-                document.querySelector(
-                    "#tablaProductos tbody");
+                const plantillaProducto =
+                    document.getElementById(
+                        "plantillaProducto"
+                    );
 
-            const cuerpoCombos =
-                document.querySelector(
-                    "#tablaCombos tbody");
+                const plantillaCombo =
+                    document.getElementById(
+                        "plantillaCombo"
+                    );
 
-            const plantillaProducto =
-                document.getElementById(
-                    "plantillaProducto");
+                const mensajeSinProductos =
+                    document.getElementById(
+                        "mensajeSinProductos"
+                    );
 
-            const plantillaCombo =
-                document.getElementById(
-                    "plantillaCombo");
+                const mensajeSinCombos =
+                    document.getElementById(
+                        "mensajeSinCombos"
+                    );
 
-            const mensajeSinProductos =
-                document.getElementById(
-                    "mensajeSinProductos");
+                function filasProductos() {
+                    return Array.from(
+                        cuerpoProductos.querySelectorAll(
+                            ".producto-fila"
+                        )
+                    );
+                }
 
-            const mensajeSinCombos =
-                document.getElementById(
-                    "mensajeSinCombos");
+                function filasCombos() {
+                    return Array.from(
+                        cuerpoCombos.querySelectorAll(
+                            ".combo-fila"
+                        )
+                    );
+                }
 
-            const errorElementosCliente =
-                document.getElementById(
-                    "errorElementosCliente");
+                function reindexarProductos() {
+                    filasProductos().forEach(
+                        function (fila, indice) {
 
-            function filasProductos() {
-                return Array.from(
-                    cuerpoProductos.querySelectorAll(
-                        ".producto-fila"));
-            }
+                            fila.querySelector(
+                                ".numero-fila"
+                            ).textContent =
+                                indice + 1;
 
-            function filasCombos() {
-                return Array.from(
-                    cuerpoCombos.querySelectorAll(
-                        ".combo-fila"));
-            }
+                            fila.querySelector(
+                                ".producto-select"
+                            ).name =
+                                `Productos[${indice}].IdProducto`;
 
-            function reindexarProductos() {
-                filasProductos().forEach(
-                    function (fila, indice) {
+                            fila.querySelector(
+                                ".producto-descuento"
+                            ).name =
+                                `Productos[${indice}].Descuento`;
+                        }
+                    );
+                }
 
-                        fila.querySelector(
-                            ".numero-fila"
-                        ).textContent = indice + 1;
+                function reindexarCombos() {
+                    filasCombos().forEach(
+                        function (fila, indice) {
 
-                        fila.querySelector(
-                            ".producto-select"
-                        ).name =
-                            `Productos[${indice}].IdProducto`;
+                            fila.querySelector(
+                                ".numero-fila"
+                            ).textContent =
+                                indice + 1;
 
-                        fila.querySelector(
-                            ".producto-descuento"
-                        ).name =
-                            `Productos[${indice}].Descuento`;
-                    });
-            }
+                            fila.querySelector(
+                                ".combo-select"
+                            ).name =
+                                `Combos[${indice}].IdCombo`;
 
-            function reindexarCombos() {
-                filasCombos().forEach(
-                    function (fila, indice) {
+                            fila.querySelector(
+                                ".combo-descuento"
+                            ).name =
+                                `Combos[${indice}].Descuento`;
+                        }
+                    );
+                }
 
-                        fila.querySelector(
-                            ".numero-fila"
-                        ).textContent = indice + 1;
+                function actualizarMensajes() {
+                    mensajeSinProductos.style.display =
+                        filasProductos().length === 0
+                            ? "block"
+                            : "none";
 
-                        fila.querySelector(
-                            ".combo-select"
-                        ).name =
-                            `Combos[${indice}].IdCombo`;
+                    mensajeSinCombos.style.display =
+                        filasCombos().length === 0
+                            ? "block"
+                            : "none";
+                }
 
-                        fila.querySelector(
-                            ".combo-descuento"
-                        ).name =
-                            `Combos[${indice}].Descuento`;
-                    });
-            }
+                document
+                    .getElementById(
+                        "btnAgregarProducto"
+                    )
+                    .addEventListener(
+                        "click",
+                        function () {
 
-            function actualizarMensajes() {
-                mensajeSinProductos.style.display =
-                    filasProductos().length === 0
-                        ? "block"
-                        : "none";
+                            const indice =
+                                filasProductos().length;
 
-                mensajeSinCombos.style.display =
-                    filasCombos().length === 0
-                        ? "block"
-                        : "none";
-            }
+                            const contenido =
+                                plantillaProducto
+                                    .innerHTML
+                                    .replaceAll(
+                                        "__index__",
+                                        indice
+                                    );
 
-            document
-                .getElementById("btnAgregarProducto")
-                .addEventListener(
+                            cuerpoProductos
+                                .insertAdjacentHTML(
+                                    "beforeend",
+                                    contenido
+                                );
+
+                            reindexarProductos();
+                            actualizarMensajes();
+                        }
+                    );
+
+                document
+                    .getElementById(
+                        "btnAgregarCombo"
+                    )
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            const indice =
+                                filasCombos().length;
+
+                            const contenido =
+                                plantillaCombo
+                                    .innerHTML
+                                    .replaceAll(
+                                        "__index__",
+                                        indice
+                                    );
+
+                            cuerpoCombos
+                                .insertAdjacentHTML(
+                                    "beforeend",
+                                    contenido
+                                );
+
+                            reindexarCombos();
+                            actualizarMensajes();
+                        }
+                    );
+
+                cuerpoProductos.addEventListener(
                     "click",
-                    function () {
+                    function (evento) {
 
-                        const indice =
-                            filasProductos().length;
+                        const boton =
+                            evento.target.closest(
+                                ".btnQuitarProducto"
+                            );
 
-                        const contenido =
-                            plantillaProducto.innerHTML
-                                .replaceAll(
-                                    "__index__",
-                                    indice);
+                        if (!boton) {
+                            return;
+                        }
 
-                        cuerpoProductos.insertAdjacentHTML(
-                            "beforeend",
-                            contenido);
+                        boton.closest(
+                            ".producto-fila"
+                        ).remove();
 
                         reindexarProductos();
                         actualizarMensajes();
+                    }
+                );
 
-                        errorElementosCliente.textContent =
-                            "";
-                    });
-
-            document
-                .getElementById("btnAgregarCombo")
-                .addEventListener(
+                cuerpoCombos.addEventListener(
                     "click",
-                    function () {
+                    function (evento) {
 
-                        const indice =
-                            filasCombos().length;
+                        const boton =
+                            evento.target.closest(
+                                ".btnQuitarCombo"
+                            );
 
-                        const contenido =
-                            plantillaCombo.innerHTML
-                                .replaceAll(
-                                    "__index__",
-                                    indice);
+                        if (!boton) {
+                            return;
+                        }
 
-                        cuerpoCombos.insertAdjacentHTML(
-                            "beforeend",
-                            contenido);
+                        boton.closest(
+                            ".combo-fila"
+                        ).remove();
 
                         reindexarCombos();
                         actualizarMensajes();
-
-                        errorElementosCliente.textContent =
-                            "";
-                    });
-
-            cuerpoProductos.addEventListener(
-                "click",
-                function (evento) {
-
-                    const boton =
-                        evento.target.closest(
-                            ".btnQuitarProducto");
-
-                    if (!boton) {
-                        return;
                     }
+                );
 
-                    boton.closest(
-                        ".producto-fila").remove();
-
-                    reindexarProductos();
-                    actualizarMensajes();
-                });
-
-            cuerpoCombos.addEventListener(
-                "click",
-                function (evento) {
-
-                    const boton =
-                        evento.target.closest(
-                            ".btnQuitarCombo");
-
-                    if (!boton) {
-                        return;
-                    }
-
-                    boton.closest(
-                        ".combo-fila").remove();
-
-                    reindexarCombos();
-                    actualizarMensajes();
-                });
-
-            function obtenerProductos() {
-                return filasProductos().map(
-                    function (fila) {
-
-                        return {
-                            id: Number(
-                                fila.querySelector(
-                                    ".producto-select"
-                                ).value),
-
-                            descuento: Number(
-                                fila.querySelector(
-                                    ".producto-descuento"
-                                ).value)
-                        };
-                    });
+                reindexarProductos();
+                reindexarCombos();
+                actualizarMensajes();
             }
-
-            function obtenerCombos() {
-                return filasCombos().map(
-                    function (fila) {
-
-                        return {
-                            id: Number(
-                                fila.querySelector(
-                                    ".combo-select"
-                                ).value),
-
-                            descuento: Number(
-                                fila.querySelector(
-                                    ".combo-descuento"
-                                ).value)
-                        };
-                    });
-            }
-
-            function tieneDuplicados(elementos) {
-                const ids =
-                    elementos
-                        .map(x => x.id)
-                        .filter(x => x > 0);
-
-                return new Set(ids).size !==
-                       ids.length;
-            }
-
-            formulario.addEventListener(
-                "submit",
-                function (evento) {
-
-                    reindexarProductos();
-                    reindexarCombos();
-
-                    const fechaInicio =
-                        document.getElementById(
-                            "FechaInicio").value;
-
-                    const fechaFinal =
-                        document.getElementById(
-                            "FechaFinal").value;
-
-                    const horaInicio =
-                        document.getElementById(
-                            "HoraInicio").value;
-
-                    const horaFinal =
-                        document.getElementById(
-                            "HoraFinal").value;
-
-                    if (
-                        fechaInicio &&
-                        fechaFinal &&
-                        fechaFinal < fechaInicio
-                    ) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "La fecha final no puede ser anterior a la fecha inicial.",
-                            "warning");
-
-                        return;
-                    }
-
-                    if (
-                        horaInicio &&
-                        horaFinal &&
-                        horaFinal <= horaInicio
-                    ) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "La hora final debe ser posterior a la hora inicial.",
-                            "warning");
-
-                        return;
-                    }
-
-                    const productos =
-                        obtenerProductos();
-
-                    const combos =
-                        obtenerCombos();
-
-                    if (
-                        productos.some(x => x.id <= 0)
-                    ) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "Complete o quite las filas de productos vacías.",
-                            "warning");
-
-                        return;
-                    }
-
-                    if (
-                        combos.some(x => x.id <= 0)
-                    ) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "Complete o quite las filas de combos vacías.",
-                            "warning");
-
-                        return;
-                    }
-
-                    const descuentoInvalido =
-                        productos.some(x =>
-                            Number.isNaN(x.descuento) ||
-                            x.descuento < 0 ||
-                            x.descuento > 100)
-                        ||
-                        combos.some(x =>
-                            Number.isNaN(x.descuento) ||
-                            x.descuento < 0 ||
-                            x.descuento > 100);
-
-                    if (descuentoInvalido) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "Los descuentos deben estar entre 0 y 100.",
-                            "warning");
-
-                        return;
-                    }
-
-                    if (tieneDuplicados(productos)) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "No puede agregar el mismo producto más de una vez.",
-                            "warning");
-
-                        return;
-                    }
-
-                    if (tieneDuplicados(combos)) {
-                        evento.preventDefault();
-
-                        Swal.fire(
-                            "Atención",
-                            "No puede agregar el mismo combo más de una vez.",
-                            "warning");
-
-                        return;
-                    }
-
-                    if (
-                        productos.length === 0 &&
-                        combos.length === 0
-                    ) {
-                        evento.preventDefault();
-
-                        errorElementosCliente.textContent =
-                            "Debe agregar al menos un producto o un combo.";
-
-                        Swal.fire(
-                            "Atención",
-                            "Debe agregar al menos un producto o un combo.",
-                            "warning");
-                    }
-                });
-
-            reindexarProductos();
-            reindexarCombos();
-            actualizarMensajes();
-        });
-</script>
-
+        );
+    </script>
 }

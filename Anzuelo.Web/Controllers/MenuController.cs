@@ -1,8 +1,8 @@
 ﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Application.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Globalization;
 using X.PagedList.Extensions;
 
 namespace Anzuelo.Web.Controllers
@@ -47,50 +47,71 @@ namespace Anzuelo.Web.Controllers
         }
 
         /*
-         * MÉTODOS EXISTENTES.
-         * No se modifica su funcionamiento.
+         * LISTADO
          */
 
-        // GET: MenuController
+        [HttpGet]
         public async Task<ActionResult> Index()
         {
-            var collection = await _serviceMenu.ListAync();
+            var collection =
+                await _serviceMenu.ListAync();
+
             return View(collection);
         }
 
-        public async Task<ActionResult> IndexAdmin(int? page)
-        {
-            var collection = await _serviceMenu.ListAync();
-            return View(collection.ToPagedList(page ?? 1, 5));
-        }
+        /*
+         * LISTADO ADMINISTRATIVO
+         */
 
-        // GET: ProductoController/Details
-        public async Task<ActionResult> Details()
+        [HttpGet]
+        public async Task<ActionResult> IndexAdmin(
+            int? page)
         {
-            var @object =
-                await _serviceMenu.GetMenuDisponibleAsync();
+            var collection =
+                await _serviceMenu.ListAync();
 
-            return View(@object);
+            return View(
+                collection.ToPagedList(
+                    page ?? 1,
+                    5));
         }
 
         /*
-         * CARGA DE LISTAS PARA CREATE Y EDIT.
+         * DETALLE DEL MENÚ DISPONIBLE
+         */
+
+        [HttpGet]
+        public async Task<ActionResult> Details()
+        {
+            var menu =
+                await _serviceMenu
+                    .GetMenuDisponibleAsync();
+
+            return View(menu);
+        }
+
+        /*
+         * CARGAR LISTAS
          */
 
         private async Task CargarListasAsync(
             MenuDTO? menu = null)
         {
             var estados =
-                await _serviceEstadoMenu.ListAync();
+                await _serviceEstadoMenu
+                    .ListAync();
 
             var dias =
-                await _serviceDisponibilidadDia.ListAync();
+                await _serviceDisponibilidadDia
+                    .ListAync();
 
             var productos =
-                await _serviceProducto.ListAync();
+                await _serviceProducto
+                    .ListAync();
 
             var combos =
-                await _serviceCombo.ListAync();
+                await _serviceCombo
+                    .ListAync();
 
             ViewBag.ListEstados =
                 new SelectList(
@@ -112,10 +133,13 @@ namespace Anzuelo.Web.Controllers
                         new SelectListItem
                         {
                             Value =
-                                producto.IdProducto.ToString(),
+                                producto
+                                    .IdProducto
+                                    .ToString(),
 
                             Text =
-                                $"{producto.Nombre} - ₡{producto.Precio:N2}"
+                                $"{producto.Nombre} - " +
+                                $"₡{producto.Precio:N2}"
                         })
                     .ToList();
 
@@ -125,16 +149,19 @@ namespace Anzuelo.Web.Controllers
                         new SelectListItem
                         {
                             Value =
-                                combo.IdCombo.ToString(),
+                                combo
+                                    .IdCombo
+                                    .ToString(),
 
                             Text =
-                                $"{combo.Nombre} - ₡{combo.PrecioTotal:N2}"
+                                $"{combo.Nombre} - " +
+                                $"₡{combo.PrecioTotal:N2}"
                         })
                     .ToList();
         }
 
         /*
-         * CREATE
+         * CREATE GET
          */
 
         [HttpGet]
@@ -170,11 +197,20 @@ namespace Anzuelo.Web.Controllers
             return View(dto);
         }
 
+        /*
+         * CREATE POST
+         */
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             MenuDTO dto)
         {
+            NormalizarColecciones(dto);
+
+            CorregirDescuentosDesdeFormulario(
+                dto);
+
             ValidarMenu(dto);
 
             if (!ModelState.IsValid)
@@ -191,7 +227,7 @@ namespace Anzuelo.Web.Controllers
         }
 
         /*
-         * EDIT
+         * EDIT GET
          */
 
         [HttpGet]
@@ -204,17 +240,24 @@ namespace Anzuelo.Web.Controllers
             }
 
             var menu =
-                await _serviceMenu.FindByIdAsync(id);
+                await _serviceMenu
+                    .FindByIdAsync(id);
 
             if (menu == null)
             {
                 return NotFound();
             }
 
+            NormalizarColecciones(menu);
+
             await CargarListasAsync(menu);
 
             return View(menu);
         }
+
+        /*
+         * EDIT POST
+         */
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -227,7 +270,26 @@ namespace Anzuelo.Web.Controllers
                 return BadRequest();
             }
 
-            dto.IdMenu = id;
+            dto.IdMenu =
+                id;
+
+            /*
+             * Evita conservar un valor anterior
+             * dentro de ModelState.
+             */
+            ModelState.Remove(
+                nameof(MenuDTO.IdMenu));
+
+            NormalizarColecciones(dto);
+
+            /*
+             * Convierte correctamente valores como:
+             *
+             * 10.00
+             * 10,00
+             */
+            CorregirDescuentosDesdeFormulario(
+                dto);
 
             ValidarMenu(dto);
 
@@ -247,7 +309,163 @@ namespace Anzuelo.Web.Controllers
         }
 
         /*
-         * VALIDACIONES ADICIONALES.
+         * EVITAR COLECCIONES NULAS
+         */
+
+        private static void NormalizarColecciones(
+            MenuDTO dto)
+        {
+            dto.Productos =
+                dto.Productos?.ToList()
+                ?? new List<MenuProductoDTO>();
+
+            dto.Combos =
+                dto.Combos?.ToList()
+                ?? new List<MenuComboDTO>();
+        }
+
+        /*
+         * CORREGIR DECIMALES RECIBIDOS
+         *
+         * El navegador normalmente envía:
+         * 10.00
+         *
+         * Algunas configuraciones regionales
+         * esperan:
+         * 10,00
+         *
+         * Este método acepta ambos formatos.
+         */
+
+        private void CorregirDescuentosDesdeFormulario(
+            MenuDTO dto)
+        {
+            var productos =
+                dto.Productos.ToList();
+
+            for (
+                int indice = 0;
+                indice < productos.Count;
+                indice++)
+            {
+                var nombreCampo =
+                    $"Productos[{indice}].Descuento";
+
+                ModelState.Remove(
+                    nombreCampo);
+
+                if (
+                    !Request.Form.TryGetValue(
+                        nombreCampo,
+                        out var valorRecibido))
+                {
+                    ModelState.AddModelError(
+                        nombreCampo,
+                        "Debe ingresar el descuento.");
+
+                    continue;
+                }
+
+                if (
+                    TryParseDecimal(
+                        valorRecibido.ToString(),
+                        out decimal descuento))
+                {
+                    productos[indice].Descuento =
+                        descuento;
+                }
+                else
+                {
+                    ModelState.AddModelError(
+                        nombreCampo,
+                        "El descuento no tiene un formato válido.");
+                }
+            }
+
+            dto.Productos =
+                productos;
+
+            var combos =
+                dto.Combos.ToList();
+
+            for (
+                int indice = 0;
+                indice < combos.Count;
+                indice++)
+            {
+                var nombreCampo =
+                    $"Combos[{indice}].Descuento";
+
+                ModelState.Remove(
+                    nombreCampo);
+
+                if (
+                    !Request.Form.TryGetValue(
+                        nombreCampo,
+                        out var valorRecibido))
+                {
+                    ModelState.AddModelError(
+                        nombreCampo,
+                        "Debe ingresar el descuento.");
+
+                    continue;
+                }
+
+                if (
+                    TryParseDecimal(
+                        valorRecibido.ToString(),
+                        out decimal descuento))
+                {
+                    combos[indice].Descuento =
+                        descuento;
+                }
+                else
+                {
+                    ModelState.AddModelError(
+                        nombreCampo,
+                        "El descuento no tiene un formato válido.");
+                }
+            }
+
+            dto.Combos =
+                combos;
+        }
+
+        /*
+         * CONVERSIÓN DE DECIMAL
+         */
+
+        private static bool TryParseDecimal(
+            string valor,
+            out decimal resultado)
+        {
+            resultado = 0;
+
+            if (string.IsNullOrWhiteSpace(valor))
+            {
+                return false;
+            }
+
+            /*
+             * Convierte una coma decimal en punto
+             * para interpretar siempre el valor
+             * utilizando formato invariable.
+             */
+            var valorNormalizado =
+                valor
+                    .Trim()
+                    .Replace(',', '.');
+
+            return decimal.TryParse(
+                valorNormalizado,
+                NumberStyles.AllowDecimalPoint |
+                NumberStyles.AllowLeadingSign,
+                CultureInfo.InvariantCulture,
+                out resultado);
+        }
+
+        /*
+         * VALIDACIONES
          */
 
         private void ValidarMenu(
@@ -257,34 +475,16 @@ namespace Anzuelo.Web.Controllers
 
             ValidarHoras(dto);
 
-            ValidarElementosMenu(dto);
+            ValidarElementos(dto);
 
             ValidarDescuentos(dto);
 
-            ValidarElementosIncompletos(dto);
+            ValidarDuplicados(dto);
         }
 
         private void ValidarFechas(
             MenuDTO dto)
         {
-            if (
-                dto.FechaInicio ==
-                default)
-            {
-                ModelState.AddModelError(
-                    nameof(dto.FechaInicio),
-                    "Debe ingresar la fecha inicial.");
-            }
-
-            if (
-                dto.FechaFinal ==
-                default)
-            {
-                ModelState.AddModelError(
-                    nameof(dto.FechaFinal),
-                    "Debe ingresar la fecha final.");
-            }
-
             if (
                 dto.FechaInicio != default &&
                 dto.FechaFinal != default &&
@@ -293,31 +493,14 @@ namespace Anzuelo.Web.Controllers
             {
                 ModelState.AddModelError(
                     nameof(dto.FechaFinal),
-                    "La fecha final no puede ser anterior a la fecha inicial.");
+                    "La fecha final no puede ser " +
+                    "anterior a la fecha inicial.");
             }
         }
 
         private void ValidarHoras(
             MenuDTO dto)
         {
-            if (
-                dto.HoraInicio ==
-                default)
-            {
-                ModelState.AddModelError(
-                    nameof(dto.HoraInicio),
-                    "Debe ingresar la hora inicial.");
-            }
-
-            if (
-                dto.HoraFinal ==
-                default)
-            {
-                ModelState.AddModelError(
-                    nameof(dto.HoraFinal),
-                    "Debe ingresar la hora final.");
-            }
-
             if (
                 dto.HoraInicio != default &&
                 dto.HoraFinal != default &&
@@ -326,83 +509,92 @@ namespace Anzuelo.Web.Controllers
             {
                 ModelState.AddModelError(
                     nameof(dto.HoraFinal),
-                    "La hora final debe ser posterior a la hora inicial.");
+                    "La hora final debe ser posterior " +
+                    "a la hora inicial.");
             }
         }
 
-        private void ValidarElementosMenu(
+        private void ValidarElementos(
             MenuDTO dto)
         {
-            bool tieneProducto =
-                dto.Productos != null &&
+            bool tieneProductos =
                 dto.Productos.Any(producto =>
                     producto.IdProducto > 0);
 
-            bool tieneCombo =
-                dto.Combos != null &&
+            bool tieneCombos =
                 dto.Combos.Any(combo =>
                     combo.IdCombo > 0);
 
             if (
-                !tieneProducto &&
-                !tieneCombo)
+                !tieneProductos &&
+                !tieneCombos)
             {
                 ModelState.AddModelError(
                     "ElementosMenu",
-                    "Debe agregar al menos un producto o un combo.");
+                    "Debe agregar al menos un producto " +
+                    "o un combo.");
             }
         }
 
         private void ValidarDescuentos(
             MenuDTO dto)
         {
-            bool descuentoProductoInvalido =
-                dto.Productos?.Any(producto =>
+            bool productoInvalido =
+                dto.Productos.Any(producto =>
                     producto.Descuento < 0 ||
-                    producto.Descuento > 100)
-                ?? false;
+                    producto.Descuento > 100);
 
-            bool descuentoComboInvalido =
-                dto.Combos?.Any(combo =>
+            bool comboInvalido =
+                dto.Combos.Any(combo =>
                     combo.Descuento < 0 ||
-                    combo.Descuento > 100)
-                ?? false;
+                    combo.Descuento > 100);
 
             if (
-                descuentoProductoInvalido ||
-                descuentoComboInvalido)
+                productoInvalido ||
+                comboInvalido)
             {
                 ModelState.AddModelError(
                     "ElementosMenu",
-                    "Los descuentos deben estar entre 0 y 100.");
+                    "Los descuentos deben estar " +
+                    "entre 0 y 100.");
             }
         }
 
-        private void ValidarElementosIncompletos(
+        private void ValidarDuplicados(
             MenuDTO dto)
         {
-            bool tieneProductoIncompleto =
-                dto.Productos?.Any(producto =>
-                    producto.IdProducto <= 0)
-                ?? false;
+            bool productosDuplicados =
+                dto.Productos
+                    .Where(producto =>
+                        producto.IdProducto > 0)
+                    .GroupBy(producto =>
+                        producto.IdProducto)
+                    .Any(grupo =>
+                        grupo.Count() > 1);
 
-            bool tieneComboIncompleto =
-                dto.Combos?.Any(combo =>
-                    combo.IdCombo <= 0)
-                ?? false;
+            bool combosDuplicados =
+                dto.Combos
+                    .Where(combo =>
+                        combo.IdCombo > 0)
+                    .GroupBy(combo =>
+                        combo.IdCombo)
+                    .Any(grupo =>
+                        grupo.Count() > 1);
 
-            if (tieneProductoIncompleto)
+            if (productosDuplicados)
             {
                 ModelState.AddModelError(
                     "ElementosMenu",
-                    "Complete o quite las filas de productos vacías.");
+                    "No puede agregar el mismo producto " +
+                    "más de una vez.");
             }
 
-            if (tieneComboIncompleto)
+            if (combosDuplicados)
             {
                 ModelState.AddModelError(
                     "ElementosMenu",
-                    "Complete o quite las filas de combos vacías.");
+                    "No puede agregar el mismo combo " +
+                    "más de una vez.");
             }
         }
     }

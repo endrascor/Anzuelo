@@ -38,8 +38,7 @@ namespace Anzuelo.Application.Services.Implementations
                 ICollection<MenuDTO>>(lista);
         }
 
-        public async Task<MenuDTO?>
-            FindByIdAsync(int id)
+        public async Task<MenuDTO?> FindByIdAsync(int id)
         {
             var menu =
                 await _repository
@@ -70,63 +69,64 @@ namespace Anzuelo.Application.Services.Implementations
                 menu);
         }
 
-        public async Task<int> AddAsync(
-            MenuDTO dto)
+        public async Task<int> AddAsync(MenuDTO dto)
         {
-            var menu =
-                _mapper.Map<Menu>(dto);
+            ArgumentNullException.ThrowIfNull(dto);
 
+            var menu = _mapper.Map<Menu>(dto);
+
+            menu.IdMenu = 0;
             menu.IdDisponibilidad = 0;
 
-            menu.IdDisponibilidadNavigation =
+            var disponibilidad =
                 CrearDisponibilidad(dto);
 
+            disponibilidad.IdDisponibilidad = 0;
+
+            menu.IdDisponibilidadNavigation =
+                disponibilidad;
+
             menu.MenuProducto =
-                CrearProductos(
-                    dto.Productos);
+                CrearProductos(dto.Productos);
 
             menu.MenuCombo =
-                CrearCombos(
-                    dto.Combos);
+                CrearCombos(dto.Combos);
 
-            return await _repository
-                .AddAsync(menu);
+            return await _repository.AddAsync(menu);
         }
 
-        public async Task UpdateAsync(
-            int id,
-            MenuDTO dto)
+        public async Task UpdateAsync(int id,MenuDTO dto)
         {
+            ArgumentNullException.ThrowIfNull(dto);
+
+            if (id <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(id),
+                    "El identificador del menú no es válido.");
+            }
+
             var menu =
                 _mapper.Map<Menu>(dto);
 
-            menu.IdMenu =
-                id;
+            menu.IdMenu = id;
 
             menu.IdDisponibilidadNavigation =
                 CrearDisponibilidad(dto);
 
             menu.MenuProducto =
-                CrearProductos(
-                    dto.Productos);
+                CrearProductos(dto.Productos);
 
             menu.MenuCombo =
-                CrearCombos(
-                    dto.Combos);
+                CrearCombos(dto.Combos);
 
-            await _repository.UpdateAsync(
-                menu);
+            await _repository.UpdateAsync(menu);
         }
 
-        private static Disponibilidad
-            CrearDisponibilidad(
-                MenuDTO dto)
+        private static Disponibilidad CrearDisponibilidad(MenuDTO dto)
         {
             return new Disponibilidad
             {
-                IdDisponibilidad =
-                    dto.IdDisponibilidad,
-
                 FechaInicio =
                     dto.FechaInicio.Date,
 
@@ -140,17 +140,14 @@ namespace Anzuelo.Application.Services.Implementations
                     dto.HoraFinal,
 
                 Descripcion =
-                    dto.DescripcionDisponibilidad,
+                    dto.DescripcionDisponibilidad.Trim(),
 
                 IdDisponibilidadDia =
                     dto.IdDisponibilidadDia
             };
         }
 
-        private static ICollection<MenuProducto>
-            CrearProductos(
-                ICollection<MenuProductoDTO>?
-                    productos)
+        private static ICollection<MenuProducto> CrearProductos(ICollection<MenuProductoDTO>? productos)
         {
             if (productos == null)
             {
@@ -158,7 +155,6 @@ namespace Anzuelo.Application.Services.Implementations
             }
 
             return productos
-
                 .Where(producto =>
                     producto.IdProducto > 0)
 
@@ -178,10 +174,7 @@ namespace Anzuelo.Application.Services.Implementations
                 .ToList();
         }
 
-        private static ICollection<MenuCombo>
-            CrearCombos(
-                ICollection<MenuComboDTO>?
-                    combos)
+        private static ICollection<MenuCombo>CrearCombos(ICollection<MenuComboDTO>? combos)
         {
             if (combos == null)
             {
@@ -189,7 +182,6 @@ namespace Anzuelo.Application.Services.Implementations
             }
 
             return combos
-
                 .Where(combo =>
                     combo.IdCombo > 0)
 
