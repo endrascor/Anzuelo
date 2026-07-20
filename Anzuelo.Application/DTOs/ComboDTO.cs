@@ -29,11 +29,11 @@ namespace Anzuelo.Application.DTOs
 
         [Display(Name = "Categoría")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
-        public int IdCategoriaCombo { get; set; }
+        public int? IdCategoriaCombo { get; set; }
 
         [Display(Name = "Estado")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
-        public int IdEstadoCombo { get; set; }
+        public int? IdEstadoCombo { get; set; }
 
         [Display(Name = "Imagen Combo")]
         public byte[]? Imagen { get; set; }

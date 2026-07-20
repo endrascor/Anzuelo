@@ -122,7 +122,7 @@ namespace Anzuelo.Web.Controllers
 
             if (dto.Productos == null || !dto.Productos.Any())
             {
-                ModelState.AddModelError("", "Debe seleccionar al menos un producto para el combo");
+                ModelState.AddModelError("", "Debe seleccionar al menos dos producto para el combo");
             }
 
             if (!ModelState.IsValid)
@@ -179,7 +179,7 @@ namespace Anzuelo.Web.Controllers
 
             if (dto.Productos == null || !dto.Productos.Any())
             {
-                ModelState.AddModelError("", "Debe seleccionar al menos un producto para el combo");
+                ModelState.AddModelError("", "Debe seleccionar al menos dos producto para el combo");
             }
 
             if (!ModelState.IsValid)
