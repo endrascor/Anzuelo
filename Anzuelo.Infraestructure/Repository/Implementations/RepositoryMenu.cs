@@ -107,8 +107,7 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                     menu.IdMenu == id);
         }
 
-        public async Task<Menu?>
-            GetMenuDisponibleAsync()
+        public async Task<Menu?>GetMenuDisponibleAsync()
         {
             var ahora = DateTime.Now;
 
@@ -377,10 +376,7 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             }
         }
 
-        private void ActualizarProductos(
-            Menu menuExistente,
-            ICollection<MenuProducto>
-                productosRecibidos)
+        private void ActualizarProductos(Menu menuExistente,ICollection<MenuProducto>productosRecibidos)
         {
             var productosNuevos =
                 productosRecibidos
@@ -450,10 +446,7 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             }
         }
 
-        private void ActualizarCombos(
-            Menu menuExistente,
-            ICollection<MenuCombo>
-                combosRecibidos)
+        private void ActualizarCombos(Menu menuExistente,ICollection<MenuCombo>combosRecibidos)
         {
             var combosNuevos =
                 combosRecibidos
@@ -521,6 +514,74 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                             });
                 }
             }
+        }
+
+        public async Task<bool> ExisteMenuDisponibleAsync(DateTime fechaHora,CancellationToken cancellationToken = default)
+        {
+            var fechaActual = fechaHora.Date;
+
+            var horaActual = fechaHora.TimeOfDay;
+
+            var diaActual = fechaHora.DayOfWeek == DayOfWeek.Sunday
+                    ? 7 : (int)fechaHora.DayOfWeek;
+
+            return await _context.Menu.AsNoTracking()
+                    .AnyAsync(
+                    menu =>
+                        menu.IdDisponibilidadNavigation != null &&
+
+                        menu
+                            .IdDisponibilidadNavigation
+                            .FechaInicio.Date <= fechaActual &&
+
+                        menu
+                            .IdDisponibilidadNavigation
+                            .FechaFinal.Date >= fechaActual &&
+
+                        menu
+                            .IdDisponibilidadNavigation
+                            .HoraInicio.TimeOfDay <= horaActual &&
+
+                        horaActual <= menu
+                            .IdDisponibilidadNavigation
+                            .HoraFinal.TimeOfDay &&
+
+                        menu
+                            .IdDisponibilidadNavigation
+                            .IdDisponibilidadDia == diaActual,
+
+                    cancellationToken);
+        }
+
+        public async Task<int> AvanzarDiaMenusAsync(
+    CancellationToken cancellationToken = default)
+        {
+            var disponibilidades =
+                await _context.Disponibilidad
+
+                    .Where(disponibilidad =>
+                        disponibilidad.Menu.Any())
+
+                    .ToListAsync(
+                        cancellationToken);
+
+            foreach (var disponibilidad in disponibilidades)
+            {
+                disponibilidad.IdDisponibilidadDia =
+                    disponibilidad.IdDisponibilidadDia == 7
+                        ? 1
+                        : disponibilidad.IdDisponibilidadDia + 1;
+            }
+
+            if (disponibilidades.Count == 0)
+            {
+                return 0;
+            }
+
+            await _context.SaveChangesAsync(
+                cancellationToken);
+
+            return disponibilidades.Count;
         }
     }
 }

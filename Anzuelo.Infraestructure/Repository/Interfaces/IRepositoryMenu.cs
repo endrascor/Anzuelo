@@ -18,5 +18,12 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<int> AddAsync(Menu entity);
 
         Task UpdateAsync(Menu entity);
+
+        Task<bool> ExisteMenuDisponibleAsync(
+            DateTime fechaHora,
+            CancellationToken cancellationToken = default);
+
+        Task<int> AvanzarDiaMenusAsync(
+            CancellationToken cancellationToken = default);
     }
 }
