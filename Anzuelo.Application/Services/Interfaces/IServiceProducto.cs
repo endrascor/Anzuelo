@@ -16,5 +16,8 @@ namespace Anzuelo.Application.Services.Interfaces
         Task<int> AddAsync(ProductoDTO dto,ICollection<byte[]> imagenes);
 
         Task UpdateAsync(int id,ProductoDTO dto,ICollection<byte[]> nuevasImagenes);
+        Task<bool> ExisteNombreAsync(
+    string nombre,
+    int? idProductoExcluir = null);
     }
 }

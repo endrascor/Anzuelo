@@ -13,5 +13,8 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<Producto> FindByIdAsync(int id);
         Task<int> AddAsync(Producto entity);
         Task UpdateAsync(Producto entity);
+        Task<bool> ExisteNombreAsync(
+    string nombre,
+    int? idProductoExcluir = null);
     }
 }

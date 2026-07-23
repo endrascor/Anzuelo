@@ -17,7 +17,7 @@ namespace Anzuelo.Application.DTOs
         [Display(Name = "Descripción")]
         [Required(ErrorMessage = "{0} es un dato requerido")]
         [StringLength(45, ErrorMessage = "{0} no puede superar los {1} caracteres")]
-        public string Descripcion { get; set; } = null!;
+        public string? Descripcion { get; set; } = null!;
 
         [Display(Name = "Producto")]
         [ValidateNever]

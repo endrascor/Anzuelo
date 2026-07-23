@@ -169,5 +169,14 @@ namespace Anzuelo.Application.Services.Implementations
                     })
                 .ToList();
         }
+        public async Task<bool> ExisteNombreAsync(
+    string nombre,
+    int? idProductoExcluir = null)
+        {
+            return await _repository
+                .ExisteNombreAsync(
+                    nombre,
+                    idProductoExcluir);
+        }
     }
 }

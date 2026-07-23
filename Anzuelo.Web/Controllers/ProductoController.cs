@@ -139,11 +139,18 @@ namespace Anzuelo.Web.Controllers
                 ProductoDTO dto,
                 List<IFormFile>? imageFiles)
         {
+            dto.Nombre =
+        dto.Nombre?.Trim() ??
+        string.Empty;
+
             var imagenes =
                 await ConvertirImagenesAsync(
                     imageFiles);
 
             ValidarIngredientes(dto);
+
+            await ValidarNombreProductoAsync(
+                dto.Nombre);
 
             if (imagenes.Count == 0)
             {
@@ -211,6 +218,9 @@ namespace Anzuelo.Web.Controllers
                     imageFiles);
 
             ValidarIngredientes(dto);
+            await ValidarNombreProductoAsync(
+    dto.Nombre,
+    id);
 
             int cantidadImagenesExistentes =
                 dto.Imagenes?
@@ -251,19 +261,70 @@ namespace Anzuelo.Web.Controllers
         }
 
         private void ValidarIngredientes(
-            ProductoDTO dto)
+    ProductoDTO dto)
         {
-            bool tieneIngredienteValido =
-                dto.Ingredientes != null &&
-                dto.Ingredientes.Any(x =>
-                    x.IdIngrediente > 0 &&
-                    x.Cantidad > 0);
+            var ingredientes =
+                dto.Ingredientes?
+                    .ToList()
+                ?? new List<IngredienteDTO>();
 
-            if (!tieneIngredienteValido)
+            if (ingredientes.Count == 0)
             {
                 ModelState.AddModelError(
                     "Ingredientes",
                     "Debe seleccionar al menos un ingrediente.");
+
+                return;
+            }
+
+            bool tieneFilasIncompletas =
+                ingredientes.Any(x =>
+                    x.IdIngrediente <= 0 ||
+                    x.Cantidad <= 0);
+
+            if (tieneFilasIncompletas)
+            {
+                ModelState.AddModelError(
+                    "Ingredientes",
+                    "Complete o quite las filas de ingredientes incompletas.");
+            }
+
+            bool tieneIngredientesRepetidos =
+                ingredientes
+                    .Where(x =>
+                        x.IdIngrediente > 0)
+                    .GroupBy(x =>
+                        x.IdIngrediente)
+                    .Any(grupo =>
+                        grupo.Count() > 1);
+
+            if (tieneIngredientesRepetidos)
+            {
+                ModelState.AddModelError(
+                    "Ingredientes",
+                    "No puede seleccionar el mismo ingrediente más de una vez.");
+            }
+        }
+        private async Task ValidarNombreProductoAsync(
+    string? nombre,
+    int? idProductoExcluir = null)
+        {
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                return;
+            }
+
+            bool nombreExistente =
+                await _serviceProducto
+                    .ExisteNombreAsync(
+                        nombre,
+                        idProductoExcluir);
+
+            if (nombreExistente)
+            {
+                ModelState.AddModelError(
+                    nameof(ProductoDTO.Nombre),
+                    "Ya existe un producto con ese nombre.");
             }
         }
 

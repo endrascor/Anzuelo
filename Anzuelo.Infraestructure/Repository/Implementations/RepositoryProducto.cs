@@ -215,6 +215,23 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                         });
             }
         }
+        public async Task<bool> ExisteNombreAsync(
+    string nombre,
+    int? idProductoExcluir = null)
+        {
+            string nombreNormalizado =
+                nombre.Trim().ToUpper();
+
+            return await _context
+                .Set<Producto>()
+                .AsNoTracking()
+                .AnyAsync(x =>
+                    x.Nombre.Trim().ToUpper() ==
+                        nombreNormalizado &&
+                    (!idProductoExcluir.HasValue ||
+                     x.IdProducto !=
+                        idProductoExcluir.Value));
+        }
     }
 }
 
