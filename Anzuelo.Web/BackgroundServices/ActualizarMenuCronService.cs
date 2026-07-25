@@ -33,9 +33,9 @@ namespace Anzuelo.Web.BackgroundServices
                 logger;
 
             var expresionCron =
-                configuration[
-                    "TareasProgramadas:ActualizarMenu:Cron"]
-                ?? "0 12 * * *";
+    configuration[
+        "TareasProgramadas:ActualizarMenu:Cron"]
+    ?? "0 5 * * *";
 
             _cronExpression =
                 CronExpression.Parse(

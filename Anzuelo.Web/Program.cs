@@ -1,10 +1,12 @@
 using Anzuelo.Application.Profiles;
+using Anzuelo.Application.Services;
 using Anzuelo.Application.Services.Implementations;
 using Anzuelo.Application.Services.Interfaces;
 using Anzuelo.Infraestructure.Data;
 using Anzuelo.Infraestructure.Models;
 using Anzuelo.Infraestructure.Repository.Implementations;
 using Anzuelo.Infraestructure.Repository.Interfaces;
+using Anzuelo.Web.BackgroundServices;
 using Anzuelo.Web.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +49,9 @@ builder.Services.AddTransient<IServiceEstadoMenu, ServiceEstadoMenu>();
 builder.Services.AddTransient<IServiceEstacionCocina, ServiceEstacionCocina>();
 builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
 builder.Services.AddTransient<IServiceDisponibilidadDia, ServiceDisponibilidadDia>();
+builder.Services.AddTransient<IServiceActualizarMenu, ServiceActualizarMenu>();
+
+builder.Services.AddHostedService<ActualizarMenuCronService>();
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
