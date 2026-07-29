@@ -54,5 +54,11 @@ namespace Anzuelo.Application.Services.Implementations
             await _repository.UpdateAsync(entity);
 
         }
+
+        public async Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null)
+        {
+            return await _repository.ExisteNombreAsync(nombre, idExcluir);
+        }
+
     }
 }

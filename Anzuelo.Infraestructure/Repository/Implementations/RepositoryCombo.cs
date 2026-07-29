@@ -66,5 +66,18 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null)
+        {
+            var query = _context.Set<Combo>()
+                .Where(x => x.Nombre.ToLower() == nombre.ToLower());
+
+            if (idExcluir.HasValue)
+            {
+                query = query.Where(x => x.IdCombo != idExcluir.Value);
+            }
+
+            return await query.AnyAsync();
+        }
     }
 }

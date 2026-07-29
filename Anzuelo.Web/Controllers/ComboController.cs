@@ -120,9 +120,29 @@ namespace Anzuelo.Web.Controllers
 
             CargarProductosSeleccionados(dto, productosIds, productosCantidades);
 
-            if (dto.Productos == null || !dto.Productos.Any())
+            if (dto.Productos == null || dto.Productos.Count < 2)
             {
-                ModelState.AddModelError("", "Debe seleccionar al menos dos producto para el combo");
+                ModelState.AddModelError("ProductosMinimo", "Debe seleccionar al menos dos productos para el combo");
+            }
+
+            if (dto.Productos != null && dto.Productos.Any())
+            {
+                var duplicados = dto.Productos
+                    .GroupBy(p => p.IdProducto)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                if (duplicados.Any())
+                {
+                    ModelState.AddModelError("ProductosDuplicados", "No se puede repetir el mismo producto dentro del combo");
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Nombre) &&
+                await _serviceCombo.ExisteNombreAsync(dto.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "Ya existe un combo registrado con ese nombre");
             }
 
             if (!ModelState.IsValid)
@@ -177,9 +197,29 @@ namespace Anzuelo.Web.Controllers
 
             CargarProductosSeleccionados(dto, productosIds, productosCantidades);
 
-            if (dto.Productos == null || !dto.Productos.Any())
+            if (dto.Productos == null || dto.Productos.Count < 2)
             {
-                ModelState.AddModelError("", "Debe seleccionar al menos dos producto para el combo");
+                ModelState.AddModelError("ProductosMinimo", "Debe seleccionar al menos dos productos para el combo");
+            }
+
+            if (dto.Productos != null && dto.Productos.Any())
+            {
+                var duplicados = dto.Productos
+                    .GroupBy(p => p.IdProducto)
+                    .Where(g => g.Count() > 1)
+                    .Select(g => g.Key)
+                    .ToList();
+
+                if (duplicados.Any())
+                {
+                    ModelState.AddModelError("ProductosDuplicados", "No se puede repetir el mismo producto dentro del combo");
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Nombre) &&
+                await _serviceCombo.ExisteNombreAsync(dto.Nombre, id))
+            {
+                ModelState.AddModelError("Nombre", "Ya existe un combo registrado con ese nombre");
             }
 
             if (!ModelState.IsValid)

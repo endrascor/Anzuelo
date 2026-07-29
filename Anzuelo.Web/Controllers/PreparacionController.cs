@@ -127,11 +127,11 @@ namespace Anzuelo.Web.Controllers
 
             if (dto.Estaciones == null || !dto.Estaciones.Any())
             {
-                ModelState.AddModelError("", "Debe agregar al menos una estación al proceso");
+                ModelState.AddModelError("EstacionesMinimo", "Debe agregar al menos una estación al proceso");
             }
             else if (dto.Estaciones.Select(e => e.IdEstacionCocina).Distinct().Count() != dto.Estaciones.Count)
             {
-                ModelState.AddModelError("", "No se puede repetir la misma estación en el proceso");
+                ModelState.AddModelError("EstacionesDuplicadas", "No se puede repetir la misma estación en el proceso");
             }
 
             if (!ModelState.IsValid)
@@ -179,11 +179,11 @@ namespace Anzuelo.Web.Controllers
 
             if (dto.Estaciones == null || !dto.Estaciones.Any())
             {
-                ModelState.AddModelError("", "Debe agregar al menos una estación al proceso");
+                ModelState.AddModelError("EstacionesMinimo", "Debe agregar al menos una estación al proceso");
             }
             else if (dto.Estaciones.Select(e => e.IdEstacionCocina).Distinct().Count() != dto.Estaciones.Count)
             {
-                ModelState.AddModelError("", "No se puede repetir la misma estación en el proceso");
+                ModelState.AddModelError("EstacionesDuplicadas", "No se puede repetir la misma estación en el proceso");
             }
 
             if (!ModelState.IsValid)

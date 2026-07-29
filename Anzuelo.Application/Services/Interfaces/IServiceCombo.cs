@@ -13,5 +13,6 @@ namespace Anzuelo.Application.Services.Interfaces
         Task<ComboDTO> FindByIdAsync(int id);
         Task<int> AddAsync(ComboDTO dto);
         Task UpdateAsync(ComboDTO dto);
+        Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null);
     }
 }
