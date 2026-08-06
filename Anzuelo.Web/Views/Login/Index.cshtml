@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = "Acceso";
+}
+
+<style>
+    .access-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4rem 1rem;
+    }
+
+    .access-card {
+        width: 100%;
+        max-width: 460px;
+        background: #fffdf8;
+        border-radius: .9rem;
+        box-shadow: 0 6px 22px rgba(10, 47, 90, .12);
+        overflow: hidden;
+    }
+
+    .access-header {
+        background: linear-gradient( 135deg, var(--anzuelo-primary), #184f8a );
+        color: #fff;
+        padding: 2rem;
+        text-align: center;
+    }
+
+    .access-icon {
+        font-size: 3rem;
+        margin-bottom: .5rem;
+    }
+
+    .access-title {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .access-subtitle {
+        margin-top: .5rem;
+        margin-bottom: 0;
+        opacity: .9;
+        font-size: .95rem;
+    }
+
+    .access-body {
+        padding: 2rem;
+    }
+
+    .access-description {
+        color: #666;
+        text-align: center;
+        margin-bottom: 1.8rem;
+    }
+
+    .access-options {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .btn-access {
+        width: 100%;
+        min-height: 58px;
+        border-radius: .45rem;
+        padding: .8rem 1rem;
+        font-weight: 700;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        transition: .2s;
+    }
+
+    .btn-login-access {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+    }
+
+        .btn-login-access:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    .btn-register-access {
+        background: transparent;
+        border: 2px solid var(--anzuelo-primary);
+        color: var(--anzuelo-primary);
+    }
+
+        .btn-register-access:hover {
+            background: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    .access-footer {
+        background: #f8f9fa;
+        color: #6c757d;
+        border-top: 1px solid #eee;
+        padding: 1rem;
+        text-align: center;
+        font-size: .85rem;
+    }
+</style>
+
+<div class="access-container">
+
+    <div class="access-card">
+
+        <div class="access-header">
+
+            <div class="access-icon">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+            <h1 class="access-title">
+                Bienvenido
+            </h1>
+
+            <p class="access-subtitle">
+                Sistema de gestión El Anzuelo
+            </p>
+
+        </div>
+
+        <div class="access-body">
+
+            <p class="access-description">
+                Seleccione una opción para continuar.
+            </p>
+
+            <div class="access-options">
+
+                <a asp-controller="Login"
+                   asp-action="LogIn"
+                   class="btn-access btn-login-access">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Iniciar sesión
+
+                </a>
+
+                <a asp-controller="Usuario"
+                   asp-action="Create"
+                   class="btn-access btn-register-access">
+
+                    <i class="bi bi-person-plus"></i>
+                    Registrarse
+
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="access-footer">
+            Restaurante El Anzuelo
+        </div>
+
+    </div>
+
+</div>

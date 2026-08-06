@@ -43,5 +43,16 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
         {
             await _context.SaveChangesAsync();
         }
+        public async Task<Usuario> LoginAsync(string id, string password)
+        {
+            var @object = await _context.Set<Usuario>()
+                                        .Include(b => b.IdRolNavigation)
+                                        .Where(p => p.Email == id && p.PasswordHash == password)
+                                        .FirstOrDefaultAsync();
+            return @object!;
+        }
+
+
+
     }
 }

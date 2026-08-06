@@ -10,5 +10,7 @@ namespace Anzuelo.Application.Services.Interfaces
     {
       Task<ICollection<UsuarioDTO>> ListAsync();
       Task<UsuarioDTO> FindByIdAsync(int id);
+      Task<UsuarioDTO> LoginAsync(string id, string password);
+      Task<string> AddAsync(UsuarioDTO dto);
     }
 }

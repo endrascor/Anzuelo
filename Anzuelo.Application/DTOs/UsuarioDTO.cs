@@ -14,9 +14,12 @@ namespace Anzuelo.Application.DTOs
         public string Nombre { get; set; } = null!;
         public string Apellido1 { get; set; } = null!;
         public string Apellido2 { get; set; } = null!;
+        public string PasswordHash { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public int IdRol { get; set; }
+        public int IdEstadoUsuario { get; set; }
+        public DateTime FechaRegistro { get; set; }
         public string NombreRol { get; set; } = null!;
         public string NombreEstado { get; set; } = null!;
-        public DateTime FechaRegistro { get; set; }
     }
 }

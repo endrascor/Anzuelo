@@ -13,6 +13,7 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<Usuario> FindByIdAsync(int id);
         Task<string> AddAsync(Usuario entity);
         Task UpdateAsync();
+        Task<Usuario> LoginAsync(string id, string password);
 
     }
 }

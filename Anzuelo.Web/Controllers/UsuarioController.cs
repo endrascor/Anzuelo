@@ -1,26 +1,111 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Anzuelo.Web.Controllers
 {
     public class UsuarioController : Controller
     {
         private readonly IServiceUsuario _serviceUsuario;
+        private readonly IServiceRol _serviceRol;
+        private readonly IServiceEstadoUsuario _serviceEstadoUsuario;
 
-        public UsuarioController(IServiceUsuario serviceUsuario)
+        public UsuarioController(
+            IServiceUsuario serviceUsuario,
+            IServiceRol serviceRol,
+            IServiceEstadoUsuario serviceEstadoUsuario)
         {
             _serviceUsuario = serviceUsuario;
+            _serviceRol = serviceRol;
+            _serviceEstadoUsuario = serviceEstadoUsuario;
         }
-        // GET: UsuarioController
+
+
+        // GET: Usuario
         public async Task<ActionResult> Index()
         {
-            var collection = await _serviceUsuario.ListAsync();
+            var collection =
+                await _serviceUsuario.ListAsync();
+
             return View(collection);
         }
-        // GET: UsuarioController/Details/1
+
+
+        // GET: Usuario/Details/1
         public async Task<ActionResult> Details(int id)
         {
-            var @object = await _serviceUsuario.FindByIdAsync(id);
-            return View(@object);
+            var usuario =
+                await _serviceUsuario.FindByIdAsync(id);
+
+            return View(usuario);
+        }
+
+
+        // GET: Usuario/Create
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            await CargarListas();
+
+            return View(new UsuarioDTO());
+        }
+
+
+        // POST: Usuario/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(
+            UsuarioDTO dto)
+        {
+
+            ModelState.Remove(nameof(UsuarioDTO.NombreRol));
+            ModelState.Remove(nameof(UsuarioDTO.NombreEstado));
+
+
+            // Validar rol
+            if (dto.IdRol <= 0)
+            {
+                ModelState.AddModelError(
+                    nameof(dto.IdRol),
+                    "Debe seleccionar un rol."
+                );
+            }
+
+
+            // Validar estado
+            if (dto.IdEstadoUsuario <= 0)
+            {
+                ModelState.AddModelError(
+                    nameof(dto.IdEstadoUsuario),
+                    "Debe seleccionar un estado."
+                );
+            }
+
+
+            if (!ModelState.IsValid)
+            {
+                await CargarListas();
+
+                return View(dto);
+            }
+
+
+            await _serviceUsuario.AddAsync(dto);
+
+            return RedirectToAction(
+                "LogIn",
+                "Login"
+            );
+        }
+
+
+        private async Task CargarListas()
+        {
+            ViewBag.ListRoles =
+                await _serviceRol.ListAync();
+
+            ViewBag.ListEstadosUsuario =
+                await _serviceEstadoUsuario.ListAync();
         }
     }
 }

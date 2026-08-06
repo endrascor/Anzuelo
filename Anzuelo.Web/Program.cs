@@ -1,3 +1,4 @@
+using Anzuelo.Application.Config;
 using Anzuelo.Application.Profiles;
 using Anzuelo.Application.Services;
 using Anzuelo.Application.Services.Implementations;
@@ -8,7 +9,9 @@ using Anzuelo.Infraestructure.Repository.Implementations;
 using Anzuelo.Infraestructure.Repository.Interfaces;
 using Anzuelo.Web.BackgroundServices;
 using Anzuelo.Web.Middleware;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -17,8 +20,12 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Mapeo de la clase AppConfig para leer appsettings.json
+builder.Services.Configure<AppConfig>(builder.Configuration);
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 
 //Repository
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
@@ -34,6 +41,9 @@ builder.Services.AddTransient<IRepositoryEstadoMenu, RepositoryEstadoMenu>();
 builder.Services.AddTransient<IRepositoryEstacionCocina, RepositoryEstacionCocina>();
 builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
 builder.Services.AddTransient<IRepositoryDisponibilidadDia, RepositoryDisponibilidadDia>();
+builder.Services.AddTransient<IRepositoryEstadoUsuario, RepositoryEstadoUsuario>();
+builder.Services.AddTransient<IRepositoryRol, RepositoryRol>();
+
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -50,8 +60,26 @@ builder.Services.AddTransient<IServiceEstacionCocina, ServiceEstacionCocina>();
 builder.Services.AddTransient<IServiceIngrediente, ServiceIngrediente>();
 builder.Services.AddTransient<IServiceDisponibilidadDia, ServiceDisponibilidadDia>();
 builder.Services.AddTransient<IServiceActualizarMenu, ServiceActualizarMenu>();
+builder.Services.AddTransient<IServiceEstadoUsuario, ServiceEstadoUsuario>();
+builder.Services.AddTransient<IServiceRol, ServiceRol>();
 
 builder.Services.AddHostedService<ActualizarMenuCronService>();
+
+//Seguridad
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options => {
+        options.LoginPath = "/Login/Index";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.AccessDeniedPath = "/Login/Forbidden";
+    });
+builder.Services.AddControllersWithViews(options => {
+    options.Filters.Add(
+        new ResponseCacheAttribute
+        {
+            NoStore = true,
+            Location = ResponseCacheLocation.None,
+        });
+});
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -68,6 +96,8 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<EstadoMenuProfile>();
     config.AddProfile<EstacionCocinaProfile>();
     config.AddProfile<DisponibilidadDiaProfile>();
+    config.AddProfile<RolProfile>();
+    config.AddProfile<EstadoUsuarioProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 

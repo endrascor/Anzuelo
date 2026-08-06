@@ -1,0 +1,461 @@
+﻿@model Anzuelo.Application.DTOs.UsuarioDTO
+
+@{
+    ViewData["Title"] = "Registrarse";
+}
+
+<style>
+    .create-user-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10, 47, 90, .10);
+        overflow: hidden;
+        background: #fffdf8;
+    }
+
+    .create-user-header {
+        background: linear-gradient(135deg, var(--anzuelo-primary), #184f8a);
+        color: #fff;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+        .create-user-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .create-user-header p {
+            margin-bottom: 0;
+            margin-top: .4rem;
+            opacity: .9;
+        }
+
+    .create-user-icon {
+        font-size: 2.7rem;
+        margin-bottom: .5rem;
+    }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        color: #555;
+        font-size: .82rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 46px;
+        border-radius: .45rem;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--anzuelo-accent);
+            box-shadow: 0 0 0 .2rem rgba(230, 126, 34, .15);
+        }
+
+    .input-icon-container {
+        position: relative;
+    }
+
+    .input-icon {
+        position: absolute;
+        top: 50%;
+        left: .9rem;
+        transform: translateY(-50%);
+        color: var(--anzuelo-primary);
+        z-index: 5;
+    }
+
+    .input-with-icon {
+        padding-left: 2.6rem;
+    }
+
+    .create-user-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: .75rem;
+    }
+
+    .btn-cancel-user {
+        background: transparent;
+        border: 2px solid #6c757d;
+        color: #6c757d;
+        font-weight: 700;
+        border-radius: .4rem;
+        padding: .55rem 1.2rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: .2s;
+    }
+
+        .btn-cancel-user:hover {
+            background: #6c757d;
+            color: #fff;
+        }
+
+    .btn-save-user {
+        background: var(--anzuelo-accent);
+        border: 2px solid var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 700;
+        border-radius: .4rem;
+        padding: .55rem 1.2rem;
+        transition: .2s;
+    }
+
+        .btn-save-user:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    @@media (max-width: 576px) {
+        .create-user-buttons {
+            flex-direction: column-reverse;
+        }
+
+        .btn-cancel-user,
+        .btn-save-user {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="card create-user-card">
+
+                <div class="create-user-header">
+
+                    <div class="create-user-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+
+                    <h2>Crear cuenta</h2>
+
+                    <p>
+                        Complete la información para registrarse en El Anzuelo.
+                    </p>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form asp-controller="Usuario"
+                          asp-action="Create"
+                          method="post">
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger">
+                        </div>
+
+
+                        <!-- INFORMACIÓN PERSONAL -->
+                        <section class="form-section">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-person-vcard me-1"></i>
+                                Información personal
+                            </div>
+
+                            <div class="row">
+
+                                <!-- Cédula -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Cedula"
+                                           class="form-label">
+                                        Cédula
+                                    </label>
+
+                                    <div class="input-icon-container">
+
+                                        <i class="bi bi-card-text input-icon"></i>
+
+                                        <input asp-for="Cedula"
+                                               class="form-control input-with-icon"
+                                               placeholder="Digite su cédula"
+                                               autocomplete="off" />
+
+                                    </div>
+
+                                    <span asp-validation-for="Cedula"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Nombre -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Nombre"
+                                           class="form-label">
+                                        Nombre
+                                    </label>
+
+                                    <div class="input-icon-container">
+
+                                        <i class="bi bi-person input-icon"></i>
+
+                                        <input asp-for="Nombre"
+                                               class="form-control input-with-icon"
+                                               placeholder="Digite su nombre"
+                                               autocomplete="given-name" />
+
+                                    </div>
+
+                                    <span asp-validation-for="Nombre"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Primer apellido -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Apellido1"
+                                           class="form-label">
+                                        Primer apellido
+                                    </label>
+
+                                    <input asp-for="Apellido1"
+                                           class="form-control"
+                                           placeholder="Digite su primer apellido" />
+
+                                    <span asp-validation-for="Apellido1"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Segundo apellido -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="Apellido2"
+                                           class="form-label">
+                                        Segundo apellido
+                                    </label>
+
+                                    <input asp-for="Apellido2"
+                                           class="form-control"
+                                           placeholder="Digite su segundo apellido" />
+
+                                    <span asp-validation-for="Apellido2"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- INFORMACIÓN DE ACCESO -->
+                        <section class="form-section">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-shield-lock me-1"></i>
+                                Información de acceso
+                            </div>
+
+                            <div class="row">
+
+                                <!-- Correo -->
+                                <div class="col-md-12 mb-3">
+
+                                    <label asp-for="Email"
+                                           class="form-label">
+                                        Correo electrónico
+                                    </label>
+
+                                    <div class="input-icon-container">
+
+                                        <i class="bi bi-envelope input-icon"></i>
+
+                                        <input asp-for="Email"
+                                               type="email"
+                                               class="form-control input-with-icon"
+                                               placeholder="ejemplo@correo.com"
+                                               autocomplete="email" />
+
+                                    </div>
+
+                                    <span asp-validation-for="Email"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Contraseña -->
+                                <div class="col-md-12 mb-3">
+
+                                    <label asp-for="PasswordHash"
+                                           class="form-label">
+                                        Contraseña
+                                    </label>
+
+                                    <div class="input-icon-container">
+
+                                        <i class="bi bi-lock input-icon"></i>
+
+                                        <input asp-for="PasswordHash"
+                                               type="password"
+                                               class="form-control input-with-icon"
+                                               placeholder="Digite una contraseña"
+                                               autocomplete="new-password" />
+
+                                    </div>
+
+                                    <span asp-validation-for="PasswordHash"
+                                          class="text-danger small">
+                                    </span>
+
+                                    <div class="form-text">
+                                        La contraseña será almacenada de forma cifrada.
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- ROL Y ESTADO -->
+                        <section class="form-section">
+
+                            <div class="form-section-title">
+                                <i class="bi bi-person-gear me-1"></i>
+                                Configuración del usuario
+                            </div>
+
+                            <div class="row">
+
+                                <!-- Rol -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="IdRol"
+                                           class="form-label">
+                                        Rol
+                                    </label>
+
+                                    <select asp-for="IdRol"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(
+                                                                                            ViewBag.ListRoles,
+                                                                                            "IdRol",
+                                                                                            "NombreRol"
+                                                                                        ))">
+
+                                        <option value="0">
+                                            -- Seleccione un rol --
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdRol"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Estado -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="IdEstadoUsuario"
+                                           class="form-label">
+                                        Estado
+                                    </label>
+
+                                    <select asp-for="IdEstadoUsuario"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(
+                                                                                            ViewBag.ListEstadosUsuario,
+                                                                                            "IdEstadoUsuario",
+                                                                                            "NombreEstado"
+                                                                                        ))">
+
+                                        <option value="0">
+                                            -- Seleccione un estado --
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdEstadoUsuario"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- BOTONES -->
+                        <div class="create-user-buttons">
+
+                            <a asp-controller="Login"
+                               asp-action="Index"
+                               class="btn-cancel-user">
+
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Cancelar
+
+                            </a>
+
+                            <button type="submit"
+                                    class="btn-save-user">
+
+                                <i class="bi bi-person-check me-1"></i>
+                                Registrarse
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
