@@ -41,6 +41,32 @@
         border: none;
     }
 
+    .top-actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: .75rem;
+        margin-bottom: 1rem;
+    }
+
+    .btn-CrearUsuario-principal {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        border: 2px solid var(--anzuelo-accent);
+        padding: .55rem 1rem;
+        border-radius: .4rem;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: opacity .2s;
+    }
+
+    .btn-CrearUsuario-principal:hover {
+            opacity: .85;
+            color: #fff;
+        }
     .btn-ver-usr {
         background: transparent;
         border: 2px solid var(--anzuelo-accent);
@@ -98,6 +124,18 @@
 </div>
 
 <div class="container">
+    <div class="top-actions">
+
+        <a asp-controller="Usuario"
+           asp-action="CreateAdmin"
+           class="btn-CrearUsuario-principal">
+
+            <i class="bi bi-plus-circle"></i>
+            Crear Usuario
+
+        </a>
+
+    </div>
     @if (!Model.Any())
     {
         <div class="text-center py-5 text-muted">

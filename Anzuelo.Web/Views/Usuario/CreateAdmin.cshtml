@@ -130,7 +130,6 @@
         }
 
     @@media (max-width: 576px) {
-
         .create-user-buttons {
             flex-direction: column-reverse;
         }
@@ -175,10 +174,7 @@
                         </div>
 
 
-                        <!-- ================================================= -->
                         <!-- INFORMACIÓN PERSONAL -->
-                        <!-- ================================================= -->
-
                         <section class="form-section">
 
                             <div class="form-section-title">
@@ -188,9 +184,7 @@
 
                             <div class="row">
 
-
                                 <!-- Cédula -->
-
                                 <div class="col-md-6 mb-3">
 
                                     <label asp-for="Cedula"
@@ -217,7 +211,6 @@
 
 
                                 <!-- Nombre -->
-
                                 <div class="col-md-6 mb-3">
 
                                     <label asp-for="Nombre"
@@ -244,7 +237,6 @@
 
 
                                 <!-- Primer apellido -->
-
                                 <div class="col-md-6 mb-3">
 
                                     <label asp-for="Apellido1"
@@ -264,7 +256,6 @@
 
 
                                 <!-- Segundo apellido -->
-
                                 <div class="col-md-6 mb-3">
 
                                     <label asp-for="Apellido2"
@@ -287,10 +278,7 @@
                         </section>
 
 
-                        <!-- ================================================= -->
                         <!-- INFORMACIÓN DE ACCESO -->
-                        <!-- ================================================= -->
-
                         <section class="form-section">
 
                             <div class="form-section-title">
@@ -300,9 +288,7 @@
 
                             <div class="row">
 
-
                                 <!-- Correo -->
-
                                 <div class="col-md-12 mb-3">
 
                                     <label asp-for="Email"
@@ -330,7 +316,6 @@
 
 
                                 <!-- Contraseña -->
-
                                 <div class="col-md-12 mb-3">
 
                                     <label asp-for="PasswordHash"
@@ -365,30 +350,79 @@
                         </section>
 
 
-                        <!-- ================================================= -->
-                        <!-- VALORES AUTOMÁTICOS -->
-                        <!-- ================================================= -->
-                        <!--
-                            Rol:
-                            2 = Cliente
+                        <!-- ROL Y ESTADO -->
+                        <section class="form-section">
 
-                            Estado:
-                            1 = Activo
-                        -->
+                            <div class="form-section-title">
+                                <i class="bi bi-person-gear me-1"></i>
+                                Configuración del usuario
+                            </div>
 
-                        <input asp-for="IdRol"
-                               type="hidden"
-                               value="2" />
+                            <div class="row">
 
-                        <input asp-for="IdEstadoUsuario"
-                               type="hidden"
-                               value="1" />
+                                <!-- Rol -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="IdRol"
+                                           class="form-label">
+                                        Rol
+                                    </label>
+
+                                    <select asp-for="IdRol"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(
+                                                                                            ViewBag.ListRoles,
+                                                                                            "IdRol",
+                                                                                            "NombreRol"
+                                                                                        ))">
+
+                                        <option value="0">
+                                            -- Seleccione un rol --
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdRol"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
 
 
-                        <!-- ================================================= -->
+                                <!-- Estado -->
+                                <div class="col-md-6 mb-3">
+
+                                    <label asp-for="IdEstadoUsuario"
+                                           class="form-label">
+                                        Estado
+                                    </label>
+
+                                    <select asp-for="IdEstadoUsuario"
+                                            class="form-select"
+                                            asp-items="@(new SelectList(
+                                                                                            ViewBag.ListEstadosUsuario,
+                                                                                            "IdEstadoUsuario",
+                                                                                            "NombreEstado"
+                                                                                        ))">
+
+                                        <option value="0">
+                                            -- Seleccione un estado --
+                                        </option>
+
+                                    </select>
+
+                                    <span asp-validation-for="IdEstadoUsuario"
+                                          class="text-danger small">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </section>
+
+
                         <!-- BOTONES -->
-                        <!-- ================================================= -->
-
                         <div class="create-user-buttons">
 
                             <a asp-controller="Login"
@@ -422,9 +456,6 @@
 
 </div>
 
-
 @section Scripts {
-
     <partial name="_ValidationScriptsPartial" />
-
 }

@@ -50,12 +50,46 @@ namespace Anzuelo.Web.Controllers
             return View(new UsuarioDTO());
         }
 
+        // GET: Usuario/CreateAdmin
+        [HttpGet]
+        public async Task<IActionResult> CreateAdmin()
+        {
+            await CargarListas();
+
+            return View(new UsuarioDTO());
+        }
+
 
         // POST: Usuario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            UsuarioDTO dto)
+        public async Task<IActionResult> Create(UsuarioDTO dto)
+        {
+
+            dto.IdRol = 2;              
+            dto.IdEstadoUsuario = 1;    
+
+            ModelState.Remove(nameof(UsuarioDTO.NombreRol));
+            ModelState.Remove(nameof(UsuarioDTO.NombreEstado));
+
+            ModelState.Remove(nameof(UsuarioDTO.IdRol));
+            ModelState.Remove(nameof(UsuarioDTO.IdEstadoUsuario));
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            await _serviceUsuario.AddAsync(dto);
+
+            return RedirectToAction(
+                "LogIn",
+                "Login"
+            );
+        }
+
+        // POST: Usuario/CreateAdmin
+        public async Task<IActionResult> CreateAdmin(UsuarioDTO dto)
         {
 
             ModelState.Remove(nameof(UsuarioDTO.NombreRol));
