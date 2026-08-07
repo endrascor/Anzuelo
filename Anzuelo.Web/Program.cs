@@ -43,7 +43,11 @@ builder.Services.AddTransient<IRepositoryIngrediente, RepositoryIngrediente>();
 builder.Services.AddTransient<IRepositoryDisponibilidadDia, RepositoryDisponibilidadDia>();
 builder.Services.AddTransient<IRepositoryEstadoUsuario, RepositoryEstadoUsuario>();
 builder.Services.AddTransient<IRepositoryRol, RepositoryRol>();
-
+builder.Services.AddTransient<IRepositoryDireccion, RepositoryDireccion>();
+builder.Services.AddTransient<IRepositoryPedido, RepositoryPedido>();
+builder.Services.AddTransient<IRepositoryEstadoPedido, RepositoryEstadoPedido>();
+builder.Services.AddTransient<IRepositoryMetodoPago, RepositoryMetodoPago>();
+builder.Services.AddTransient<IRepositoryTipoEntrega, RepositoryTipoEntrega>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -62,6 +66,11 @@ builder.Services.AddTransient<IServiceDisponibilidadDia, ServiceDisponibilidadDi
 builder.Services.AddTransient<IServiceActualizarMenu, ServiceActualizarMenu>();
 builder.Services.AddTransient<IServiceEstadoUsuario, ServiceEstadoUsuario>();
 builder.Services.AddTransient<IServiceRol, ServiceRol>();
+builder.Services.AddTransient<IServiceDireccion, ServiceDireccion>();
+builder.Services.AddTransient<IServicePedido, ServicePedido>();
+builder.Services.AddTransient<IServiceEstadoPedido, ServiceEstadoPedido>();
+builder.Services.AddTransient<IServiceMetodoPago, ServiceMetodoPago>();
+builder.Services.AddTransient<IServiceTipoEntrega, ServiceTipoEntrega>();
 
 builder.Services.AddHostedService<ActualizarMenuCronService>();
 
