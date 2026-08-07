@@ -9,10 +9,13 @@ using Anzuelo.Infraestructure.Repository.Implementations;
 using Anzuelo.Infraestructure.Repository.Interfaces;
 using Anzuelo.Web.BackgroundServices;
 using Anzuelo.Web.Middleware;
+using Humanizer.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Events;
 using System.Text;
@@ -20,13 +23,32 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configurar los servicios de localización e indicar la carpeta de recursos
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
 // Mapeo de la clase AppConfig para leer appsettings.json
 builder.Services.Configure<AppConfig>(builder.Configuration);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => {
+    options.Filters.Add(
+        new ResponseCacheAttribute
+        {
+            NoStore = true,
+            Location = ResponseCacheLocation.None,
+        });
+})
+.AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+.AddDataAnnotationsLocalization();
 
-
+// Configuración de culturas soportadas
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "es", "en" };
+    options.SetDefaultCulture("es")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
+});
 //Repository
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
@@ -81,14 +103,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
         options.AccessDeniedPath = "/Login/Forbidden";
     });
-builder.Services.AddControllersWithViews(options => {
-    options.Filters.Add(
-        new ResponseCacheAttribute
-        {
-            NoStore = true,
-            Location = ResponseCacheLocation.None,
-        });
-});
 
 //Configurar Automapper 
 builder.Services.AddAutoMapper(config =>
@@ -163,6 +177,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

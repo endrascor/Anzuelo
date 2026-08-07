@@ -1,7 +1,10 @@
-﻿@model IEnumerable<Anzuelo.Application.DTOs.PreparacionDTO>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<Anzuelo.Application.DTOs.PreparacionDTO>
 @{
-    ViewData["Title"] = "Procesos de Preparación";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
+
 <style>
     .prep-table-wrap {
         background: #fff;
@@ -75,17 +78,17 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-diagram-3 me-2"></i>Procesos de Preparación</h1>
-        <p class="page-hero-sub">Flujo de estaciones para cada producto de la cocina</p>
+        <h1><i class="bi bi-diagram-3 me-2"></i>@Localizer["EncabezadoPrincipal"]</h1>
+        <p class="page-hero-sub">@Localizer["SubtituloPrincipal"]</p>
     </div>
 </div>
 
 <div class="container">
-    @if (!Model.Any())
+    @if (Model == null || !Model.Any())
     {
         <div class="text-center py-5 text-muted">
             <i class="bi bi-inbox" style="font-size:3rem;opacity:.4;"></i>
-            <h5 class="mt-3">No hay procesos registrados aún</h5>
+            <h5 class="mt-3">@Localizer["SinProcesos"]</h5>
         </div>
     }
     else
@@ -94,9 +97,9 @@
             <table class="table prep-table mb-0">
                 <thead>
                     <tr>
-                        <th>Producto</th>
-                        <th class="text-center">Pasos</th>
-                        <th class="text-center">Detalle</th>
+                        <th>@Localizer["ThProducto"]</th>
+                        <th class="text-center">@Localizer["ThPasos"]</th>
+                        <th class="text-center">@Localizer["ThDetalle"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -105,12 +108,12 @@
                         <tr>
                             <td>@item.NombreProducto</td>
                             <td class="text-center">
-                                <span class="badge-pasos">@item.Estaciones.Count</span>
+                                <span class="badge-pasos">@(item.Estaciones?.Count ?? 0)</span>
                             </td>
                             <td class="text-center">
                                 <a asp-action="Details" asp-route-id="@item.IdPreparacion"
                                    class="btn-ver-prep">
-                                    Ver detalle
+                                    @Localizer["BtnVerDetalle"]
                                     <i class="bi bi-arrow-right"></i>
                                 </a>
                             </td>

@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Anzuelo.Application.DTOs.ComboDTO>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<Anzuelo.Application.DTOs.ComboDTO>
 
 @{
-    ViewData["Title"] = "Combos";
+    ViewData["Title"] = Localizer["TituloCombos"];
 }
 
 <style>
@@ -72,7 +74,6 @@
         border-top: 1px solid #edf0f2;
     }
 
-    /* BOTÓN estilo productos */
     .btn-anzuelo {
         background: transparent;
         border: 2px solid var(--anzuelo-accent);
@@ -100,8 +101,8 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-bag-heart me-2"></i>Combos</h1>
-        <p class="page-hero-sub">Selecciones especiales con nuestros mejores mariscos</p>
+        <h1><i class="bi bi-bag-heart me-2"></i>@Localizer["TituloCombos"]</h1>
+        <p class="page-hero-sub">@Localizer["SubtituloCombos"]</p>
     </div>
 </div>
 
@@ -111,7 +112,7 @@
     {
         <div class="text-center py-5 text-muted">
             <i class="bi bi-inbox" style="font-size:3rem;opacity:.4;"></i>
-            <h5 class="mt-3">No hay combos disponibles por el momento</h5>
+            <h5 class="mt-3">@Localizer["NoHayCombos"]</h5>
         </div>
     }
     else
@@ -134,7 +135,7 @@
                         {
                             <img class="combo-img"
                                  src="~/images/no-image.png"
-                                 alt="Sin imagen" />
+                                 alt="@Localizer["SinImagen"]" />
                         }
 
                         <div class="card-body d-flex flex-column">
@@ -154,7 +155,7 @@
                                    asp-route-id="@item.IdCombo"
                                    class="btn-anzuelo">
 
-                                    Ver detalle
+                                    @Localizer["VerDetalle"]
                                     <i class="bi bi-arrow-right"></i>
 
                                 </a>

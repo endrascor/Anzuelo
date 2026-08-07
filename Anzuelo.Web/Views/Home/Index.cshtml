@@ -1,78 +1,48 @@
-﻿@{
-    ViewData["Title"] = "Inicio";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <section class="text-center py-5">
-
-    <h1 class="display-2 fw-bold"
-        style="color:var(--anzuelo-primary);">
-
+    <h1 class="display-2 fw-bold" style="color:var(--anzuelo-primary);">
         EL ANZUELO
-
     </h1>
-
     <p class="lead">
-        Sabor del mar en cada plato
+        @Localizer["Eslogan"]
     </p>
-
 </section>
 
 <section class="text-center mb-5">
-
     <img src="~/images/logo.png"
          class="img-fluid"
          style="max-height:500px;"
          alt="Anzuelo" />
-
 </section>
 
 <section class="container mb-5">
-
     <div class="card shadow-sm">
-
         <div class="card-header bg-white text-center">
-
             <button class="btn btn-link text-decoration-none fs-4 fw-bold"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#quienesSomos"
                     aria-expanded="true"
                     aria-controls="quienesSomos">
-
-                ¿Quiénes Somos? ▼
-
+                @Localizer["TituloQuienesSomos"]
             </button>
-
         </div>
 
         <div class="collapse show" id="quienesSomos">
-
             <div class="card-body p-5">
-
                 <p class="fs-5 text-center">
-
-                    En Soda El Anzuelo nos especializamos en la preparación
-                    de ceviches, mariscos frescos y platos típicos
-                    costarricenses. Nuestro objetivo es ofrecer a cada
-                    cliente una experiencia gastronómica auténtica,
-                    utilizando ingredientes frescos y recetas llenas
-                    de sabor.
-
+                    @Localizer["TextoQuienesSomos1"]
                 </p>
-
                 <p class="fs-5 text-center">
-
-                    Desde nuestros tradicionales ceviches hasta nuestros
-                    casados y combos especiales, cada platillo es preparado
-                    con dedicación para brindar calidad, frescura y el
-                    auténtico sabor del mar.
-
+                    @Localizer["TextoQuienesSomos2"]
                 </p>
-
             </div>
-
         </div>
-
     </div>
-
 </section>

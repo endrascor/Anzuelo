@@ -43,6 +43,7 @@
         border-radius: .55rem;
         padding: 1rem;
         margin-bottom: 1rem;
+        transition: box-shadow .15s;
     }
 
     .btn-guardar-preparacion {
@@ -75,6 +76,37 @@
         font-weight: 700;
         font-size: .85rem;
     }
+
+    .orden-controles {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+        margin-top: .4rem;
+    }
+
+    .btn-orden {
+        width: 28px;
+        height: 24px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #dee2e6;
+        background: #fff;
+        border-radius: .3rem;
+        color: var(--anzuelo-primary);
+        transition: background .15s, color .15s;
+    }
+
+        .btn-orden:hover:not(:disabled) {
+            background: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+        .btn-orden:disabled {
+            opacity: .3;
+            cursor: not-allowed;
+        }
 </style>
 
 <div class="container py-4">
@@ -116,9 +148,60 @@
                                 </button>
                             </div>
 
-                            <div id="contenedorEstaciones"></div>
+                            <div id="contenedorEstaciones">
+                                @if (Model.Estaciones != null)
+                                {
+                                    foreach (var e in Model.Estaciones.OrderBy(x => x.NumeroOrden))
+                                    {
+                                        <div class="row align-items-center estacion-fila">
+                                            <div class="col-md-1 mb-2 text-center">
+                                                <label class="form-label d-block">&nbsp;</label>
+                                                <span class="orden-badge orden-label">@e.NumeroOrden</span>
+                                                <div class="orden-controles">
+                                                    <button type="button" class="btn-orden btn-subir" title="Subir">
+                                                        <i class="bi bi-caret-up-fill"></i>
+                                                    </button>
+                                                    <button type="button" class="btn-orden btn-bajar" title="Bajar">
+                                                        <i class="bi bi-caret-down-fill"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label class="form-label">Estación</label>
+                                                <select class="form-select estacion-select">
+                                                    @foreach (var opt in ViewBag.ListEstaciones)
+                                                    {
+                                                        <option value="@opt.IdEstacionCocina" selected="@(opt.IdEstacionCocina == e.IdEstacionCocina)">@opt.Descripcion</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Tiempo (min)</label>
+                                                <input type="number" class="form-control tiempo-input" min="1" value="@e.TiempoEstimadoMinutos" />
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <button type="button" class="btn btn-outline-danger w-100 btn-quitar">
+                                                    <i class="bi bi-trash me-1"></i>Quitar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
                             <div id="mensajeSinEstaciones" class="alert alert-light border mb-0">No se han agregado estaciones.</div>
                             <div id="errorEstacionesCliente" class="text-danger mensaje-validacion-seccion"></div>
+                            @if (ViewData.ModelState["EstacionesMinimo"] != null)
+                            {
+                                <div class="text-danger mensaje-validacion-seccion">
+                                    @ViewData.ModelState["EstacionesMinimo"].Errors.First().ErrorMessage
+                                </div>
+                            }
+                            @if (ViewData.ModelState["EstacionesDuplicadas"] != null)
+                            {
+                                <div class="text-danger mensaje-validacion-seccion">
+                                    @ViewData.ModelState["EstacionesDuplicadas"].Errors.First().ErrorMessage
+                                </div>
+                            }
                             <div id="estacionesHidden"></div>
                         </section>
 
@@ -134,12 +217,20 @@
 </div>
 
 <template id="plantillaEstacion">
-    <div class="row align-items-end estacion-fila">
+    <div class="row align-items-center estacion-fila">
         <div class="col-md-1 mb-2 text-center">
             <label class="form-label d-block">&nbsp;</label>
             <span class="orden-badge orden-label"></span>
+            <div class="orden-controles">
+                <button type="button" class="btn-orden btn-subir" title="Subir">
+                    <i class="bi bi-caret-up-fill"></i>
+                </button>
+                <button type="button" class="btn-orden btn-bajar" title="Bajar">
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+            </div>
         </div>
-        <div class="col-md-6 mb-2">
+        <div class="col-md-5 mb-2">
             <label class="form-label">Estación</label>
             <select class="form-select estacion-select">
                 @foreach (var opt in ViewBag.ListEstaciones)
@@ -152,7 +243,7 @@
             <label class="form-label">Tiempo (min)</label>
             <input type="number" class="form-control tiempo-input" min="1" value="5" />
         </div>
-        <div class="col-md-2 mb-2">
+        <div class="col-md-3 mb-2">
             <button type="button" class="btn btn-outline-danger w-100 btn-quitar">
                 <i class="bi bi-trash me-1"></i>Quitar
             </button>
@@ -174,8 +265,11 @@
         }
 
         function renumerar() {
-            obtenerFilasEstaciones().forEach((fila, i) => {
+            const filas = obtenerFilasEstaciones();
+            filas.forEach((fila, i) => {
                 fila.querySelector('.orden-label').textContent = i + 1;
+                fila.querySelector('.btn-subir').disabled = (i === 0);
+                fila.querySelector('.btn-bajar').disabled = (i === filas.length - 1);
             });
         }
 
@@ -191,8 +285,35 @@
         });
 
         contenedorEstaciones.addEventListener('click', function (e) {
-            const btn = e.target.closest('.btn-quitar');
-            if (btn) { btn.closest('.estacion-fila').remove(); renumerar(); actualizarMensajeEstaciones(); }
+            const btnQuitar = e.target.closest('.btn-quitar');
+            if (btnQuitar) {
+                btnQuitar.closest('.estacion-fila').remove();
+                renumerar();
+                actualizarMensajeEstaciones();
+                return;
+            }
+
+            const btnSubir = e.target.closest('.btn-subir');
+            if (btnSubir) {
+                const fila = btnSubir.closest('.estacion-fila');
+                const anterior = fila.previousElementSibling;
+                if (anterior) {
+                    contenedorEstaciones.insertBefore(fila, anterior);
+                    renumerar();
+                }
+                return;
+            }
+
+            const btnBajar = e.target.closest('.btn-bajar');
+            if (btnBajar) {
+                const fila = btnBajar.closest('.estacion-fila');
+                const siguiente = fila.nextElementSibling;
+                if (siguiente) {
+                    contenedorEstaciones.insertBefore(siguiente, fila);
+                    renumerar();
+                }
+                return;
+            }
         });
 
         document.getElementById('formPreparacion').addEventListener('submit', function (e) {
@@ -216,6 +337,7 @@
             });
         });
 
+        renumerar();
         actualizarMensajeEstaciones();
     </script>
 }

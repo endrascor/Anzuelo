@@ -1,6 +1,8 @@
-﻿@model Anzuelo.Application.DTOs.ComboDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.ComboDTO
 @{
-    ViewData["Title"] = "Detalle del Combo";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <style>
@@ -84,7 +86,7 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-bag-heart me-2"></i>Detalle del Combo</h1>
+        <h1><i class="bi bi-bag-heart me-2"></i>@Localizer["EncabezadoPrincipal"]</h1>
         <p class="page-hero-sub">@Model.Nombre</p>
     </div>
 </div>
@@ -132,7 +134,7 @@
                     <div class="d-flex justify-content-center align-items-center text-muted" style="height:350px;">
                         <div class="text-center">
                             <i class="bi bi-image" style="font-size:3rem;opacity:.3;"></i>
-                            <p class="mt-2 small">Sin imágenes</p>
+                            <p class="mt-2 small">@Localizer["SinImagenes"]</p>
                         </div>
                     </div>
                 }
@@ -141,16 +143,16 @@
             <div class="col-md-7 d-flex flex-column justify-content-center">
                 <h3 style="color:var(--anzuelo-primary);font-weight:700;">@Model.Nombre</h3>
                 <hr />
-                <p><strong>Descripción:</strong><br />@Model.Descripcion</p>
+                <p><strong>@Localizer["LabelDescripcion"]:</strong><br />@Model.Descripcion</p>
                 <p>
-                    <strong>Categoría:</strong>
+                    <strong>@Localizer["LabelCategoria"]:</strong>
                     <span class="badge rounded-pill ms-1"
                           style="background:var(--anzuelo-primary);color:#fff;">
                         @Model.NombreCategoria
                     </span>
                 </p>
                 <p>
-                    <strong>Estado:</strong>
+                    <strong>@Localizer["LabelEstado"]:</strong>
                     <span class="badge rounded-pill ms-1"
                           style="background:#eaf4de;color:#3d6b1a;">
                         @Model.NombreEstado
@@ -165,25 +167,28 @@
     <div class="card detail-card shadow-sm mt-4">
         <div class="card-body p-4">
             <h4 style="color:var(--anzuelo-primary);font-weight:700;">
-                <i class="bi bi-list-ul me-1"></i>Productos incluidos
+                <i class="bi bi-list-ul me-1"></i>@Localizer["TituloProductosIncluidos"]
             </h4>
         </div>
-        @foreach (var producto in Model.Productos)
+        @if (Model.Productos != null && Model.Productos.Any())
         {
-            <div class="producto-row">
-                <span>
-                    <i class="bi bi-circle-fill me-2"
-                       style="font-size:.45rem;color:var(--anzuelo-accent);vertical-align:middle;"></i>
-                    @producto.NombreProducto
-                </span>
-                <span class="badge-cant">×@producto.Cantidad</span>
-            </div>
+            foreach (var producto in Model.Productos)
+            {
+                <div class="producto-row">
+                    <span>
+                        <i class="bi bi-circle-fill me-2"
+                           style="font-size:.45rem;color:var(--anzuelo-accent);vertical-align:middle;"></i>
+                        @producto.NombreProducto
+                    </span>
+                    <span class="badge-cant">×@producto.Cantidad</span>
+                </div>
+            }
         }
     </div>
 
     <div class="mt-4">
         <a href="javascript:history.back()" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver a Combos
+            <i class="bi bi-arrow-left"></i> @Localizer["BtnVolver"]
         </a>
     </div>
 
