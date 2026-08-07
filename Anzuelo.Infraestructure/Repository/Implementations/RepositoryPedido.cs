@@ -26,6 +26,7 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .Include(p => p.IdTipoEntregaNavigation)
                 .Include(p => p.IdDireccionNavigation)
                 .Include(p => p.IdUsuario)
+                    .ThenInclude(u => u.IdRolNavigation)
                 .Include(p => p.Pago)
                     .ThenInclude(pa => pa.IdMetodoPagoNavigation)
                 .Include(p => p.DetallePedido)
@@ -33,7 +34,6 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 .Include(p => p.DetallePedido)
                     .ThenInclude(d => d.IdComboNavigation)
                 .FirstOrDefaultAsync(p => p.IdPedido == id);
-
             return pedido!;
         }
 

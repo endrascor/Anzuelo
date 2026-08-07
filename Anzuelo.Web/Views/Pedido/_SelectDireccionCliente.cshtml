@@ -1,0 +1,44 @@
+﻿@model List<Anzuelo.Application.DTOs.DireccionDTO>
+@{
+    var idClienteActual = ViewBag.IdClienteActual as int?;
+}
+
+@if (Model != null && Model.Any())
+{
+    <label class="form-label">Dirección de entrega</label>
+    <select name="IdDireccion" class="form-select">
+        <option value="">-- Seleccione una dirección --</option>
+        @foreach (var d in Model)
+        {
+            <option value="@d.IdDireccion">@d.Provincia, @d.Canton, @d.Distrito - @d.Detalle</option>
+        }
+    </select>
+}
+else
+{
+    <div class="info-cliente-box">
+        <p class="mb-2"><strong>Este cliente no tiene direcciones registradas.</strong> Agregue una para continuar.</p>
+        <div class="row">
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Provincia</label>
+                <input type="text" class="form-control form-control-sm" id="nuevaProvinciaCliente" />
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Cantón</label>
+                <input type="text" class="form-control form-control-sm" id="nuevoCantonCliente" />
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Distrito</label>
+                <input type="text" class="form-control form-control-sm" id="nuevoDistritoCliente" />
+            </div>
+            <div class="col-md-6 mb-2">
+                <label class="form-label">Detalle (señas)</label>
+                <input type="text" class="form-control form-control-sm" id="nuevoDetalleCliente" />
+            </div>
+        </div>
+        <input type="hidden" id="idClienteParaDireccion" value="@idClienteActual" />
+        <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btnGuardarDireccionCliente">
+            <i class="bi bi-plus-lg me-1"></i>Guardar dirección
+        </button>
+    </div>
+}

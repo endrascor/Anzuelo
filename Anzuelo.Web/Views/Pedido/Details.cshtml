@@ -1,0 +1,232 @@
+﻿@model Anzuelo.Application.DTOs.PedidoDTO
+@{
+    ViewData["Title"] = "Detalle del Pedido";
+}
+
+<style>
+    .factura-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10,47,90,.10);
+        overflow: hidden;
+    }
+
+    .factura-header {
+        background: linear-gradient(135deg, var(--anzuelo-primary), #184f8a);
+        color: #fff;
+        padding: 1.75rem;
+    }
+
+        .factura-header h2 {
+            margin: 0;
+            font-weight: 800;
+        }
+
+    .factura-encabezado-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 1.5rem;
+        background: #f8f9fa;
+        border-bottom: 1px solid #edf0f2;
+    }
+
+    .factura-dato .label {
+        font-size: .75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--anzuelo-primary);
+        margin-bottom: .25rem;
+    }
+
+    .factura-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .8rem 1rem;
+    }
+
+    .factura-table td {
+        padding: .7rem 1rem;
+        border-bottom: 1px solid #edf0f2;
+    }
+
+    .factura-totales {
+        background: #fff5ee;
+        border-radius: .5rem;
+        padding: 1.25rem;
+        margin: 1.5rem;
+    }
+
+    .fila-total {
+        display: flex;
+        justify-content: space-between;
+        padding: .3rem 0;
+    }
+
+    .fila-total-final {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: var(--anzuelo-accent);
+        border-top: 1px solid #e6c9ab;
+        margin-top: .5rem;
+        padding-top: .5rem;
+    }
+
+    .badge-estado {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-size: .85rem;
+        font-weight: 700;
+        padding: .35em .9em;
+        border-radius: 2rem;
+    }
+
+    .btn-back {
+        background: transparent;
+        border: 2px solid var(--anzuelo-accent);
+        color: var(--anzuelo-accent);
+        font-weight: 600;
+        border-radius: .4rem;
+        padding: .45rem 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        transition: .2s;
+    }
+
+        .btn-back:hover {
+            background: var(--anzuelo-accent);
+            color: #fff;
+        }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-receipt-cutoff me-2"></i>Pedido #@Model.IdPedido</h1>
+        <p class="page-hero-sub">Comprobante del pedido registrado</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card factura-card">
+                <div class="factura-header d-flex justify-content-between align-items-center">
+                    <h2><i class="bi bi-shop me-2"></i>Soda Anzuelo</h2>
+                    <span class="badge-estado">@Model.NombreEstado</span>
+                </div>
+
+                <div class="factura-encabezado-grid">
+                    <div class="factura-dato">
+                        <div class="label">Fecha</div>
+                        <div>@Model.FechaPedido.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="factura-dato">
+                        <div class="label">Cliente</div>
+                        <div>@Model.NombreCliente</div>
+                        <small class="text-muted">Cédula: @Model.CedulaCliente</small>
+                    </div>
+                    @if (!string.IsNullOrWhiteSpace(Model.NombreEncargado))
+                    {
+                        <div class="factura-dato">
+                            <div class="label">Encargado</div>
+                            <div>@Model.NombreEncargado</div>
+                        </div>
+                    }
+                    <div class="factura-dato">
+                        <div class="label">Método de entrega</div>
+                        <div>@Model.NombreTipoEntrega</div>
+                    </div>
+                    <div class="factura-dato">
+                        <div class="label">Método de pago</div>
+                        <div>@Model.Pago?.NombreMetodoPago</div>
+                    </div>
+                </div>
+
+                <div class="p-4">
+                    <div class="table-responsive">
+                        <table class="table factura-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Producto / Combo</th>
+                                    <th class="text-end">Precio</th>
+                                    <th class="text-center">Cantidad</th>
+                                    <th class="text-end">Subtotal</th>
+                                    <th class="text-end">Impuesto</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var linea in Model.Detalles)
+                                {
+                                    <tr>
+                                        <td><strong>@linea.Nombre</strong></td>
+                                        <td class="text-end">₡@linea.PrecioUnitario.ToString("N2")</td>
+                                        <td class="text-center">@linea.Cantidad</td>
+                                        <td class="text-end">₡@linea.Subtotal.ToString("N2")</td>
+                                        <td class="text-end">₡@linea.Impuesto.ToString("N2")</td>
+                                        <td>@linea.Observaciones</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="factura-totales">
+                    <div class="fila-total">
+                        <span>Subtotal</span>
+                        <span>₡@Model.Subtotal.ToString("N2")</span>
+                    </div>
+                    <div class="fila-total">
+                        <span>Impuesto</span>
+                        <span>₡@Model.Impuesto.ToString("N2")</span>
+                    </div>
+                    @if (Model.CostoEnvio > 0)
+                    {
+                        <div class="fila-total">
+                            <span>Costo de envío</span>
+                            <span>₡@Model.CostoEnvio.ToString("N2")</span>
+                        </div>
+                    }
+                    <div class="fila-total fila-total-final">
+                        <span>Total</span>
+                        <span>₡@Model.Total.ToString("N2")</span>
+                    </div>
+                    @if (Model.Pago != null && Model.Pago.NombreMetodoPago != null &&
+                                        Model.Pago.NombreMetodoPago.Contains("efectivo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        <div class="fila-total mt-2">
+                            <span>Monto recibido</span>
+                            <span>₡@Model.Pago.MontoRecibido?.ToString("N2")</span>
+                        </div>
+                        <div class="fila-total">
+                            <span>Vuelto</span>
+                            <span>₡@Model.Pago.Vuelto?.ToString("N2")</span>
+                        </div>
+                    }
+                    else if (Model.Pago != null && !string.IsNullOrWhiteSpace(Model.Pago.Ultimos4Tarjeta))
+                    {
+                        <div class="fila-total mt-2">
+                            <span>Tarjeta terminada en</span>
+                            <span>**** @Model.Pago.Ultimos4Tarjeta</span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <a asp-controller="Home" asp-action="Index" class="btn-back">
+                    <i class="bi bi-arrow-left"></i> Volver al inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

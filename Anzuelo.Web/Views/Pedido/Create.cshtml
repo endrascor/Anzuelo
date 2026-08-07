@@ -1,0 +1,648 @@
+﻿@model Anzuelo.Application.DTOs.PedidoDTO
+@{
+    ViewData["Title"] = "Registrar Pedido";
+    var esCliente = User.IsInRole("Cliente");
+    var listaDirecciones = (IEnumerable<Anzuelo.Application.DTOs.DireccionDTO>)ViewBag.ListDirecciones;
+    var hayDirecciones = listaDirecciones != null && listaDirecciones.Any();
+}
+
+<style>
+    .create-card {
+        border: none;
+        border-radius: .75rem;
+        box-shadow: 0 4px 18px rgba(10,47,90,.10);
+        overflow: hidden;
+    }
+
+    .create-card-header {
+        background: var(--anzuelo-primary);
+        color: #fff;
+        padding: 1.25rem 1.5rem;
+    }
+
+        .create-card-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .info-cliente-box {
+        background: #f8f9fa;
+        border: 1px solid #e5e8eb;
+        border-radius: .55rem;
+        padding: 1rem;
+        margin-top: .75rem;
+    }
+
+    .btn-guardar-pedido {
+        background: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .btn-guardar-pedido:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-receipt me-2"></i>Registrar Pedido</h1>
+        <p class="page-hero-sub">Complete los datos del pedido</p>
+    </div>
+</div>
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <div class="card create-card">
+                <div class="create-card-header">
+                    <h2><i class="bi bi-cart-check me-2"></i>Nuevo pedido</h2>
+                    <p class="mb-0 mt-1">Complete la información y agregue los productos o combos.</p>
+                </div>
+                <div class="card-body p-4">
+                    <form id="formPedido">
+                        @Html.AntiForgeryToken()
+
+                        <section class="form-section">
+                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>Información general</div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Fecha</label>
+                                    <input type="text" class="form-control" value="@DateTime.Now.ToString("dd/MM/yyyy")" disabled />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Estado</label>
+                                    <input type="text" class="form-control" value="Pendiente de pago" disabled />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label asp-for="IdTipoEntrega" class="form-label">Método de entrega</label>
+                                    <select asp-for="IdTipoEntrega" class="form-select" id="selectTipoEntrega"
+                                            asp-items="@(new SelectList(ViewBag.ListTipoEntrega, "IdTipoEntrega", "Descripcion"))">
+                                        <option value="">-- Seleccione --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            @if (esCliente)
+                            {
+                                var clienteSesion = ViewBag.ClienteSesion as Anzuelo.Application.DTOs.UsuarioDTO;
+                                <input type="hidden" asp-for="IdUsuarioCliente" value="@clienteSesion?.IdUsuario" />
+                                <div class="info-cliente-box">
+                                    <p class="mb-1"><strong>Cliente:</strong> @clienteSesion?.Nombre @clienteSesion?.Apellido1</p>
+                                    <p class="mb-0"><strong>Cédula:</strong> @clienteSesion?.Cedula</p>
+                                </div>
+
+                                <div class="row mt-3" id="seccionDireccion" style="display:none;">
+                                    <div class="col-md-12" id="contenedorDireccion">
+                                        @if (hayDirecciones)
+                                        {
+                                            <label class="form-label">Dirección de entrega</label>
+                                            <select asp-for="IdDireccion" name="IdDireccion" class="form-select">
+                                                <option value="">-- Seleccione una dirección --</option>
+                                                @foreach (var d in listaDirecciones)
+                                                {
+                                                    <option value="@d.IdDireccion">@d.Provincia, @d.Canton, @d.Distrito - @d.Detalle</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <div class="info-cliente-box">
+                                                <p class="mb-2"><strong>No tiene direcciones registradas.</strong> Agregue una para continuar.</p>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label">Provincia</label>
+                                                        <input type="text" class="form-control form-control-sm" id="nuevaProvincia" />
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label">Cantón</label>
+                                                        <input type="text" class="form-control form-control-sm" id="nuevoCanton" />
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label">Distrito</label>
+                                                        <input type="text" class="form-control form-control-sm" id="nuevoDistrito" />
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <label class="form-label">Detalle (señas)</label>
+                                                        <input type="text" class="form-control form-control-sm" id="nuevoDetalle" />
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btnGuardarDireccion">
+                                                    <i class="bi bi-plus-lg me-1"></i>Guardar dirección
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row mt-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label asp-for="IdUsuarioCliente" class="form-label">Cliente</label>
+                                        <select asp-for="IdUsuarioCliente" class="form-select" id="selectCliente">
+                                            <option value="">-- Seleccione un cliente --</option>
+                                            @foreach (var c in (IEnumerable<Anzuelo.Application.DTOs.UsuarioDTO>)ViewBag.ListClientes)
+                                            {
+                                                <option value="@c.IdUsuario" data-cedula="@c.Cedula" data-email="@c.Email">
+                                                    @c.Nombre @c.Apellido1
+                                                </option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Información del cliente</label>
+                                        <div class="info-cliente-box" id="infoClienteSeleccionado">
+                                            <p class="mb-0 text-muted">Seleccione un cliente para ver su información.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3" id="seccionDireccion" style="display:none;">
+                                    <div class="col-md-12" id="contenedorDireccion">
+                                        <label class="form-label">Dirección de entrega</label>
+                                        <select name="IdDireccion" class="form-select">
+                                            <option value="">-- Primero seleccione un cliente --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            }
+                        </section>
+
+                        <section class="form-section" id="seccionAgregar">
+                            <div class="form-section-title"><i class="bi bi-plus-circle me-1"></i>Agregar producto o combo</div>
+                            <div class="row align-items-end">
+                                <div class="col-md-5 mb-2">
+                                    <label class="form-label">Producto / Combo</label>
+                                    <select class="form-select" id="selectItem">
+                                        <option value="">-- Seleccione --</option>
+                                        <optgroup label="Productos">
+                                            @foreach (var p in (IEnumerable<Anzuelo.Application.DTOs.ProductoDTO>)ViewBag.ListProductos)
+                                            {
+                                                <option value="P-@p.IdProducto">@p.Nombre - ₡@p.Precio.ToString("N2")</option>
+                                            }
+                                        </optgroup>
+                                        <optgroup label="Combos">
+                                            @foreach (var c in (IEnumerable<Anzuelo.Application.DTOs.ComboDTO>)ViewBag.ListCombos)
+                                            {
+                                                <option value="C-@c.IdCombo">@c.Nombre - ₡@c.PrecioTotal.ToString("N2")</option>
+                                            }
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Cantidad</label>
+                                    <input type="number" min="1" value="1" class="form-control" id="inputCantidadNueva" />
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label">Observaciones</label>
+                                    <input type="text" class="form-control" id="inputObservacionesNueva" placeholder="Opcional" />
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <button type="button" class="btn btn-outline-primary w-100" id="btnAgregarLinea">
+                                        <i class="bi bi-plus-lg me-1"></i>Agregar
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="form-section" id="seccionDetalle">
+                            <div class="form-section-title"><i class="bi bi-list-ul me-1"></i>Detalle del pedido</div>
+                            <div id="contenedorDetallePedido">
+                                @await Html.PartialAsync("_DetallePedido", new List<Anzuelo.Application.DTOs.DetallePedidoDTO>())
+                            </div>
+                        </section>
+
+                        <section class="form-section" id="seccionPago">
+                            <div class="form-section-title"><i class="bi bi-credit-card me-1"></i>Método de pago</div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label">Método de pago</label>
+                                    <select class="form-select" id="selectMetodoPago" name="Pago.IdMetodoPago">
+                                        <option value="">-- Seleccione --</option>
+                                        @foreach (var m in (IEnumerable<Anzuelo.Application.DTOs.MetodoPagoDTO>)ViewBag.ListMetodoPago)
+                                        {
+                                            <option value="@m.IdMetodoPago" data-descripcion="@m.Descripcion.ToLower()">@m.Descripcion</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3" id="campoMontoRecibido" style="display:none;">
+                                    <label class="form-label">Monto recibido</label>
+                                    <input type="number" step="0.01" class="form-control" name="Pago.MontoRecibido" id="inputMontoRecibido" />
+                                </div>
+                                <div class="col-md-4 mb-3" id="campoVuelto" style="display:none;">
+                                    <label class="form-label">Vuelto</label>
+                                    <input type="text" class="form-control" id="inputVuelto" disabled />
+                                </div>
+                                <div class="col-md-4 mb-3" id="campoTarjeta" style="display:none;">
+                                    <label class="form-label">Últimos 4 dígitos de la tarjeta</label>
+                                    <input type="text" maxlength="4" class="form-control" name="Pago.Ultimos4Tarjeta" id="inputUltimos4" />
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Cancelar</a>
+                            <button type="submit" class="btn btn-guardar-pedido" id="btnFinalizarPedido"><i class="bi bi-check-circle me-1"></i>Finalizar pedido</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const antiforgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        function actualizarContadorGlobal() {
+            if (typeof actualizarContadorCarrito === 'function') {
+                actualizarContadorCarrito();
+            }
+        }
+
+        function recalcularTotalConEnvio() {
+            const filaEnvio = document.getElementById('filaCostoEnvio');
+            const valorEnvio = document.getElementById('valorCostoEnvio');
+            const valorTotal = document.getElementById('valorTotalPedido');
+
+            const tabla = document.getElementById('tablaCarrito');
+            const subtotal = parseFloat(tabla?.dataset.subtotal) || 0;
+            const impuesto = parseFloat(tabla?.dataset.impuesto) || 0;
+
+            const tipoEntregaSelect = document.getElementById('selectTipoEntrega');
+            const textoSeleccionado = tipoEntregaSelect.options[tipoEntregaSelect.selectedIndex]?.text?.toLowerCase() || '';
+            const esDomicilio = textoSeleccionado.includes('domicilio');
+            const costoEnvio = esDomicilio ? 1500 : 0;
+
+            if (esDomicilio) {
+                filaEnvio.style.display = 'flex';
+                valorEnvio.textContent = '₡' + costoEnvio.toFixed(2);
+            } else {
+                filaEnvio.style.display = 'none';
+            }
+
+            const totalCalculado = subtotal + impuesto + costoEnvio;
+            valorTotal.textContent = '₡' + totalCalculado.toFixed(2);
+            valorTotal.dataset.totalCrudo = totalCalculado.toFixed(2);
+
+            actualizarVuelto();
+        }
+
+        function actualizarVuelto() {
+            const valorTotal = document.getElementById('valorTotalPedido');
+            const total = parseFloat(valorTotal?.dataset.totalCrudo) || 0;
+            const montoInput = document.getElementById('inputMontoRecibido');
+            const vueltoInput = document.getElementById('inputVuelto');
+
+            if (montoInput && vueltoInput) {
+                const monto = parseFloat(montoInput.value) || 0;
+                const vuelto = monto - total;
+                vueltoInput.value = '₡' + (vuelto >= 0 ? vuelto.toFixed(2) : '0.00');
+            }
+        }
+
+        document.getElementById('selectTipoEntrega')?.addEventListener('change', function () {
+            const seccionDireccion = document.getElementById('seccionDireccion');
+            const texto = this.options[this.selectedIndex]?.text?.toLowerCase() || '';
+            if (seccionDireccion) {
+                seccionDireccion.style.display = texto.includes('domicilio') ? 'block' : 'none';
+            }
+            recalcularTotalConEnvio();
+        });
+
+        document.getElementById('selectCliente')?.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const contenedor = document.getElementById('infoClienteSeleccionado');
+            if (this.value) {
+                contenedor.innerHTML = `
+                    <p class="mb-1"><strong>Cédula:</strong> ${opt.dataset.cedula}</p>
+                    <p class="mb-0"><strong>Email:</strong> ${opt.dataset.email}</p>`;
+
+                fetch(`/Pedido/ObtenerDireccionesCliente?idCliente=${this.value}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('contenedorDireccion').innerHTML = html;
+                    });
+            } else {
+                contenedor.innerHTML = '<p class="mb-0 text-muted">Seleccione un cliente para ver su información.</p>';
+                document.getElementById('contenedorDireccion').innerHTML = `
+                    <label class="form-label">Dirección de entrega</label>
+                    <select name="IdDireccion" class="form-select">
+                        <option value="">-- Primero seleccione un cliente --</option>
+                    </select>`;
+            }
+        });
+
+        document.getElementById('selectMetodoPago')?.addEventListener('change', function () {
+            const opt = this.options[this.selectedIndex];
+            const descripcion = opt.dataset.descripcion || '';
+
+            const campoMonto = document.getElementById('campoMontoRecibido');
+            const campoVuelto = document.getElementById('campoVuelto');
+            const campoTarjeta = document.getElementById('campoTarjeta');
+
+            campoMonto.style.display = 'none';
+            campoVuelto.style.display = 'none';
+            campoTarjeta.style.display = 'none';
+
+            if (descripcion.includes('efectivo')) {
+                campoMonto.style.display = 'block';
+                campoVuelto.style.display = 'block';
+            } else if (descripcion.includes('tarjeta')) {
+                campoTarjeta.style.display = 'block';
+            }
+        });
+
+        document.getElementById('inputMontoRecibido')?.addEventListener('input', actualizarVuelto);
+
+        document.getElementById('btnAgregarLinea').addEventListener('click', function () {
+            const select = document.getElementById('selectItem');
+            const cantidad = document.getElementById('inputCantidadNueva').value;
+            const observaciones = document.getElementById('inputObservacionesNueva').value;
+
+            if (!select.value) {
+                Swal.fire({ title: "Error!", text: "Debe seleccionar un producto o combo.", icon: "error" });
+                return;
+            }
+            if (!cantidad || cantidad <= 0) {
+                Swal.fire({ title: "Error!", text: "La cantidad debe ser mayor a cero.", icon: "error" });
+                return;
+            }
+
+            const [tipo, id] = select.value.split('-');
+            const params = new URLSearchParams();
+            if (tipo === 'P') params.append('idProducto', id);
+            if (tipo === 'C') params.append('idCombo', id);
+            params.append('cantidad', cantidad);
+            params.append('observaciones', observaciones);
+
+            fetch('/Pedido/AgregarLinea', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('contenedorDetallePedido').innerHTML = html;
+                    document.getElementById('inputCantidadNueva').value = 1;
+                    document.getElementById('inputObservacionesNueva').value = '';
+                    select.value = '';
+                    recalcularTotalConEnvio();
+                    actualizarContadorGlobal();
+                })
+                .catch(error => {
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        });
+
+        function actualizarCantidad(input) {
+            const index = input.dataset.index;
+            const cantidad = input.value;
+
+            const params = new URLSearchParams();
+            params.append('index', index);
+            params.append('cantidad', cantidad);
+
+            fetch('/Pedido/ActualizarCantidad', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('contenedorDetallePedido').innerHTML = html;
+                    recalcularTotalConEnvio();
+                    actualizarContadorGlobal();
+                })
+                .catch(error => {
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        }
+
+        function actualizarObservaciones(input) {
+            const index = input.dataset.index;
+            const observaciones = input.value;
+
+            const params = new URLSearchParams();
+            params.append('index', index);
+            params.append('observaciones', observaciones);
+
+            fetch('/Pedido/ActualizarObservaciones', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('contenedorDetallePedido').innerHTML = html;
+                    recalcularTotalConEnvio();
+                })
+                .catch(error => {
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        }
+
+        function eliminarLinea(boton) {
+            const index = boton.dataset.index;
+
+            const params = new URLSearchParams();
+            params.append('index', index);
+
+            fetch('/Pedido/EliminarLinea', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('contenedorDetallePedido').innerHTML = html;
+                    recalcularTotalConEnvio();
+                    actualizarContadorGlobal();
+                })
+                .catch(error => {
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        }
+
+        document.getElementById('btnGuardarDireccion')?.addEventListener('click', function () {
+            const provincia = document.getElementById('nuevaProvincia').value.trim();
+            const canton = document.getElementById('nuevoCanton').value.trim();
+            const distrito = document.getElementById('nuevoDistrito').value.trim();
+            const detalle = document.getElementById('nuevoDetalle').value.trim();
+
+            if (!provincia || !canton || !distrito || !detalle) {
+                Swal.fire({ title: "Error!", text: "Todos los campos de la dirección son obligatorios.", icon: "error" });
+                return;
+            }
+
+            const params = new URLSearchParams();
+            params.append('provincia', provincia);
+            params.append('canton', canton);
+            params.append('distrito', distrito);
+            params.append('detalle', detalle);
+
+            fetch('/Pedido/CrearDireccion', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('contenedorDireccion').innerHTML = html;
+                })
+                .catch(error => {
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.id === 'btnGuardarDireccionCliente') {
+                const provincia = document.getElementById('nuevaProvinciaCliente').value.trim();
+                const canton = document.getElementById('nuevoCantonCliente').value.trim();
+                const distrito = document.getElementById('nuevoDistritoCliente').value.trim();
+                const detalle = document.getElementById('nuevoDetalleCliente').value.trim();
+                const idCliente = document.getElementById('idClienteParaDireccion').value;
+
+                if (!provincia || !canton || !distrito || !detalle) {
+                    Swal.fire({ title: "Error!", text: "Todos los campos de la dirección son obligatorios.", icon: "error" });
+                    return;
+                }
+
+                const params = new URLSearchParams();
+                params.append('provincia', provincia);
+                params.append('canton', canton);
+                params.append('distrito', distrito);
+                params.append('detalle', detalle);
+                params.append('idCliente', idCliente);
+
+                fetch('/Pedido/CrearDireccion', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': antiforgeryToken,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params
+                })
+                    .then(response => {
+                        if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                        return response.text();
+                    })
+                    .then(html => {
+                        document.getElementById('contenedorDireccion').innerHTML = html;
+                    })
+                    .catch(error => {
+                        Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    });
+            }
+        });
+
+        document.getElementById('formPedido').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const filas = document.querySelectorAll('.carrito-table tbody tr td.text-end');
+            if (filas.length === 0) {
+                Swal.fire({ title: "Error!", text: "Debe agregar al menos un producto o combo al pedido.", icon: "error" });
+                document.getElementById('seccionDetalle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const metodoPago = document.getElementById('selectMetodoPago').value;
+            if (!metodoPago) {
+                Swal.fire({ title: "Error!", text: "Debe seleccionar un método de pago.", icon: "error" });
+                document.getElementById('seccionPago').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const tipoEntrega = document.getElementById('selectTipoEntrega').value;
+            if (!tipoEntrega) {
+                Swal.fire({ title: "Error!", text: "Debe seleccionar un método de entrega.", icon: "error" });
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnFinalizarPedido');
+            btnSubmit.disabled = true;
+
+            const formData = new FormData(e.target);
+
+            fetch('/Pedido/Create', {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': antiforgeryToken
+                },
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Pedido registrado",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        window.location.href = data.redirectUrl;
+                    });
+                })
+                .catch(error => {
+                    btnSubmit.disabled = false;
+                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            recalcularTotalConEnvio();
+        });
+    </script>
+}

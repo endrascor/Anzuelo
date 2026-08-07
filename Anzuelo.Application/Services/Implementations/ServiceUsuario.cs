@@ -89,5 +89,12 @@ namespace Anzuelo.Application.Services.Implementations
 
             return await _repository.AddAsync(objectMapped);
         }
+
+        public async Task<ICollection<UsuarioDTO>> ListByRolAsync(string nombreRol)
+        {
+            var list = await _repository.ListByRolAsync(nombreRol);
+            return _mapper.Map<ICollection<UsuarioDTO>>(list);
+        }
+
     }
 }

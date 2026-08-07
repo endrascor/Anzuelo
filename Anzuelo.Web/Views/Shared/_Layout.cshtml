@@ -117,6 +117,33 @@
                     background-color: #f8f9fa;
                 }
 
+        .nav-carrito {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-carrito-icon {
+            font-size: 1.5rem;
+        }
+
+        .nav-carrito-badge {
+            position: absolute;
+            top: -6px;
+            right: -10px;
+            background: var(--anzuelo-accent);
+            color: #fff;
+            font-size: .68rem;
+            font-weight: 700;
+            border-radius: 50%;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+
         @@media (max-width: 991px) {
 
             .btn-acceso {
@@ -329,6 +356,19 @@
                             </ul>
 
                         </li>
+
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item mx-3">
+                                <a class="nav-link text-white fs-5 nav-carrito"
+                                   asp-controller="Pedido"
+                                   asp-action="Create"
+                                   title="Registrar pedido">
+                                    <i class="bi bi-cart3 nav-carrito-icon"></i>
+                                    <span class="nav-carrito-badge" id="badgeCarrito" style="display:none;">0</span>
+                                </a>
+                            </li>
+                        }
 
                         @if (User.Identity != null &&
                                                 User.Identity.IsAuthenticated)
@@ -571,6 +611,26 @@
 
     <script src="~/js/site.js"
             asp-append-version="true">
+    </script>
+
+    <script>
+        function actualizarContadorCarrito() {
+            const badge = document.getElementById('badgeCarrito');
+            if (!badge) return;
+
+            fetch('/Pedido/ObtenerCantidadCarrito')
+                .then(response => response.ok ? response.json() : { cantidad: 0 })
+                .then(data => {
+                    const cantidad = data.cantidad || 0;
+                    badge.textContent = cantidad;
+                    badge.style.display = cantidad > 0 ? 'flex' : 'none';
+                })
+                .catch(() => {
+                    badge.style.display = 'none';
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
     </script>
 
     @if (ViewBag.NotificationMessage != null)

@@ -107,6 +107,11 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<DisponibilidadDiaProfile>();
     config.AddProfile<RolProfile>();
     config.AddProfile<EstadoUsuarioProfile>();
+    config.AddProfile<PedidoProfile>();
+    config.AddProfile<DireccionProfile>();
+    config.AddProfile<EstadoPedidoProfile>();
+    config.AddProfile<TipoEntregaProfile>();
+    config.AddProfile<MetodoPagoProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 

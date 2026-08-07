@@ -1,0 +1,147 @@
+﻿@model List<Anzuelo.Application.DTOs.DetallePedidoDTO>
+
+<style>
+    .carrito-table thead th {
+        background-color: var(--anzuelo-primary);
+        color: #fff;
+        font-size: .76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border: none;
+        padding: .75rem 1rem;
+    }
+
+    .carrito-table tbody tr {
+        border-bottom: 1px solid #edf0f2;
+    }
+
+    .carrito-table td {
+        padding: .65rem 1rem;
+        vertical-align: middle;
+        border: none;
+    }
+
+    .carrito-cantidad-input {
+        width: 70px;
+        text-align: center;
+    }
+
+    .carrito-obs-input {
+        min-width: 160px;
+    }
+
+    .carrito-totales {
+        background: #fff5ee;
+        border-radius: .5rem;
+        padding: 1rem 1.25rem;
+        margin-top: 1rem;
+    }
+
+        .carrito-totales .fila-total {
+            display: flex;
+            justify-content: space-between;
+            padding: .25rem 0;
+        }
+
+        .carrito-totales .fila-total-final {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--anzuelo-accent);
+            border-top: 1px solid #e6c9ab;
+            margin-top: .5rem;
+            padding-top: .5rem;
+        }
+
+    .btn-quitar-linea {
+        background: transparent;
+        border: 1px solid #dc3545;
+        color: #dc3545;
+        border-radius: .35rem;
+        padding: .25rem .55rem;
+        transition: background .15s, color .15s;
+    }
+
+        .btn-quitar-linea:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+</style>
+
+@{
+    var subtotal = Model.Sum(d => d.Subtotal);
+    var impuesto = Model.Sum(d => d.Impuesto);
+    var cultura = System.Globalization.CultureInfo.InvariantCulture;
+}
+
+<div class="table-responsive" id="tablaCarrito" data-subtotal="@subtotal.ToString("F2", cultura)" data-impuesto="@impuesto.ToString("F2", cultura)">
+    <table class="table carrito-table mb-0">
+        <thead>
+            <tr>
+                <th>Producto / Combo</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Precio</th>
+                <th class="text-end">Subtotal</th>
+                <th class="text-end">Impuesto</th>
+                <th>Observaciones</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        Aún no ha agregado productos o combos al pedido.
+                    </td>
+                </tr>
+            }
+            else
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var linea = Model[i];
+                    <tr>
+                        <td><strong>@linea.Nombre</strong></td>
+                        <td class="text-center">
+                            <input type="number" min="0" step="1" class="form-control form-control-sm carrito-cantidad-input"
+                                   value="@linea.Cantidad" data-index="@i" onchange="actualizarCantidad(this)" />
+                        </td>
+                        <td class="text-end">₡@linea.PrecioUnitario.ToString("N2")</td>
+                        <td class="text-end">₡@linea.Subtotal.ToString("N2")</td>
+                        <td class="text-end">₡@linea.Impuesto.ToString("N2")</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm carrito-obs-input"
+                                   value="@linea.Observaciones" data-index="@i" onchange="actualizarObservaciones(this)"
+                                   placeholder="Observaciones" />
+                        </td>
+                        <td>
+                            <button type="button" class="btn-quitar-linea" data-index="@i" onclick="eliminarLinea(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="carrito-totales">
+    <div class="fila-total">
+        <span>Subtotal</span>
+        <span>₡@subtotal.ToString("N2")</span>
+    </div>
+    <div class="fila-total">
+        <span>Impuesto</span>
+        <span>₡@impuesto.ToString("N2")</span>
+    </div>
+    <div class="fila-total" id="filaCostoEnvio" style="display:none;">
+        <span>Costo de envío</span>
+        <span id="valorCostoEnvio">₡0.00</span>
+    </div>
+    <div class="fila-total fila-total-final">
+        <span>Total</span>
+        <span id="valorTotalPedido" data-total-crudo="@((subtotal + impuesto).ToString("F2", cultura))">₡@((subtotal + impuesto).ToString("N2"))</span>
+    </div>
+</div>
