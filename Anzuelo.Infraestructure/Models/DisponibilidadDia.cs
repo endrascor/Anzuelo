@@ -8,5 +8,6 @@ public partial class DisponibilidadDia
     public int IdDisponibilidadDia { get; set; }
 
     public string DiaSemana { get; set; } = null!;
+
     public virtual ICollection<Disponibilidad> Disponibilidad { get; set; } = new List<Disponibilidad>();
 }

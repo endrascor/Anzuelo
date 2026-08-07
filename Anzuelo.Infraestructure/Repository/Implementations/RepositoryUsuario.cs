@@ -52,7 +52,14 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             return @object!;
         }
 
-
+        public async Task<ICollection<Usuario>> ListByRolAsync(string nombreRol)
+        {
+            var collection = await _context.Set<Usuario>()
+                .Include(x => x.IdRolNavigation)
+                .Where(x => x.IdRolNavigation.NombreRol.ToLower() == nombreRol.ToLower())
+                .ToListAsync();
+            return collection;
+        }
 
     }
 }

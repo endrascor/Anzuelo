@@ -8,9 +8,10 @@ namespace Anzuelo.Application.Services.Interfaces
 {
     public interface IServiceUsuario
     {
-      Task<ICollection<UsuarioDTO>> ListAsync();
-      Task<UsuarioDTO> FindByIdAsync(int id);
-      Task<UsuarioDTO> LoginAsync(string id, string password);
-      Task<string> AddAsync(UsuarioDTO dto);
+        Task<ICollection<UsuarioDTO>> ListAsync();
+        Task<UsuarioDTO> FindByIdAsync(int id);
+        Task<UsuarioDTO> LoginAsync(string id, string password);
+        Task<string> AddAsync(UsuarioDTO dto);
+        Task<ICollection<UsuarioDTO>> ListByRolAsync(string nombreRol);
     }
 }

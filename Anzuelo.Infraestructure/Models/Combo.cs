@@ -21,6 +21,8 @@ public partial class Combo
 
     public virtual ICollection<ComboProducto> ComboProducto { get; set; } = new List<ComboProducto>();
 
+    public virtual ICollection<DetallePedido> DetallePedido { get; set; } = new List<DetallePedido>();
+
     public virtual CategoriaCombo IdCategoriaComboNavigation { get; set; } = null!;
 
     public virtual EstadoCombo IdEstadoComboNavigation { get; set; } = null!;

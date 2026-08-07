@@ -13,7 +13,7 @@ public partial class Pedido
 
     public int IdTipoEntrega { get; set; }
 
-    public int IdDireccion { get; set; }
+    public int? IdDireccion { get; set; }
 
     public decimal Subtotal { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Pedido
 
     public virtual ICollection<DetallePedido> DetallePedido { get; set; } = new List<DetallePedido>();
 
-    public virtual Direccion IdDireccionNavigation { get; set; } = null!;
+    public virtual Direccion? IdDireccionNavigation { get; set; }
 
     public virtual EstadoPedido IdEstadoPedidoNavigation { get; set; } = null!;
 

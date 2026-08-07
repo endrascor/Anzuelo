@@ -14,6 +14,7 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<string> AddAsync(Usuario entity);
         Task UpdateAsync();
         Task<Usuario> LoginAsync(string id, string password);
+        Task<ICollection<Usuario>> ListByRolAsync(string nombreRol);
 
     }
 }

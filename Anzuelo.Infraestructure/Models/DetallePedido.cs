@@ -9,8 +9,6 @@ public partial class DetallePedido
 
     public int IdPedido { get; set; }
 
-    public int IdComboProducto { get; set; }
-
     public int Cantidad { get; set; }
 
     public decimal PrecioUnitario { get; set; }
@@ -19,7 +17,17 @@ public partial class DetallePedido
 
     public decimal Subtotal { get; set; }
 
+    public int? IdProducto { get; set; }
+
+    public int? IdCombo { get; set; }
+
+    public decimal Impuesto { get; set; }
+
+    public virtual Combo? IdComboNavigation { get; set; }
+
     public virtual Pedido IdPedidoNavigation { get; set; } = null!;
+
+    public virtual Producto? IdProductoNavigation { get; set; }
 
     public virtual ICollection<PedidoEstacion> PedidoEstacion { get; set; } = new List<PedidoEstacion>();
 }
