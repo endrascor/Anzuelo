@@ -1,6 +1,8 @@
-﻿@model Anzuelo.Application.DTOs.PedidoDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.PedidoDTO
 @{
-    ViewData["Title"] = "Registrar Pedido";
+    ViewData["Title"] = Localizer["TituloPedido"];
     var esCliente = User.IsInRole("Cliente");
     var listaDirecciones = (IEnumerable<Anzuelo.Application.DTOs.DireccionDTO>)ViewBag.ListDirecciones;
     var hayDirecciones = listaDirecciones != null && listaDirecciones.Any();
@@ -64,8 +66,8 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-receipt me-2"></i>Registrar Pedido</h1>
-        <p class="page-hero-sub">Complete los datos del pedido</p>
+        <h1><i class="bi bi-receipt me-2"></i>@Localizer["TituloPedido"]</h1>
+        <p class="page-hero-sub">@Localizer["SubtituloHero"]</p>
     </div>
 </div>
 
@@ -74,29 +76,29 @@
         <div class="col-lg-11">
             <div class="card create-card">
                 <div class="create-card-header">
-                    <h2><i class="bi bi-cart-check me-2"></i>Nuevo pedido</h2>
-                    <p class="mb-0 mt-1">Complete la información y agregue los productos o combos.</p>
+                    <h2><i class="bi bi-cart-check me-2"></i>@Localizer["TituloNuevoPedido"]</h2>
+                    <p class="mb-0 mt-1">@Localizer["SubtituloNuevoPedido"]</p>
                 </div>
                 <div class="card-body p-4">
                     <form id="formPedido">
                         @Html.AntiForgeryToken()
 
                         <section class="form-section">
-                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>Información general</div>
+                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>@Localizer["SeccionInformacionGeneral"]</div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">Fecha</label>
+                                    <label class="form-label">@Localizer["LabelFecha"]</label>
                                     <input type="text" class="form-control" value="@DateTime.Now.ToString("dd/MM/yyyy")" disabled />
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">Estado</label>
-                                    <input type="text" class="form-control" value="Pendiente de pago" disabled />
+                                    <label class="form-label">@Localizer["LabelEstado"]</label>
+                                    <input type="text" class="form-control" value="@Localizer["ValorPendientePago"]" disabled />
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label asp-for="IdTipoEntrega" class="form-label">Método de entrega</label>
+                                    <label asp-for="IdTipoEntrega" class="form-label">@Localizer["LabelMetodoEntrega"]</label>
                                     <select asp-for="IdTipoEntrega" class="form-select" id="selectTipoEntrega"
                                             asp-items="@(new SelectList(ViewBag.ListTipoEntrega, "IdTipoEntrega", "Descripcion"))">
-                                        <option value="">-- Seleccione --</option>
+                                        <option value="">@Localizer["OpcionSeleccione"]</option>
                                     </select>
                                 </div>
                             </div>
@@ -106,17 +108,17 @@
                                 var clienteSesion = ViewBag.ClienteSesion as Anzuelo.Application.DTOs.UsuarioDTO;
                                 <input type="hidden" asp-for="IdUsuarioCliente" value="@clienteSesion?.IdUsuario" />
                                 <div class="info-cliente-box">
-                                    <p class="mb-1"><strong>Cliente:</strong> @clienteSesion?.Nombre @clienteSesion?.Apellido1</p>
-                                    <p class="mb-0"><strong>Cédula:</strong> @clienteSesion?.Cedula</p>
+                                    <p class="mb-1"><strong>@Localizer["LabelClienteColon"]</strong> @clienteSesion?.Nombre @clienteSesion?.Apellido1</p>
+                                    <p class="mb-0"><strong>@Localizer["LabelCedulaColon"]</strong> @clienteSesion?.Cedula</p>
                                 </div>
 
                                 <div class="row mt-3" id="seccionDireccion" style="display:none;">
                                     <div class="col-md-12" id="contenedorDireccion">
                                         @if (hayDirecciones)
                                         {
-                                            <label class="form-label">Dirección de entrega</label>
+                                            <label class="form-label">@Localizer["LabelDireccionEntrega"]</label>
                                             <select asp-for="IdDireccion" name="IdDireccion" class="form-select">
-                                                <option value="">-- Seleccione una dirección --</option>
+                                                <option value="">@Localizer["OpcionSeleccioneDireccion"]</option>
                                                 @foreach (var d in listaDirecciones)
                                                 {
                                                     <option value="@d.IdDireccion">@d.Provincia, @d.Canton, @d.Distrito - @d.Detalle</option>
@@ -126,27 +128,27 @@
                                         else
                                         {
                                             <div class="info-cliente-box">
-                                                <p class="mb-2"><strong>No tiene direcciones registradas.</strong> Agregue una para continuar.</p>
+                                                <p class="mb-2"><strong>@Localizer["MsgNoDireccionesRegistradas"]</strong> @Localizer["MsgAgregueParaContinuar"]</p>
                                                 <div class="row">
                                                     <div class="col-md-6 mb-2">
-                                                        <label class="form-label">Provincia</label>
+                                                        <label class="form-label">@Localizer["LabelProvincia"]</label>
                                                         <input type="text" class="form-control form-control-sm" id="nuevaProvincia" />
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <label class="form-label">Cantón</label>
+                                                        <label class="form-label">@Localizer["LabelCanton"]</label>
                                                         <input type="text" class="form-control form-control-sm" id="nuevoCanton" />
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <label class="form-label">Distrito</label>
+                                                        <label class="form-label">@Localizer["LabelDistrito"]</label>
                                                         <input type="text" class="form-control form-control-sm" id="nuevoDistrito" />
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <label class="form-label">Detalle (señas)</label>
+                                                        <label class="form-label">@Localizer["LabelDetalleSenas"]</label>
                                                         <input type="text" class="form-control form-control-sm" id="nuevoDetalle" />
                                                     </div>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="btnGuardarDireccion">
-                                                    <i class="bi bi-plus-lg me-1"></i>Guardar dirección
+                                                    <i class="bi bi-plus-lg me-1"></i>@Localizer["BtnGuardarDireccion"]
                                                 </button>
                                             </div>
                                         }
@@ -157,9 +159,9 @@
                             {
                                 <div class="row mt-3">
                                     <div class="col-md-6 mb-3">
-                                        <label asp-for="IdUsuarioCliente" class="form-label">Cliente</label>
+                                        <label asp-for="IdUsuarioCliente" class="form-label">@Localizer["LabelClienteSelect"]</label>
                                         <select asp-for="IdUsuarioCliente" class="form-select" id="selectCliente">
-                                            <option value="">-- Seleccione un cliente --</option>
+                                            <option value="">@Localizer["OpcionSeleccioneCliente"]</option>
                                             @foreach (var c in (IEnumerable<Anzuelo.Application.DTOs.UsuarioDTO>)ViewBag.ListClientes)
                                             {
                                                 <option value="@c.IdUsuario" data-cedula="@c.Cedula" data-email="@c.Email">
@@ -169,18 +171,18 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Información del cliente</label>
+                                        <label class="form-label">@Localizer["LabelInfoCliente"]</label>
                                         <div class="info-cliente-box" id="infoClienteSeleccionado">
-                                            <p class="mb-0 text-muted">Seleccione un cliente para ver su información.</p>
+                                            <p class="mb-0 text-muted">@Localizer["MsgSeleccioneClienteInfo"]</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row mt-3" id="seccionDireccion" style="display:none;">
                                     <div class="col-md-12" id="contenedorDireccion">
-                                        <label class="form-label">Dirección de entrega</label>
+                                        <label class="form-label">@Localizer["LabelDireccionEntrega"]</label>
                                         <select name="IdDireccion" class="form-select">
-                                            <option value="">-- Primero seleccione un cliente --</option>
+                                            <option value="">@Localizer["OpcionPrimeroSeleccioneCliente"]</option>
                                         </select>
                                     </div>
                                 </div>
@@ -188,19 +190,19 @@
                         </section>
 
                         <section class="form-section" id="seccionAgregar">
-                            <div class="form-section-title"><i class="bi bi-plus-circle me-1"></i>Agregar producto o combo</div>
+                            <div class="form-section-title"><i class="bi bi-plus-circle me-1"></i>@Localizer["SeccionAgregarProductoCombo"]</div>
                             <div class="row align-items-end">
                                 <div class="col-md-5 mb-2">
-                                    <label class="form-label">Producto / Combo</label>
+                                    <label class="form-label">@Localizer["LabelProductoCombo"]</label>
                                     <select class="form-select" id="selectItem">
-                                        <option value="">-- Seleccione --</option>
-                                        <optgroup label="Productos">
+                                        <option value="">@Localizer["OpcionSeleccione"]</option>
+                                        <optgroup label="@Localizer["OptgroupProductos"]">
                                             @foreach (var p in (IEnumerable<Anzuelo.Application.DTOs.ProductoDTO>)ViewBag.ListProductos)
                                             {
                                                 <option value="P-@p.IdProducto">@p.Nombre - ₡@p.Precio.ToString("N2")</option>
                                             }
                                         </optgroup>
-                                        <optgroup label="Combos">
+                                        <optgroup label="@Localizer["OptgroupCombos"]">
                                             @foreach (var c in (IEnumerable<Anzuelo.Application.DTOs.ComboDTO>)ViewBag.ListCombos)
                                             {
                                                 <option value="C-@c.IdCombo">@c.Nombre - ₡@c.PrecioTotal.ToString("N2")</option>
@@ -209,35 +211,35 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 mb-2">
-                                    <label class="form-label">Cantidad</label>
+                                    <label class="form-label">@Localizer["LabelCantidad"]</label>
                                     <input type="number" min="1" value="1" class="form-control" id="inputCantidadNueva" />
                                 </div>
                                 <div class="col-md-3 mb-2">
-                                    <label class="form-label">Observaciones</label>
-                                    <input type="text" class="form-control" id="inputObservacionesNueva" placeholder="Opcional" />
+                                    <label class="form-label">@Localizer["LabelObservaciones"]</label>
+                                    <input type="text" class="form-control" id="inputObservacionesNueva" placeholder="@Localizer["PlaceholderOpcional"]" />
                                 </div>
                                 <div class="col-md-2 mb-2">
                                     <button type="button" class="btn btn-outline-primary w-100" id="btnAgregarLinea">
-                                        <i class="bi bi-plus-lg me-1"></i>Agregar
+                                        <i class="bi bi-plus-lg me-1"></i>@Localizer["BtnAgregar"]
                                     </button>
                                 </div>
                             </div>
                         </section>
 
                         <section class="form-section" id="seccionDetalle">
-                            <div class="form-section-title"><i class="bi bi-list-ul me-1"></i>Detalle del pedido</div>
+                            <div class="form-section-title"><i class="bi bi-list-ul me-1"></i>@Localizer["SeccionDetallePedido"]</div>
                             <div id="contenedorDetallePedido">
                                 @await Html.PartialAsync("_DetallePedido", new List<Anzuelo.Application.DTOs.DetallePedidoDTO>())
                             </div>
                         </section>
 
                         <section class="form-section" id="seccionPago">
-                            <div class="form-section-title"><i class="bi bi-credit-card me-1"></i>Método de pago</div>
+                            <div class="form-section-title"><i class="bi bi-credit-card me-1"></i>@Localizer["SeccionMetodoPago"]</div>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
-                                    <label class="form-label">Método de pago</label>
+                                    <label class="form-label">@Localizer["SeccionMetodoPago"]</label>
                                     <select class="form-select" id="selectMetodoPago" name="Pago.IdMetodoPago">
-                                        <option value="">-- Seleccione --</option>
+                                        <option value="">@Localizer["OpcionSeleccione"]</option>
                                         @foreach (var m in (IEnumerable<Anzuelo.Application.DTOs.MetodoPagoDTO>)ViewBag.ListMetodoPago)
                                         {
                                             <option value="@m.IdMetodoPago" data-descripcion="@m.Descripcion.ToLower()">@m.Descripcion</option>
@@ -245,23 +247,23 @@
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3" id="campoMontoRecibido" style="display:none;">
-                                    <label class="form-label">Monto recibido</label>
+                                    <label class="form-label">@Localizer["LabelMontoRecibido"]</label>
                                     <input type="number" step="0.01" class="form-control" name="Pago.MontoRecibido" id="inputMontoRecibido" />
                                 </div>
                                 <div class="col-md-4 mb-3" id="campoVuelto" style="display:none;">
-                                    <label class="form-label">Vuelto</label>
+                                    <label class="form-label">@Localizer["LabelVuelto"]</label>
                                     <input type="text" class="form-control" id="inputVuelto" disabled />
                                 </div>
                                 <div class="col-md-4 mb-3" id="campoTarjeta" style="display:none;">
-                                    <label class="form-label">Últimos 4 dígitos de la tarjeta</label>
+                                    <label class="form-label">@Localizer["LabelUltimos4Tarjeta"]</label>
                                     <input type="text" maxlength="4" class="form-control" name="Pago.Ultimos4Tarjeta" id="inputUltimos4" />
                                 </div>
                             </div>
                         </section>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Cancelar</a>
-                            <button type="submit" class="btn btn-guardar-pedido" id="btnFinalizarPedido"><i class="bi bi-check-circle me-1"></i>Finalizar pedido</button>
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>@Localizer["BtnCancelar"]</a>
+                            <button type="submit" class="btn btn-guardar-pedido" id="btnFinalizarPedido"><i class="bi bi-check-circle me-1"></i>@Localizer["BtnFinalizarPedido"]</button>
                         </div>
                     </form>
                 </div>
@@ -273,6 +275,21 @@
 @section Scripts {
     <script>
         const antiforgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        const msgError = '@Localizer["MsgErrorTitulo"]';
+        const msgErrorGenerico = '@Localizer["MsgErrorGenericoTitulo"]';
+        const msgDebeSeleccionarProductoCombo = '@Localizer["MsgDebeSeleccionarProductoCombo"]';
+        const msgCantidadMayorCero = '@Localizer["MsgCantidadMayorCero"]';
+        const msgCamposDireccionObligatorios = '@Localizer["MsgCamposDireccionObligatorios"]';
+        const msgDebeAgregarProductoComboPedido = '@Localizer["MsgDebeAgregarProductoComboPedido"]';
+        const msgDebeSeleccionarMetodoPago = '@Localizer["MsgDebeSeleccionarMetodoPago"]';
+        const msgDebeSeleccionarMetodoEntrega = '@Localizer["MsgDebeSeleccionarMetodoEntrega"]';
+        const msgPedidoRegistrado = '@Localizer["MsgPedidoRegistrado"]';
+        const msgSeleccioneClienteInfo = '@Localizer["MsgSeleccioneClienteInfo"]';
+        const optPrimeroSeleccioneCliente = '@Localizer["OpcionPrimeroSeleccioneCliente"]';
+        const labelDireccionEntrega = '@Localizer["LabelDireccionEntrega"]';
+        const labelCedulaColon = '@Localizer["LabelCedulaColon"]';
+        const labelEmailColon = '@Localizer["LabelEmailColon"]';
 
         function actualizarContadorGlobal() {
             if (typeof actualizarContadorCarrito === 'function') {
@@ -335,8 +352,8 @@
             const contenedor = document.getElementById('infoClienteSeleccionado');
             if (this.value) {
                 contenedor.innerHTML = `
-                    <p class="mb-1"><strong>Cédula:</strong> ${opt.dataset.cedula}</p>
-                    <p class="mb-0"><strong>Email:</strong> ${opt.dataset.email}</p>`;
+                    <p class="mb-1"><strong>${labelCedulaColon}</strong> ${opt.dataset.cedula}</p>
+                    <p class="mb-0"><strong>${labelEmailColon}</strong> ${opt.dataset.email}</p>`;
 
                 fetch(`/Pedido/ObtenerDireccionesCliente?idCliente=${this.value}`)
                     .then(response => response.text())
@@ -344,11 +361,11 @@
                         document.getElementById('contenedorDireccion').innerHTML = html;
                     });
             } else {
-                contenedor.innerHTML = '<p class="mb-0 text-muted">Seleccione un cliente para ver su información.</p>';
+                contenedor.innerHTML = `<p class="mb-0 text-muted">${msgSeleccioneClienteInfo}</p>`;
                 document.getElementById('contenedorDireccion').innerHTML = `
-                    <label class="form-label">Dirección de entrega</label>
+                    <label class="form-label">${labelDireccionEntrega}</label>
                     <select name="IdDireccion" class="form-select">
-                        <option value="">-- Primero seleccione un cliente --</option>
+                        <option value="">${optPrimeroSeleccioneCliente}</option>
                     </select>`;
             }
         });
@@ -381,11 +398,11 @@
             const observaciones = document.getElementById('inputObservacionesNueva').value;
 
             if (!select.value) {
-                Swal.fire({ title: "Error!", text: "Debe seleccionar un producto o combo.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgDebeSeleccionarProductoCombo, icon: "error" });
                 return;
             }
             if (!cantidad || cantidad <= 0) {
-                Swal.fire({ title: "Error!", text: "La cantidad debe ser mayor a cero.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgCantidadMayorCero, icon: "error" });
                 return;
             }
 
@@ -417,7 +434,7 @@
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         });
 
@@ -447,7 +464,7 @@
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         }
 
@@ -476,7 +493,7 @@
                     recalcularTotalConEnvio();
                 })
                 .catch(error => {
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         }
 
@@ -504,7 +521,7 @@
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         }
 
@@ -515,7 +532,7 @@
             const detalle = document.getElementById('nuevoDetalle').value.trim();
 
             if (!provincia || !canton || !distrito || !detalle) {
-                Swal.fire({ title: "Error!", text: "Todos los campos de la dirección son obligatorios.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgCamposDireccionObligatorios, icon: "error" });
                 return;
             }
 
@@ -541,7 +558,7 @@
                     document.getElementById('contenedorDireccion').innerHTML = html;
                 })
                 .catch(error => {
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         });
 
@@ -554,7 +571,7 @@
                 const idCliente = document.getElementById('idClienteParaDireccion').value;
 
                 if (!provincia || !canton || !distrito || !detalle) {
-                    Swal.fire({ title: "Error!", text: "Todos los campos de la dirección son obligatorios.", icon: "error" });
+                    Swal.fire({ title: msgError, text: msgCamposDireccionObligatorios, icon: "error" });
                     return;
                 }
 
@@ -581,7 +598,7 @@
                         document.getElementById('contenedorDireccion').innerHTML = html;
                     })
                     .catch(error => {
-                        Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                        Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                     });
             }
         });
@@ -591,21 +608,21 @@
 
             const filas = document.querySelectorAll('.carrito-table tbody tr td.text-end');
             if (filas.length === 0) {
-                Swal.fire({ title: "Error!", text: "Debe agregar al menos un producto o combo al pedido.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgDebeAgregarProductoComboPedido, icon: "error" });
                 document.getElementById('seccionDetalle').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
             const metodoPago = document.getElementById('selectMetodoPago').value;
             if (!metodoPago) {
-                Swal.fire({ title: "Error!", text: "Debe seleccionar un método de pago.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgDebeSeleccionarMetodoPago, icon: "error" });
                 document.getElementById('seccionPago').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
             const tipoEntrega = document.getElementById('selectTipoEntrega').value;
             if (!tipoEntrega) {
-                Swal.fire({ title: "Error!", text: "Debe seleccionar un método de entrega.", icon: "error" });
+                Swal.fire({ title: msgError, text: msgDebeSeleccionarMetodoEntrega, icon: "error" });
                 return;
             }
 
@@ -628,7 +645,7 @@
                 .then(data => {
                     Swal.fire({
                         icon: "success",
-                        title: "Pedido registrado",
+                        title: msgPedidoRegistrado,
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
@@ -637,7 +654,7 @@
                 })
                 .catch(error => {
                     btnSubmit.disabled = false;
-                    Swal.fire({ title: "Error", text: error.message, icon: "error" });
+                    Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         });
 

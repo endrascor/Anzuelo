@@ -1,4 +1,6 @@
-﻿@model List<Anzuelo.Application.DTOs.DetallePedidoDTO>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model List<Anzuelo.Application.DTOs.DetallePedidoDTO>
 
 <style>
     .carrito-table thead th {
@@ -78,12 +80,12 @@
     <table class="table carrito-table mb-0">
         <thead>
             <tr>
-                <th>Producto / Combo</th>
-                <th class="text-center">Cantidad</th>
-                <th class="text-end">Precio</th>
-                <th class="text-end">Subtotal</th>
-                <th class="text-end">Impuesto</th>
-                <th>Observaciones</th>
+                <th>@Localizer["ThProductoCombo"]</th>
+                <th class="text-center">@Localizer["ThCantidad"]</th>
+                <th class="text-end">@Localizer["ThPrecio"]</th>
+                <th class="text-end">@Localizer["ThSubtotal"]</th>
+                <th class="text-end">@Localizer["ThImpuesto"]</th>
+                <th>@Localizer["ThObservaciones"]</th>
                 <th></th>
             </tr>
         </thead>
@@ -92,7 +94,7 @@
             {
                 <tr>
                     <td colspan="7" class="text-center text-muted py-4">
-                        Aún no ha agregado productos o combos al pedido.
+                        @Localizer["MsgCarritoVacio"]
                     </td>
                 </tr>
             }
@@ -113,7 +115,7 @@
                         <td>
                             <input type="text" class="form-control form-control-sm carrito-obs-input"
                                    value="@linea.Observaciones" data-index="@i" onchange="actualizarObservaciones(this)"
-                                   placeholder="Observaciones" />
+                                   placeholder="@Localizer["PlaceholderObservaciones"]" />
                         </td>
                         <td>
                             <button type="button" class="btn-quitar-linea" data-index="@i" onclick="eliminarLinea(this)">
@@ -129,19 +131,19 @@
 
 <div class="carrito-totales">
     <div class="fila-total">
-        <span>Subtotal</span>
+        <span>@Localizer["ThSubtotal"]</span>
         <span>₡@subtotal.ToString("N2")</span>
     </div>
     <div class="fila-total">
-        <span>Impuesto</span>
+        <span>@Localizer["ThImpuesto"]</span>
         <span>₡@impuesto.ToString("N2")</span>
     </div>
     <div class="fila-total" id="filaCostoEnvio" style="display:none;">
-        <span>Costo de envío</span>
+        <span>@Localizer["LabelCostoEnvio"]</span>
         <span id="valorCostoEnvio">₡0.00</span>
     </div>
     <div class="fila-total fila-total-final">
-        <span>Total</span>
+        <span>@Localizer["LabelTotal"]</span>
         <span id="valorTotalPedido" data-total-crudo="@((subtotal + impuesto).ToString("F2", cultura))">₡@((subtotal + impuesto).ToString("N2"))</span>
     </div>
 </div>
