@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AltImagenActual" xml:space="preserve">
+    <value>Current combo image</value>
+  </data>
   <data name="AltVistaPrevia" xml:space="preserve">
     <value>Preview</value>
   </data>
@@ -126,11 +129,14 @@
   <data name="BtnCancelar" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="BtnGuardarCombo" xml:space="preserve">
-    <value>Save combo</value>
+  <data name="BtnGuardarCambios" xml:space="preserve">
+    <value>Save changes</value>
   </data>
   <data name="BtnQuitar" xml:space="preserve">
     <value>Remove</value>
+  </data>
+  <data name="CambiarImagen" xml:space="preserve">
+    <value>Change image</value>
   </data>
   <data name="Categoria" xml:space="preserve">
     <value>Category</value>
@@ -150,17 +156,26 @@
   <data name="Estado" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="FormTextInstruccionImagen" xml:space="preserve">
+    <value>Leave this field empty to keep the current image, or upload a new one to replace it.</value>
+  </data>
   <data name="FormTextTamanioMaximo" xml:space="preserve">
     <value>Maximum size: 5 MB.</value>
+  </data>
+  <data name="ImagenActual" xml:space="preserve">
+    <value>Current image</value>
   </data>
   <data name="ImagenDelCombo" xml:space="preserve">
     <value>Combo image</value>
   </data>
+  <data name="ImagenGuardada" xml:space="preserve">
+    <value>Saved image</value>
+  </data>
   <data name="InformacionGeneral" xml:space="preserve">
     <value>General information</value>
   </data>
-  <data name="InstruccionProductos" xml:space="preserve">
-    <value>Add the products included in this combo.</value>
+  <data name="InstruccionModificarProductos" xml:space="preserve">
+    <value>Modify, add, or remove products from the combo.</value>
   </data>
   <data name="LabelCantidad" xml:space="preserve">
     <value>Quantity</value>
@@ -192,11 +207,11 @@
   <data name="SeleccioneEstado" xml:space="preserve">
     <value>Select a status</value>
   </data>
-  <data name="SubtituloCrearCombo" xml:space="preserve">
-    <value>Complete the information, image, and included products.</value>
+  <data name="SubtituloEditarCombo" xml:space="preserve">
+    <value>Modify the information, image, and included products.</value>
   </data>
-  <data name="TituloCrearCombo" xml:space="preserve">
-    <value>Create combo</value>
+  <data name="TituloEditarCombo" xml:space="preserve">
+    <value>Edit combo</value>
   </data>
   <data name="ToolTipQuitarImagen" xml:space="preserve">
     <value>Remove image</value>
