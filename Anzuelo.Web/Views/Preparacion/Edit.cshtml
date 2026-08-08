@@ -1,6 +1,8 @@
-﻿@model Anzuelo.Application.DTOs.PreparacionDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.PreparacionDTO
 @{
-    ViewData["Title"] = "Editar proceso de preparación";
+    ViewData["Title"] = Localizer["TituloEditarPreparacion"];
 }
 
 <style>
@@ -114,8 +116,8 @@
         <div class="col-lg-11">
             <div class="card edit-card">
                 <div class="edit-card-header">
-                    <h2><i class="bi bi-pencil-square me-2"></i>Editar proceso de preparación</h2>
-                    <p class="mb-0 mt-1">Modifique la información y las estaciones del proceso.</p>
+                    <h2><i class="bi bi-pencil-square me-2"></i>@Localizer["TituloEditarPreparacion"]</h2>
+                    <p class="mb-0 mt-1">@Localizer["SubtituloEditarPreparacion"]</p>
                 </div>
                 <div class="card-body p-4">
                     <form asp-action="Edit" method="post" id="formPreparacion">
@@ -123,12 +125,12 @@
 
 
                         <section class="form-section">
-                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>Información general</div>
+                            <div class="form-section-title"><i class="bi bi-info-circle me-1"></i>@Localizer["SeccionInformacionGeneral"]</div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label asp-for="IdProducto" class="form-label">Producto</label>
+                                    <label asp-for="IdProducto" class="form-label">@Localizer["LabelProducto"]</label>
                                     <select asp-for="IdProducto" class="form-select" asp-items="@(new SelectList(ViewBag.ListProductos, "IdProducto", "Nombre"))">
-                                        <option value="">-- Seleccione un producto --</option>
+                                        <option value="">@Localizer["OpcionSeleccioneProducto"]</option>
                                     </select>
                                     <span asp-validation-for="IdProducto" class="text-danger"></span>
                                 </div>
@@ -141,11 +143,11 @@
                         </section>
 
                         <section class="form-section" id="seccionEstaciones">
-                            <div class="form-section-title"><i class="bi bi-list-ol me-1"></i>Estaciones del proceso</div>
+                            <div class="form-section-title"><i class="bi bi-list-ol me-1"></i>@Localizer["SeccionEstacionesProceso"]</div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <p class="text-muted mb-0">Modifique, agregue o quite estaciones.</p>
+                                <p class="text-muted mb-0">@Localizer["SubtituloModificarEstaciones"]</p>
                                 <button type="button" id="btnAgregarEstacion" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-plus-lg me-1"></i>Agregar estación
+                                    <i class="bi bi-plus-lg me-1"></i>@Localizer["BtnAgregarEstacion"]
                                 </button>
                             </div>
 
@@ -159,16 +161,16 @@
                                                 <label class="form-label d-block">&nbsp;</label>
                                                 <span class="orden-badge orden-label">@e.NumeroOrden</span>
                                                 <div class="orden-controles">
-                                                    <button type="button" class="btn-orden btn-subir" title="Subir">
+                                                    <button type="button" class="btn-orden btn-subir" title="@Localizer["TitleSubir"]">
                                                         <i class="bi bi-caret-up-fill"></i>
                                                     </button>
-                                                    <button type="button" class="btn-orden btn-bajar" title="Bajar">
+                                                    <button type="button" class="btn-orden btn-bajar" title="@Localizer["TitleBajar"]">
                                                         <i class="bi bi-caret-down-fill"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div class="col-md-5 mb-2">
-                                                <label class="form-label">Estación</label>
+                                                <label class="form-label">@Localizer["LabelEstacion"]</label>
                                                 <select class="form-select estacion-select">
                                                     @foreach (var opt in ViewBag.ListEstaciones)
                                                     {
@@ -177,12 +179,12 @@
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mb-2">
-                                                <label class="form-label">Tiempo (min)</label>
+                                                <label class="form-label">@Localizer["LabelTiempoMin"]</label>
                                                 <input type="number" class="form-control tiempo-input" min="1" value="@e.TiempoEstimadoMinutos" />
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <button type="button" class="btn btn-outline-danger w-100 btn-quitar">
-                                                    <i class="bi bi-trash me-1"></i>Quitar
+                                                    <i class="bi bi-trash me-1"></i>@Localizer["BtnQuitar"]
                                                 </button>
                                             </div>
                                         </div>
@@ -190,7 +192,7 @@
                                 }
                             </div>
 
-                            <div id="mensajeSinEstaciones" class="alert alert-light border mb-0">No se han agregado estaciones.</div>
+                            <div id="mensajeSinEstaciones" class="alert alert-light border mb-0">@Localizer["MsgSinEstaciones"]</div>
                             <div id="errorEstacionesCliente" class="text-danger mensaje-validacion-seccion"></div>
                             @if (ViewData.ModelState["EstacionesMinimo"] != null)
                             {
@@ -208,8 +210,8 @@
                         </section>
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a asp-action="IndexAdmin" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>Cancelar</a>
-                            <button type="submit" class="btn btn-guardar-preparacion"><i class="bi bi-floppy me-1"></i>Guardar cambios</button>
+                            <a asp-action="IndexAdmin" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>@Localizer["BtnCancelar"]</a>
+                            <button type="submit" class="btn btn-guardar-preparacion"><i class="bi bi-floppy me-1"></i>@Localizer["BtnGuardarCambios"]</button>
                         </div>
                     </form>
                 </div>
@@ -224,16 +226,16 @@
             <label class="form-label d-block">&nbsp;</label>
             <span class="orden-badge orden-label"></span>
             <div class="orden-controles">
-                <button type="button" class="btn-orden btn-subir" title="Subir">
+                <button type="button" class="btn-orden btn-subir" title="@Localizer["TitleSubir"]">
                     <i class="bi bi-caret-up-fill"></i>
                 </button>
-                <button type="button" class="btn-orden btn-bajar" title="Bajar">
+                <button type="button" class="btn-orden btn-bajar" title="@Localizer["TitleBajar"]">
                     <i class="bi bi-caret-down-fill"></i>
                 </button>
             </div>
         </div>
         <div class="col-md-5 mb-2">
-            <label class="form-label">Estación</label>
+            <label class="form-label">@Localizer["LabelEstacion"]</label>
             <select class="form-select estacion-select">
                 @foreach (var opt in ViewBag.ListEstaciones)
                 {
@@ -242,12 +244,12 @@
             </select>
         </div>
         <div class="col-md-3 mb-2">
-            <label class="form-label">Tiempo (min)</label>
+            <label class="form-label">@Localizer["LabelTiempoMin"]</label>
             <input type="number" class="form-control tiempo-input" min="1" value="5" />
         </div>
         <div class="col-md-3 mb-2">
             <button type="button" class="btn btn-outline-danger w-100 btn-quitar">
-                <i class="bi bi-trash me-1"></i>Quitar
+                <i class="bi bi-trash me-1"></i>@Localizer["BtnQuitar"]
             </button>
         </div>
     </div>
@@ -257,6 +259,8 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        const msgMinEstaciones = '@Localizer["MsgMinimoEstacionesJs"]';
+
         const contenedorEstaciones = document.getElementById('contenedorEstaciones');
         const plantillaEstacion = document.getElementById('plantillaEstacion');
         const mensajeSinEstaciones = document.getElementById('mensajeSinEstaciones');
@@ -322,7 +326,7 @@
             const filas = obtenerFilasEstaciones();
             if (filas.length === 0) {
                 e.preventDefault();
-                errorEstacionesCliente.textContent = 'Debe agregar al menos una estación.';
+                errorEstacionesCliente.textContent = msgMinEstaciones;
                 document.getElementById('seccionEstaciones').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }

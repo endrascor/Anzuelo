@@ -117,103 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AltImagenActual" xml:space="preserve">
-    <value>Current combo image</value>
-  </data>
-  <data name="AltVistaPrevia" xml:space="preserve">
-    <value>Preview</value>
-  </data>
-  <data name="BtnAgregarProducto" xml:space="preserve">
-    <value>Add product</value>
+  <data name="BtnAgregarEstacion" xml:space="preserve">
+    <value>Agregar estación</value>
   </data>
   <data name="BtnCancelar" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Cancelar</value>
   </data>
-  <data name="BtnGuardarCambios" xml:space="preserve">
-    <value>Save changes</value>
+  <data name="BtnGuardarProceso" xml:space="preserve">
+    <value>Guardar proceso</value>
   </data>
   <data name="BtnQuitar" xml:space="preserve">
-    <value>Remove</value>
+    <value>Quitar</value>
   </data>
-  <data name="CambiarImagen" xml:space="preserve">
-    <value>Change image</value>
-  </data>
-  <data name="Categoria" xml:space="preserve">
-    <value>Category</value>
-  </data>
-  <data name="Clasificacion" xml:space="preserve">
-    <value>Classification</value>
-  </data>
-  <data name="Descripcion" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="ErrorImagenRequerida" xml:space="preserve">
-    <value>You must select an image for the combo.</value>
-  </data>
-  <data name="ErrorMinimoProductos" xml:space="preserve">
-    <value>You must add at least one product to the combo.</value>
-  </data>
-  <data name="Estado" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="FormTextInstruccionImagen" xml:space="preserve">
-    <value>Leave this field empty to keep the current image, or upload a new one to replace it.</value>
-  </data>
-  <data name="FormTextTamanioMaximo" xml:space="preserve">
-    <value>Maximum size: 5 MB.</value>
-  </data>
-  <data name="ImagenActual" xml:space="preserve">
-    <value>Current image</value>
-  </data>
-  <data name="ImagenDelCombo" xml:space="preserve">
-    <value>Combo image</value>
-  </data>
-  <data name="ImagenGuardada" xml:space="preserve">
-    <value>Saved image</value>
-  </data>
-  <data name="InformacionGeneral" xml:space="preserve">
-    <value>General information</value>
-  </data>
-  <data name="InstruccionModificarProductos" xml:space="preserve">
-    <value>Modify, add, or remove products from the combo.</value>
-  </data>
-  <data name="LabelCantidad" xml:space="preserve">
-    <value>Quantity</value>
+  <data name="LabelEstacion" xml:space="preserve">
+    <value>Estación</value>
   </data>
   <data name="LabelProducto" xml:space="preserve">
-    <value>Product</value>
+    <value>Producto</value>
   </data>
-  <data name="NoHayProductosAgregadas" xml:space="preserve">
-    <value>No products added.</value>
+  <data name="LabelTiempoMin" xml:space="preserve">
+    <value>Tiempo (min)</value>
   </data>
-  <data name="NombreCombo" xml:space="preserve">
-    <value>Name</value>
+  <data name="MsgMinimoEstacionesJs" xml:space="preserve">
+    <value>Debe agregar al menos una estación.</value>
+  </data>
+  <data name="MsgSinEstaciones" xml:space="preserve">
+    <value> No se han agregado estaciones</value>
+  </data>
+  <data name="OpcionSeleccioneProducto" xml:space="preserve">
+    <value> -- Seleccione un producto --</value>
   </data>
   <data name="PlaceholderDescripcion" xml:space="preserve">
-    <value>Combo description</value>
+    <value>Descripción del proceso</value>
   </data>
-  <data name="PlaceholderNombre" xml:space="preserve">
-    <value>Combo name</value>
+  <data name="SeccionEstacionesProceso" xml:space="preserve">
+    <value>Estaciones del proceso</value>
   </data>
-  <data name="PrecioTotal" xml:space="preserve">
-    <value>Total Price</value>
+  <data name="SeccionInformacionGeneral" xml:space="preserve">
+    <value> Información general</value>
   </data>
-  <data name="ProductosDelCombo" xml:space="preserve">
-    <value>Combo products</value>
+  <data name="SubtituloCrearPreparacion" xml:space="preserve">
+    <value> Complete la información y las estaciones del proceso.</value>
   </data>
-  <data name="SeleccioneCategoria" xml:space="preserve">
-    <value>Select a category</value>
+  <data name="SubtituloEstaciones" xml:space="preserve">
+    <value>Defina el orden de ejecución de cada estación.</value>
   </data>
-  <data name="SeleccioneEstado" xml:space="preserve">
-    <value>Select a status</value>
+  <data name="TitleBajar" xml:space="preserve">
+    <value>Bajar</value>
   </data>
-  <data name="SubtituloEditarCombo" xml:space="preserve">
-    <value>Modify the information, image, and included products.</value>
+  <data name="TitleSubir" xml:space="preserve">
+    <value> Subir</value>
   </data>
-  <data name="TituloEditarCombo" xml:space="preserve">
-    <value>Edit combo</value>
-  </data>
-  <data name="ToolTipQuitarImagen" xml:space="preserve">
-    <value>Remove image</value>
+  <data name="TituloCrearPreparacion" xml:space="preserve">
+    <value>Crear proceso de preparación</value>
   </data>
 </root>

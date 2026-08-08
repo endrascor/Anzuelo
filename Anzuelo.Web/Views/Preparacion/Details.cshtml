@@ -1,6 +1,8 @@
-﻿@model Anzuelo.Application.DTOs.PreparacionDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.PreparacionDTO
 @{
-    ViewData["Title"] = "Detalle del Proceso de Preparación";
+    ViewData["Title"] = Localizer["TituloDetalle"];
     var tiempoTotal = Model.Estaciones.Sum(e => e.TiempoEstimadoMinutos);
 }
 
@@ -119,7 +121,7 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-diagram-3 me-2"></i>Proceso de Preparación</h1>
+        <h1><i class="bi bi-diagram-3 me-2"></i>@Localizer["EncabezadoProceso"]</h1>
         <p class="page-hero-sub">@Model.NombreProducto</p>
     </div>
 </div>
@@ -132,13 +134,13 @@
             <div class="card detail-card shadow-sm h-100">
                 <div class="card-body p-4">
 
-                    <h6 style="color:var(--anzuelo-primary);font-weight:700;">Información</h6>
+                    <h6 style="color:var(--anzuelo-primary);font-weight:700;">@Localizer["LabelInformacion"]</h6>
 
-                    <p><strong>Descripción:</strong><br />@Model.Descripcion</p>
-                    <p><strong>Producto:</strong><br />@Model.NombreProducto</p>
+                    <p><strong>@Localizer["LabelDescripcion"]</strong><br />@Model.Descripcion</p>
+                    <p><strong>@Localizer["LabelProducto"]</strong><br />@Model.NombreProducto</p>
 
                     <p>
-                        <strong>Estaciones:</strong>
+                        <strong>@Localizer["LabelEstaciones"]</strong>
                         <span class="badge rounded-pill"
                               style="background:var(--anzuelo-accent);color:#fff;padding:.4em .9em;">
                             @Model.Estaciones.Count
@@ -146,9 +148,9 @@
                     </p>
 
                     <div style="background:#fff5ee;padding:1rem;border-radius:.4rem;">
-                        <strong style="color:var(--anzuelo-primary);">Tiempo total</strong>
+                        <strong style="color:var(--anzuelo-primary);">@Localizer["LabelTiempoTotal"]</strong>
                         <h3 style="color:var(--anzuelo-accent);font-weight:800;">
-                            @tiempoTotal min
+                            @tiempoTotal @Localizer["UnidadMin"]
                         </h3>
                     </div>
 
@@ -161,7 +163,7 @@
                 <div class="card-body p-4">
 
                     <h5 style="color:var(--anzuelo-primary);font-weight:700;">
-                        Estaciones de preparación
+                        @Localizer["EncabezadoEstacionesPreparacion"]
                     </h5>
 
                     <div class="timeline">
@@ -175,7 +177,7 @@
                                     <span class="tl-nombre">@estacion.NombreEstacion</span>
                                     <span class="tl-tiempo">
                                         <i class="bi bi-clock"></i>
-                                        @estacion.TiempoEstimadoMinutos min
+                                        @estacion.TiempoEstimadoMinutos @Localizer["UnidadMin"]
                                     </span>
                                 </div>
                             </div>
@@ -191,7 +193,7 @@
 
     <div class="mt-4">
         <a href="javascript:history.back()" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver
+            <i class="bi bi-arrow-left"></i> @Localizer["BtnVolver"]
         </a>
     </div>
 

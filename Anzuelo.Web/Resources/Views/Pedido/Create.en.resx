@@ -117,103 +117,157 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AltImagenActual" xml:space="preserve">
-    <value>Current combo image</value>
-  </data>
-  <data name="AltVistaPrevia" xml:space="preserve">
-    <value>Preview</value>
-  </data>
-  <data name="BtnAgregarProducto" xml:space="preserve">
-    <value>Add product</value>
+  <data name="BtnAgregar" xml:space="preserve">
+    <value>Add</value>
   </data>
   <data name="BtnCancelar" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="BtnGuardarCambios" xml:space="preserve">
-    <value>Save changes</value>
+  <data name="BtnFinalizarPedido" xml:space="preserve">
+    <value>Complete order</value>
   </data>
-  <data name="BtnQuitar" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="CambiarImagen" xml:space="preserve">
-    <value>Change image</value>
-  </data>
-  <data name="Categoria" xml:space="preserve">
-    <value>Category</value>
-  </data>
-  <data name="Clasificacion" xml:space="preserve">
-    <value>Classification</value>
-  </data>
-  <data name="Descripcion" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="ErrorImagenRequerida" xml:space="preserve">
-    <value>You must select an image for the combo.</value>
-  </data>
-  <data name="ErrorMinimoProductos" xml:space="preserve">
-    <value>You must add at least one product to the combo.</value>
-  </data>
-  <data name="Estado" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="FormTextInstruccionImagen" xml:space="preserve">
-    <value>Leave this field empty to keep the current image, or upload a new one to replace it.</value>
-  </data>
-  <data name="FormTextTamanioMaximo" xml:space="preserve">
-    <value>Maximum size: 5 MB.</value>
-  </data>
-  <data name="ImagenActual" xml:space="preserve">
-    <value>Current image</value>
-  </data>
-  <data name="ImagenDelCombo" xml:space="preserve">
-    <value>Combo image</value>
-  </data>
-  <data name="ImagenGuardada" xml:space="preserve">
-    <value>Saved image</value>
-  </data>
-  <data name="InformacionGeneral" xml:space="preserve">
-    <value>General information</value>
-  </data>
-  <data name="InstruccionModificarProductos" xml:space="preserve">
-    <value>Modify, add, or remove products from the combo.</value>
+  <data name="BtnGuardarDireccion" xml:space="preserve">
+    <value>Save address</value>
   </data>
   <data name="LabelCantidad" xml:space="preserve">
     <value>Quantity</value>
   </data>
-  <data name="LabelProducto" xml:space="preserve">
-    <value>Product</value>
+  <data name="LabelCanton" xml:space="preserve">
+    <value>Canton</value>
   </data>
-  <data name="NoHayProductosAgregadas" xml:space="preserve">
-    <value>No products added.</value>
+  <data name="LabelCedulaColon" xml:space="preserve">
+    <value>ID number:</value>
   </data>
-  <data name="NombreCombo" xml:space="preserve">
-    <value>Name</value>
+  <data name="LabelClienteColon" xml:space="preserve">
+    <value>Customer:</value>
   </data>
-  <data name="PlaceholderDescripcion" xml:space="preserve">
-    <value>Combo description</value>
+  <data name="LabelClienteSelect" xml:space="preserve">
+    <value>Customer</value>
   </data>
-  <data name="PlaceholderNombre" xml:space="preserve">
-    <value>Combo name</value>
+  <data name="LabelDetalleSenas" xml:space="preserve">
+    <value>Details (landmarks)</value>
   </data>
-  <data name="PrecioTotal" xml:space="preserve">
-    <value>Total Price</value>
+  <data name="LabelDireccionEntrega" xml:space="preserve">
+    <value>Delivery address</value>
   </data>
-  <data name="ProductosDelCombo" xml:space="preserve">
-    <value>Combo products</value>
+  <data name="LabelDistrito" xml:space="preserve">
+    <value>District</value>
   </data>
-  <data name="SeleccioneCategoria" xml:space="preserve">
-    <value>Select a category</value>
+  <data name="LabelEmailColon" xml:space="preserve">
+    <value> Email:</value>
   </data>
-  <data name="SeleccioneEstado" xml:space="preserve">
-    <value>Select a status</value>
+  <data name="LabelEstado" xml:space="preserve">
+    <value>Status</value>
   </data>
-  <data name="SubtituloEditarCombo" xml:space="preserve">
-    <value>Modify the information, image, and included products.</value>
+  <data name="LabelFecha" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="TituloEditarCombo" xml:space="preserve">
-    <value>Edit combo</value>
+  <data name="LabelInfoCliente" xml:space="preserve">
+    <value>Customer information</value>
   </data>
-  <data name="ToolTipQuitarImagen" xml:space="preserve">
-    <value>Remove image</value>
+  <data name="LabelMetodoEntrega" xml:space="preserve">
+    <value>Delivery method</value>
+  </data>
+  <data name="LabelMontoRecibido" xml:space="preserve">
+    <value>Amount received</value>
+  </data>
+  <data name="LabelObservaciones" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="LabelProductoCombo" xml:space="preserve">
+    <value>Product / Combo</value>
+  </data>
+  <data name="LabelProvincia" xml:space="preserve">
+    <value>Province</value>
+  </data>
+  <data name="LabelUltimos4Tarjeta" xml:space="preserve">
+    <value>Last 4 card digits</value>
+  </data>
+  <data name="LabelVuelto" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="MsgAgregueParaContinuar" xml:space="preserve">
+    <value>Add one to continue.</value>
+  </data>
+  <data name="MsgCamposDireccionObligatorios" xml:space="preserve">
+    <value>All address fields are required.</value>
+  </data>
+  <data name="MsgCantidadMayorCero" xml:space="preserve">
+    <value>Quantity must be more than zero.</value>
+  </data>
+  <data name="MsgDebeAgregarProductoComboPedido" xml:space="preserve">
+    <value>You must add at least one product or combo to the order.</value>
+  </data>
+  <data name="MsgDebeSeleccionarMetodoEntrega" xml:space="preserve">
+    <value>You must select a delivery method.</value>
+  </data>
+  <data name="MsgDebeSeleccionarMetodoPago" xml:space="preserve">
+    <value>You must select a payment method.</value>
+  </data>
+  <data name="MsgDebeSeleccionarProductoCombo" xml:space="preserve">
+    <value>You must select a product or combo.</value>
+  </data>
+  <data name="MsgErrorGenericoTitulo" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="MsgErrorTitulo" xml:space="preserve">
+    <value>Error!</value>
+  </data>
+  <data name="MsgNoDireccionesRegistradas" xml:space="preserve">
+    <value>No addresses registered.</value>
+  </data>
+  <data name="MsgPedidoRegistrado" xml:space="preserve">
+    <value>Order registered</value>
+  </data>
+  <data name="MsgSeleccioneClienteInfo" xml:space="preserve">
+    <value>Select a customer to view their information.</value>
+  </data>
+  <data name="OpcionPrimeroSeleccioneCliente" xml:space="preserve">
+    <value>-- First select a customer --</value>
+  </data>
+  <data name="OpcionSeleccione" xml:space="preserve">
+    <value>-- Select --</value>
+  </data>
+  <data name="OpcionSeleccioneCliente" xml:space="preserve">
+    <value>-- Select a customer --</value>
+  </data>
+  <data name="OpcionSeleccioneDireccion" xml:space="preserve">
+    <value>-- Select an address --</value>
+  </data>
+  <data name="OptgroupCombos" xml:space="preserve">
+    <value>Combos</value>
+  </data>
+  <data name="OptgroupProductos" xml:space="preserve">
+    <value>Products</value>
+  </data>
+  <data name="PlaceholderOpcional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
+  <data name="SeccionAgregarProductoCombo" xml:space="preserve">
+    <value>Add product or combo</value>
+  </data>
+  <data name="SeccionDetallePedido" xml:space="preserve">
+    <value>Order details</value>
+  </data>
+  <data name="SeccionInformacionGeneral" xml:space="preserve">
+    <value>General information</value>
+  </data>
+  <data name="SeccionMetodoPago" xml:space="preserve">
+    <value>Payment method</value>
+  </data>
+  <data name="SubtituloHero" xml:space="preserve">
+    <value>Fill in the order details</value>
+  </data>
+  <data name="SubtituloNuevoPedido" xml:space="preserve">
+    <value>Complete the information and add products or combos.</value>
+  </data>
+  <data name="TituloNuevoPedido" xml:space="preserve">
+    <value>New order</value>
+  </data>
+  <data name="TituloPedido" xml:space="preserve">
+    <value>Register Order</value>
+  </data>
+  <data name="ValorPendientePago" xml:space="preserve">
+    <value>Pending payment</value>
   </data>
 </root>

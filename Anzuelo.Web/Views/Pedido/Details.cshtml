@@ -1,6 +1,8 @@
-﻿@model Anzuelo.Application.DTOs.PedidoDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.PedidoDTO
 @{
-    ViewData["Title"] = "Detalle del Pedido";
+    ViewData["Title"] = Localizer["TituloDetallePedido"];
 }
 
 <style>
@@ -109,8 +111,8 @@
 
 <div class="page-hero">
     <div class="container">
-        <h1><i class="bi bi-receipt-cutoff me-2"></i>Pedido #@Model.IdPedido</h1>
-        <p class="page-hero-sub">Comprobante del pedido registrado</p>
+        <h1><i class="bi bi-receipt-cutoff me-2"></i>@Localizer["TituloPedidoNumero"]@Model.IdPedido</h1>
+        <p class="page-hero-sub">@Localizer["SubtituloComprobante"]</p>
     </div>
 </div>
 
@@ -125,27 +127,27 @@
 
                 <div class="factura-encabezado-grid">
                     <div class="factura-dato">
-                        <div class="label">Fecha</div>
+                        <div class="label">@Localizer["LabelFecha"]</div>
                         <div>@Model.FechaPedido.ToString("dd/MM/yyyy HH:mm")</div>
                     </div>
                     <div class="factura-dato">
-                        <div class="label">Cliente</div>
+                        <div class="label">@Localizer["LabelCliente"]</div>
                         <div>@Model.NombreCliente</div>
-                        <small class="text-muted">Cédula: @Model.CedulaCliente</small>
+                        <small class="text-muted">@Localizer["LabelCedulaColon"] @Model.CedulaCliente</small>
                     </div>
                     @if (!string.IsNullOrWhiteSpace(Model.NombreEncargado))
                     {
                         <div class="factura-dato">
-                            <div class="label">Encargado</div>
+                            <div class="label">@Localizer["LabelEncargado"]</div>
                             <div>@Model.NombreEncargado</div>
                         </div>
                     }
                     <div class="factura-dato">
-                        <div class="label">Método de entrega</div>
+                        <div class="label">@Localizer["LabelMetodoEntrega"]</div>
                         <div>@Model.NombreTipoEntrega</div>
                     </div>
                     <div class="factura-dato">
-                        <div class="label">Método de pago</div>
+                        <div class="label">@Localizer["LabelMetodoPago"]</div>
                         <div>@Model.Pago?.NombreMetodoPago</div>
                     </div>
                 </div>
@@ -155,12 +157,12 @@
                         <table class="table factura-table mb-0">
                             <thead>
                                 <tr>
-                                    <th>Producto / Combo</th>
-                                    <th class="text-end">Precio</th>
-                                    <th class="text-center">Cantidad</th>
-                                    <th class="text-end">Subtotal</th>
-                                    <th class="text-end">Impuesto</th>
-                                    <th>Observaciones</th>
+                                    <th>@Localizer["ThProductoCombo"]</th>
+                                    <th class="text-end">@Localizer["ThPrecio"]</th>
+                                    <th class="text-center">@Localizer["ThCantidad"]</th>
+                                    <th class="text-end">@Localizer["ThSubtotal"]</th>
+                                    <th class="text-end">@Localizer["ThImpuesto"]</th>
+                                    <th>@Localizer["ThObservaciones"]</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -182,40 +184,40 @@
 
                 <div class="factura-totales">
                     <div class="fila-total">
-                        <span>Subtotal</span>
+                        <span>@Localizer["LabelSubtotal"]</span>
                         <span>₡@Model.Subtotal.ToString("N2")</span>
                     </div>
                     <div class="fila-total">
-                        <span>Impuesto</span>
+                        <span>@Localizer["LabelImpuesto"]</span>
                         <span>₡@Model.Impuesto.ToString("N2")</span>
                     </div>
                     @if (Model.CostoEnvio > 0)
                     {
                         <div class="fila-total">
-                            <span>Costo de envío</span>
+                            <span>@Localizer["LabelCostoEnvio"]</span>
                             <span>₡@Model.CostoEnvio.ToString("N2")</span>
                         </div>
                     }
                     <div class="fila-total fila-total-final">
-                        <span>Total</span>
+                        <span>@Localizer["LabelTotal"]</span>
                         <span>₡@Model.Total.ToString("N2")</span>
                     </div>
                     @if (Model.Pago != null && Model.Pago.NombreMetodoPago != null &&
                                         Model.Pago.NombreMetodoPago.Contains("efectivo", StringComparison.OrdinalIgnoreCase))
                     {
                         <div class="fila-total mt-2">
-                            <span>Monto recibido</span>
+                            <span>@Localizer["LabelMontoRecibido"]</span>
                             <span>₡@Model.Pago.MontoRecibido?.ToString("N2")</span>
                         </div>
                         <div class="fila-total">
-                            <span>Vuelto</span>
+                            <span>@Localizer["LabelVuelto"]</span>
                             <span>₡@Model.Pago.Vuelto?.ToString("N2")</span>
                         </div>
                     }
                     else if (Model.Pago != null && !string.IsNullOrWhiteSpace(Model.Pago.Ultimos4Tarjeta))
                     {
                         <div class="fila-total mt-2">
-                            <span>Tarjeta terminada en</span>
+                            <span>@Localizer["LabelTarjetaTerminadaEn"]</span>
                             <span>**** @Model.Pago.Ultimos4Tarjeta</span>
                         </div>
                     }
@@ -224,7 +226,7 @@
 
             <div class="mt-4 text-center">
                 <a asp-controller="Home" asp-action="Index" class="btn-back">
-                    <i class="bi bi-arrow-left"></i> Volver al inicio
+                    <i class="bi bi-arrow-left"></i> @Localizer["BtnVolverInicio"]
                 </a>
             </div>
         </div>
