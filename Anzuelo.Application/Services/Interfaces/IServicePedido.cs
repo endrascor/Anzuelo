@@ -12,5 +12,6 @@ namespace Anzuelo.Application.Services.Interfaces
         Task<PedidoDTO> FindByIdAsync(int id);
         Task<int> AddAsync(PedidoDTO dto, int idUsuarioLogueado, string rolUsuarioLogueado);
         Task<ICollection<PedidoDTO>> ListHistorialAsync(int idUsuarioLogueado, string rolUsuarioLogueado, System.DateTime? fecha, int? idEstadoPedido);
+        Task<bool> PerteneceAlUsuarioAsync(int idPedido, int idUsuario);
     }
 }

@@ -14,5 +14,6 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<int> AddAsync(Combo entity);
         Task UpdateAsync(Combo entity);
         Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null);
+        Task<ICollection<ComboProducto>> ListProductosAsync(int idCombo);
     }
 }

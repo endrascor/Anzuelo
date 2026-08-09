@@ -8,10 +8,11 @@ using System.Text.Json;
 
 namespace Anzuelo.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Cliente,Encargado,Administrador")]
     public class PedidoController : Controller
     {
         private const string TEMPDATA_CARRITO = "CarritoPedido";
+        private const string SESSION_CARRITO = "CarritoPedido";
         private const string ROL_CLIENTE = "Cliente";
         private const decimal PORCENTAJE_IMPUESTO = 0.13m;
 
@@ -88,8 +89,8 @@ namespace Anzuelo.Web.Controllers
         {
             await CargarListasAsync();
 
-            TempData[TEMPDATA_CARRITO] = null;
-            TempData.Keep(TEMPDATA_CARRITO);
+            var carrito = ObtenerCarrito();
+            ViewBag.CarritoActual = carrito;
 
             return View();
         }
@@ -109,7 +110,8 @@ namespace Anzuelo.Web.Controllers
 
                 var idPedido = await _servicePedido.AddAsync(dto, IdUsuarioSesion!.Value, RolSesion!);
 
-                TempData[TEMPDATA_CARRITO] = null;
+                LimpiarCarrito();
+
                 TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
                     "Registrar Pedido",
                     "Pedido registrado con éxito. ID: " + idPedido.ToString(),
@@ -261,22 +263,21 @@ namespace Anzuelo.Web.Controllers
 
         private List<DetallePedidoDTO> ObtenerCarrito()
         {
-            var json = TempData[TEMPDATA_CARRITO] as string;
+            var json = HttpContext.Session.GetString(SESSION_CARRITO);
 
-            var carrito = string.IsNullOrEmpty(json)
+            return string.IsNullOrEmpty(json)
                 ? new List<DetallePedidoDTO>()
                 : JsonSerializer.Deserialize<List<DetallePedidoDTO>>(json)!;
-
-            TempData[TEMPDATA_CARRITO] = json;
-            TempData.Keep(TEMPDATA_CARRITO);
-
-            return carrito;
         }
 
         private void GuardarCarrito(List<DetallePedidoDTO> carrito)
         {
-            TempData[TEMPDATA_CARRITO] = JsonSerializer.Serialize(carrito);
-            TempData.Keep(TEMPDATA_CARRITO);
+            HttpContext.Session.SetString(SESSION_CARRITO, JsonSerializer.Serialize(carrito));
+        }
+
+        private void LimpiarCarrito()
+        {
+            HttpContext.Session.Remove(SESSION_CARRITO);
         }
 
         [HttpPost]
@@ -346,6 +347,22 @@ namespace Anzuelo.Web.Controllers
             var direcciones = await _serviceDireccion.ListByUsuarioAsync(idCliente);
             ViewBag.IdClienteActual = idCliente;
             return PartialView("_SelectDireccionCliente", direcciones.ToList());
+        }
+
+        public async Task<ActionResult> Seguimiento(int id)
+        {
+            if (RolSesion == ROL_CLIENTE)
+            {
+                var esDelUsuario = await _servicePedido.PerteneceAlUsuarioAsync(id, IdUsuarioSesion!.Value);
+                if (!esDelUsuario)
+                    return Forbid();
+            }
+
+            var pedido = await _servicePedido.FindByIdAsync(id);
+            if (pedido == null)
+                return NotFound("El pedido solicitado no existe.");
+
+            return View(pedido);
         }
     }
 }

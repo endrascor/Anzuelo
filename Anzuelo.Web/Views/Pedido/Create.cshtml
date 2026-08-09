@@ -92,7 +92,7 @@
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="form-label">@Localizer["LabelEstado"]</label>
-                                    <input type="text" class="form-control" value="@Localizer["ValorPendientePago"]" disabled />
+                                    <input type="text" class="form-control" value="@Localizer["ValorEstadoInicial"]" disabled />
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label asp-for="IdTipoEntrega" class="form-label">@Localizer["LabelMetodoEntrega"]</label>
@@ -229,7 +229,7 @@
                         <section class="form-section" id="seccionDetalle">
                             <div class="form-section-title"><i class="bi bi-list-ul me-1"></i>@Localizer["SeccionDetallePedido"]</div>
                             <div id="contenedorDetallePedido">
-                                @await Html.PartialAsync("_DetallePedido", new List<Anzuelo.Application.DTOs.DetallePedidoDTO>())
+                                @await Html.PartialAsync("_DetallePedido", (List<Anzuelo.Application.DTOs.DetallePedidoDTO>)ViewBag.CarritoActual)
                             </div>
                         </section>
 

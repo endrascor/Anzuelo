@@ -225,6 +225,9 @@
             </div>
 
             <div class="mt-4 text-center">
+                <a asp-action="Seguimiento" asp-route-id="@Model.IdPedido" class="btn-back me-2">
+                    <i class="bi bi-truck"></i> @Localizer["BtnVerSeguimiento"]
+                </a>
                 <a asp-controller="Home" asp-action="Index" class="btn-back">
                     <i class="bi bi-arrow-left"></i> @Localizer["BtnVolverInicio"]
                 </a>

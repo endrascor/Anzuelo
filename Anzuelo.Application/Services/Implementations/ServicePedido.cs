@@ -16,11 +16,14 @@ namespace Anzuelo.Application.Services
         private const decimal PORCENTAJE_IMPUESTO = 0.13m;
         private const decimal COSTO_ENVIO_DOMICILIO = 1500m;
 
-        private const int ID_ESTADO_PENDIENTE_PAGO = 1;
+        private const int ID_ESTADO_INICIAL = 1;
         private const int ID_ENTREGA_DOMICILIO = 1;
         private const int ID_PAGO_EFECTIVO = 1;
         private const int ID_PAGO_TARJETA_CREDITO = 2;
         private const int ID_PAGO_TARJETA_DEBITO = 3;
+        private const int ID_ESTADO_PEDIDO_ESTACION_PENDIENTE = 1;
+        private const int ID_ESTADO_PEDIDO_ESTACION_PROCESO = 2;
+        private const int ID_ESTADO_PEDIDO_ESTACION_FINALIZADO = 3;
 
         private const string ROL_CLIENTE = "Cliente";
 
@@ -31,6 +34,7 @@ namespace Anzuelo.Application.Services
         private readonly IRepositoryTipoEntrega _repositoryTipoEntrega;
         private readonly IRepositoryDireccion _repositoryDireccion;
         private readonly IRepositoryMetodoPago _repositoryMetodoPago;
+        private readonly IRepositoryPreparacionEstacion _repositoryPreparacionEstacion;
         private readonly IMapper _mapper;
         private readonly ILogger<ServicePedido> _logger;
 
@@ -42,6 +46,7 @@ namespace Anzuelo.Application.Services
             IRepositoryTipoEntrega repositoryTipoEntrega,
             IRepositoryDireccion repositoryDireccion,
             IRepositoryMetodoPago repositoryMetodoPago,
+            IRepositoryPreparacionEstacion repositoryPreparacionEstacion,
             IMapper mapper,
             ILogger<ServicePedido> logger)
         {
@@ -52,14 +57,41 @@ namespace Anzuelo.Application.Services
             _repositoryTipoEntrega = repositoryTipoEntrega;
             _repositoryDireccion = repositoryDireccion;
             _repositoryMetodoPago = repositoryMetodoPago;
+            _repositoryPreparacionEstacion = repositoryPreparacionEstacion;
             _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<PedidoDTO> FindByIdAsync(int id)
         {
-            var @object = await _repository.FindByIdAsync(id);
-            return _mapper.Map<PedidoDTO>(@object);
+            var entidad = await _repository.FindByIdAsync(id);
+            var dto = _mapper.Map<PedidoDTO>(entidad);
+
+            AsignarNombresUsuarios(entidad, dto);
+
+            foreach (var linea in dto.Detalles)
+            {
+                linea.TotalEstaciones = linea.Estaciones.Count;
+                linea.EstacionesCompletadas = linea.Estaciones.Count(e => e.IdEstadoPedidoEstacion == ID_ESTADO_PEDIDO_ESTACION_FINALIZADO);
+
+                foreach (var estacion in linea.Estaciones)
+                {
+                    estacion.ClaseEstado = estacion.IdEstadoPedidoEstacion switch
+                    {
+                        ID_ESTADO_PEDIDO_ESTACION_PENDIENTE => "pendiente",
+                        ID_ESTADO_PEDIDO_ESTACION_PROCESO => "proceso",
+                        ID_ESTADO_PEDIDO_ESTACION_FINALIZADO => "completado",
+                        _ => "pendiente"
+                    };
+                }
+            }
+
+            return dto;
+        }
+
+        public async Task<bool> PerteneceAlUsuarioAsync(int idPedido, int idUsuario)
+        {
+            return await _repository.PerteneceAlUsuarioAsync(idPedido, idUsuario);
         }
 
         public async Task<int> AddAsync(PedidoDTO dto, int idUsuarioLogueado, string rolUsuarioLogueado)
@@ -105,7 +137,7 @@ namespace Anzuelo.Application.Services
                 dto.IdDireccion = null;
             }
 
-            var estado = await _repositoryEstadoPedido.FindByIdAsync(ID_ESTADO_PENDIENTE_PAGO)
+            var estado = await _repositoryEstadoPedido.FindByIdAsync(ID_ESTADO_INICIAL)
                 ?? throw new InvalidOperationException("No se encontró el estado inicial configurado en el sistema.");
 
             if (dto.Detalles == null || !dto.Detalles.Any())
@@ -126,18 +158,30 @@ namespace Anzuelo.Application.Services
                     throw new InvalidOperationException("Cada línea del pedido debe ser un producto o un combo, no ambos ni ninguno.");
 
                 decimal precioUnitario;
+                var estacionesLinea = new List<PedidoEstacionDTO>();
+                var fechaInicioLinea = DateTime.Now;
 
                 if (esProducto)
                 {
                     var producto = await _repositoryProducto.FindByIdAsync(linea.IdProducto!.Value)
                         ?? throw new InvalidOperationException($"El producto con id {linea.IdProducto} no existe.");
                     precioUnitario = producto.Precio;
+
+                    var pasos = await _repositoryPreparacionEstacion.ListByProductoAsync(linea.IdProducto.Value);
+                    AgregarPasosPlanificados(estacionesLinea, pasos, ref fechaInicioLinea);
                 }
                 else
                 {
                     var combo = await _repositoryCombo.FindByIdAsync(linea.IdCombo!.Value)
                         ?? throw new InvalidOperationException($"El combo con id {linea.IdCombo} no existe.");
                     precioUnitario = combo.PrecioTotal;
+
+                    var productosCombo = await _repositoryCombo.ListProductosAsync(linea.IdCombo.Value);
+                    foreach (var cp in productosCombo)
+                    {
+                        var pasos = await _repositoryPreparacionEstacion.ListByProductoAsync(cp.IdProducto);
+                        AgregarPasosPlanificados(estacionesLinea, pasos, ref fechaInicioLinea);
+                    }
                 }
 
                 var subtotalLinea = precioUnitario * linea.Cantidad;
@@ -146,6 +190,7 @@ namespace Anzuelo.Application.Services
                 linea.Subtotal = subtotalLinea;
                 linea.Impuesto = impuestoLinea;
                 linea.Observaciones ??= string.Empty;
+                linea.Estaciones = estacionesLinea;
 
                 subtotalPedido += subtotalLinea;
                 impuestoPedido += impuestoLinea;
@@ -213,7 +258,47 @@ namespace Anzuelo.Application.Services
                 pedidos = await _repository.ListAsync(fecha, idEstadoPedido);
             }
 
-            return _mapper.Map<ICollection<PedidoDTO>>(pedidos);
+            var listaDto = _mapper.Map<ICollection<PedidoDTO>>(pedidos);
+
+            foreach (var (entidad, dto) in pedidos.Zip(listaDto))
+            {
+                AsignarNombresUsuarios(entidad, dto);
+            }
+
+            return listaDto;
+        }
+
+        private static void AsignarNombresUsuarios(Pedido entidad, PedidoDTO dto)
+        {
+            var usuarioCliente = entidad.IdUsuario
+                .FirstOrDefault(u => u.IdRolNavigation.NombreRol.Equals(ROL_CLIENTE, StringComparison.OrdinalIgnoreCase));
+
+            var usuarioEncargado = entidad.IdUsuario
+                .FirstOrDefault(u => !u.IdRolNavigation.NombreRol.Equals(ROL_CLIENTE, StringComparison.OrdinalIgnoreCase));
+
+            dto.NombreCliente = usuarioCliente != null ? $"{usuarioCliente.Nombre} {usuarioCliente.Apellido1}" : string.Empty;
+            dto.CedulaCliente = usuarioCliente?.Cedula ?? string.Empty;
+            dto.NombreEncargado = usuarioEncargado != null ? $"{usuarioEncargado.Nombre} {usuarioEncargado.Apellido1}" : string.Empty;
+        }
+
+        private static void AgregarPasosPlanificados(List<PedidoEstacionDTO> destino, ICollection<PreparacionEstacion> pasos, ref DateTime fechaInicio)
+        {
+            foreach (var paso in pasos.OrderBy(p => p.NumeroOrden))
+            {
+                var fechaFin = fechaInicio.AddMinutes(paso.TiempoEstimadoMinutos);
+
+                destino.Add(new PedidoEstacionDTO
+                {
+                    IdEstacionCocina = paso.IdEstacionCocina,
+                    IdEstadoPedidoEstacion = ID_ESTADO_PEDIDO_ESTACION_PENDIENTE,
+                    OrdenProceso = paso.NumeroOrden,
+                    TiempoEstimadoMinutos = paso.TiempoEstimadoMinutos,
+                    FechaInicio = fechaInicio,
+                    FechaFin = fechaFin
+                });
+
+                fechaInicio = fechaFin;
+            }
         }
     }
 }

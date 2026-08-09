@@ -267,7 +267,7 @@
   <data name="TituloPedido" xml:space="preserve">
     <value>Registrar Pedido</value>
   </data>
-  <data name="ValorPendientePago" xml:space="preserve">
-    <value>Pendiente de pago</value>
+  <data name="ValorEstadoInicial" xml:space="preserve">
+    <value>Aceptado</value>
   </data>
 </root>

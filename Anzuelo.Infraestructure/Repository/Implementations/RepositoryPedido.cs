@@ -19,6 +19,12 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             _context = context;
         }
 
+        public async Task<bool> PerteneceAlUsuarioAsync(int idPedido, int idUsuario)
+        {
+            return await _context.Set<Pedido>()
+                .AnyAsync(p => p.IdPedido == idPedido && p.IdUsuario.Any(u => u.IdUsuario == idUsuario));
+        }
+
         public async Task<Pedido> FindByIdAsync(int id)
         {
             var pedido = await _context.Set<Pedido>()
@@ -33,6 +39,12 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                     .ThenInclude(d => d.IdProductoNavigation)
                 .Include(p => p.DetallePedido)
                     .ThenInclude(d => d.IdComboNavigation)
+                .Include(p => p.DetallePedido)
+                    .ThenInclude(d => d.PedidoEstacion)
+                        .ThenInclude(pe => pe.IdEstacionCocinaNavigation)
+                .Include(p => p.DetallePedido)
+                    .ThenInclude(d => d.PedidoEstacion)
+                        .ThenInclude(pe => pe.IdEstadoPedidoEstacionNavigation)
                 .FirstOrDefaultAsync(p => p.IdPedido == id);
             return pedido!;
         }

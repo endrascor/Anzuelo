@@ -117,76 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BtnVerSeguimiento" xml:space="preserve">
-    <value>Ver Seguimiento</value>
+  <data name="BtnVerFactura" xml:space="preserve">
+    <value>Ver Detalle</value>
   </data>
-  <data name="BtnVolverInicio" xml:space="preserve">
-    <value>Volver al inicio</value>
+  <data name="SubtituloSeguimiento" xml:space="preserve">
+    <value>Consulta el avance de tu pedido en cocina</value>
   </data>
-  <data name="LabelCedulaColon" xml:space="preserve">
-    <value>Cédula:</value>
+  <data name="TituloSeguimientoNumero" xml:space="preserve">
+    <value>Seguimiento del pedido #</value>
   </data>
-  <data name="LabelCliente" xml:space="preserve">
-    <value>Cliente</value>
-  </data>
-  <data name="LabelCostoEnvio" xml:space="preserve">
-    <value>Costo de envío</value>
-  </data>
-  <data name="LabelEncargado" xml:space="preserve">
-    <value>Encargado</value>
-  </data>
-  <data name="LabelFecha" xml:space="preserve">
-    <value>Fecha</value>
-  </data>
-  <data name="LabelImpuesto" xml:space="preserve">
-    <value>Impuesto</value>
-  </data>
-  <data name="LabelMetodoEntrega" xml:space="preserve">
-    <value>Método de entrega</value>
-  </data>
-  <data name="LabelMetodoPago" xml:space="preserve">
-    <value>Método de pago</value>
-  </data>
-  <data name="LabelMontoRecibido" xml:space="preserve">
-    <value>Monto recibido</value>
-  </data>
-  <data name="LabelSubtotal" xml:space="preserve">
-    <value>Subtotal</value>
-  </data>
-  <data name="LabelTarjetaTerminadaEn" xml:space="preserve">
-    <value>Tarjeta terminada en</value>
-  </data>
-  <data name="LabelTotal" xml:space="preserve">
-    <value>Total</value>
-  </data>
-  <data name="LabelVuelto" xml:space="preserve">
-    <value>Vuelto</value>
-  </data>
-  <data name="SubtituloComprobante" xml:space="preserve">
-    <value>Comprobante del pedido registrado</value>
-  </data>
-  <data name="ThCantidad" xml:space="preserve">
-    <value>Cantidad</value>
-  </data>
-  <data name="ThImpuesto" xml:space="preserve">
-    <value>Impuesto</value>
-  </data>
-  <data name="ThObservaciones" xml:space="preserve">
-    <value>Observaciones</value>
-  </data>
-  <data name="ThPrecio" xml:space="preserve">
-    <value>Precio</value>
-  </data>
-  <data name="ThProductoCombo" xml:space="preserve">
-    <value>Producto / Combo</value>
-  </data>
-  <data name="ThSubtotal" xml:space="preserve">
-    <value>Subtotal</value>
-  </data>
-  <data name="TituloDetallePedido" xml:space="preserve">
-    <value>Detalle del Pedido</value>
-  </data>
-  <data name="TituloPedidoNumero" xml:space="preserve">
-    <value>Pedido #</value>
+  <data name="TituloSeguimiento" xml:space="preserve">
+    <value>Seguimiento del Pedido</value>
   </data>
 </root>

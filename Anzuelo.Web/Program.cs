@@ -24,6 +24,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configurar los servicios de localización e indicar la carpeta de recursos
+//Indica la ruta de los archivos de recursos para la localización
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 // Mapeo de la clase AppConfig para leer appsettings.json
@@ -38,6 +39,7 @@ builder.Services.AddControllersWithViews(options => {
             Location = ResponseCacheLocation.None,
         });
 })
+// Configuración de localización para vistas y anotaciones de datos
 .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
 .AddDataAnnotationsLocalization();
 
@@ -49,6 +51,15 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
            .AddSupportedCultures(supportedCultures)
            .AddSupportedUICultures(supportedCultures);
 });
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 //Repository
 builder.Services.AddTransient<IRepositoryCombo, RepositoryCombo>();
 builder.Services.AddTransient<IRepositoryProducto, RepositoryProducto>();
@@ -70,6 +81,7 @@ builder.Services.AddTransient<IRepositoryPedido, RepositoryPedido>();
 builder.Services.AddTransient<IRepositoryEstadoPedido, RepositoryEstadoPedido>();
 builder.Services.AddTransient<IRepositoryMetodoPago, RepositoryMetodoPago>();
 builder.Services.AddTransient<IRepositoryTipoEntrega, RepositoryTipoEntrega>();
+builder.Services.AddTransient<IRepositoryPreparacionEstacion, RepositoryPreparacionEstacion>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -126,6 +138,9 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<EstadoPedidoProfile>();
     config.AddProfile<TipoEntregaProfile>();
     config.AddProfile<MetodoPagoProfile>();
+    config.AddProfile<DetallePedidoProfile>();
+    config.AddProfile<PedidoEstacionProfile>();
+    config.AddProfile<PagoProfile>();
 });
 
 // Configuar Conexión a la Base de Datos SQL 
@@ -180,6 +195,8 @@ app.UseRouting();
 
 var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
 app.UseRequestLocalization(locOptions.Value);
+
+app.UseSession();
 
 app.UseAuthentication();
 

@@ -79,5 +79,11 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             return await query.AnyAsync();
         }
+        public async Task<ICollection<ComboProducto>> ListProductosAsync(int idCombo)
+        {
+            return await _context.Set<ComboProducto>()
+                .Where(cp => cp.IdCombo == idCombo)
+                .ToListAsync();
+        }
     }
 }

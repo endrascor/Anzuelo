@@ -13,5 +13,6 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
         Task<int> AddAsync(Pedido entity, int idUsuarioCliente, int? idUsuarioEncargado);
         Task<ICollection<Pedido>> ListByClienteAsync(int idUsuarioCliente);
         Task<ICollection<Pedido>> ListAsync(DateTime? fecha, int? idEstadoPedido);
+        Task<bool> PerteneceAlUsuarioAsync(int idPedido, int idUsuario);
     }
 }
