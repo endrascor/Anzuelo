@@ -66,7 +66,7 @@ namespace Anzuelo.Web.Controllers
         public async Task<IActionResult> Create(UsuarioDTO dto)
         {
 
-            dto.IdRol = 2;              
+            dto.IdRol = 4;              
             dto.IdEstadoUsuario = 1;    
 
             ModelState.Remove(nameof(UsuarioDTO.NombreRol));
