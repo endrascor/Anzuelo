@@ -11,5 +11,7 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
     {
         Task<Pedido> FindByIdAsync(int id);
         Task<int> AddAsync(Pedido entity, int idUsuarioCliente, int? idUsuarioEncargado);
+        Task<ICollection<Pedido>> ListByClienteAsync(int idUsuarioCliente);
+        Task<ICollection<Pedido>> ListAsync(DateTime? fecha, int? idEstadoPedido);
     }
 }

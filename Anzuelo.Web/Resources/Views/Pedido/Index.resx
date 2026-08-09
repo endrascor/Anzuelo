@@ -117,67 +117,52 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Admin_Combos" xml:space="preserve">
-    <value>Combos Admin</value>
+  <data name="BtnFiltrar" xml:space="preserve">
+    <value>Filtrar</value>
   </data>
-  <data name="Admin_Menu" xml:space="preserve">
-    <value>Menú Admin</value>
+  <data name="BtnVerDetalle" xml:space="preserve">
+    <value>Ver detalle</value>
   </data>
-  <data name="Admin_Pedidos" xml:space="preserve">
-    <value>Pedidos</value>
+  <data name="EncabezadoPrincipal" xml:space="preserve">
+    <value>Historial de Pedidos</value>
   </data>
-  <data name="Admin_Preparacion" xml:space="preserve">
-    <value>Preparación Admin</value>
+  <data name="LabelFiltroEstado" xml:space="preserve">
+    <value>Estado</value>
   </data>
-  <data name="Admin_Productos" xml:space="preserve">
-    <value>Productos Admin</value>
+  <data name="LabelFiltroFecha" xml:space="preserve">
+    <value>Fecha</value>
   </data>
-  <data name="Admin_Usuarios" xml:space="preserve">
-    <value>Usuarios</value>
+  <data name="OpcionTodosEstados" xml:space="preserve">
+    <value>-- Todos los estados --</value>
   </data>
-  <data name="Carrito_RegistrarPedido" xml:space="preserve">
-    <value>Registrar pedido</value>
+  <data name="SeccionFiltros" xml:space="preserve">
+    <value>Filtros de búsqueda</value>
   </data>
-  <data name="Footer_Copyright" xml:space="preserve">
-    <value>© 2026 Sistema El Anzuelo. Creado por: Dilan Sánchez y Adrian Rojas. Todos los derechos reservados.</value>
+  <data name="SinPedidos" xml:space="preserve">
+    <value>No hay pedidos registrados</value>
   </data>
-  <data name="Footer_Descripcion" xml:space="preserve">
-    <value>Especialistas en ceviches, mariscos frescos y comida tradicional costarricense.</value>
+  <data name="SubtituloPrincipal" xml:space="preserve">
+    <value>Consulte el estado y detalle de los pedidos registrados</value>
   </data>
-  <data name="Login_IniciarSesionRegistrarse" xml:space="preserve">
-    <value>Iniciar Sesión/Registrarse</value>
+  <data name="ThCliente" xml:space="preserve">
+    <value>Cliente</value>
   </data>
-  <data name="Menu_Administracion" xml:space="preserve">
-    <value>Administración</value>
+  <data name="ThDetalle" xml:space="preserve">
+    <value>Detalle</value>
   </data>
-  <data name="Menu_Combos" xml:space="preserve">
-    <value>Combos</value>
+  <data name="ThEntrega" xml:space="preserve">
+    <value>Entrega</value>
   </data>
-  <data name="Menu_Inicio" xml:space="preserve">
-    <value>Inicio</value>
+  <data name="ThEstado" xml:space="preserve">
+    <value>Estado</value>
   </data>
-  <data name="Menu_Menu" xml:space="preserve">
-    <value>Menú</value>
+  <data name="ThFecha" xml:space="preserve">
+    <value>Fecha</value>
   </data>
-  <data name="Menu_Preparacion" xml:space="preserve">
-    <value>Preparación</value>
+  <data name="ThTotal" xml:space="preserve">
+    <value>Total</value>
   </data>
-  <data name="Menu_Productos" xml:space="preserve">
-    <value>Productos</value>
-  </data>
-  <data name="Nav_AbrirNavegacion" xml:space="preserve">
-    <value>Abrir navegación</value>
-  </data>
-  <data name="Usuario_CerrarSesion" xml:space="preserve">
-    <value>Cerrar sesión</value>
-  </data>
-  <data name="Usuario_DetalleUsuario" xml:space="preserve">
-    <value>Detalle de usuario</value>
-  </data>
-  <data name="Usuario_HistorialPedidos" xml:space="preserve">
-    <value>Historial de pedidos</value>
-  </data>
-  <data name="Usuario_MiCuenta" xml:space="preserve">
-    <value>Mi cuenta</value>
+  <data name="TituloPagina" xml:space="preserve">
+    <value>Historial de Pedidos</value>
   </data>
 </root>

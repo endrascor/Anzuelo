@@ -79,6 +79,15 @@ namespace Anzuelo.Web.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Pedidos.
+        /// </summary>
+        public static string Admin_Pedidos {
+            get {
+                return ResourceManager.GetString("Admin_Pedidos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Preparación Admin.
         /// </summary>
         public static string Admin_Preparacion {
@@ -219,6 +228,15 @@ namespace Anzuelo.Web.Resources {
         public static string Usuario_DetalleUsuario {
             get {
                 return ResourceManager.GetString("Usuario_DetalleUsuario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Historial de pedidos.
+        /// </summary>
+        public static string Usuario_HistorialPedidos {
+            get {
+                return ResourceManager.GetString("Usuario_HistorialPedidos", resourceCulture);
             }
         }
         

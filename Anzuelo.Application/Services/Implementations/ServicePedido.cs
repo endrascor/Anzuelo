@@ -197,5 +197,23 @@ namespace Anzuelo.Application.Services
 
             return await _repository.AddAsync(pedido, idUsuarioCliente, idUsuarioEncargado);
         }
+
+        public async Task<ICollection<PedidoDTO>> ListHistorialAsync(int idUsuarioLogueado, string rolUsuarioLogueado, DateTime? fecha, int? idEstadoPedido)
+        {
+            var esCliente = rolUsuarioLogueado.Equals(ROL_CLIENTE, StringComparison.OrdinalIgnoreCase);
+
+            ICollection<Pedido> pedidos;
+
+            if (esCliente)
+            {
+                pedidos = await _repository.ListByClienteAsync(idUsuarioLogueado);
+            }
+            else
+            {
+                pedidos = await _repository.ListAsync(fecha, idEstadoPedido);
+            }
+
+            return _mapper.Map<ICollection<PedidoDTO>>(pedidos);
+        }
     }
 }
