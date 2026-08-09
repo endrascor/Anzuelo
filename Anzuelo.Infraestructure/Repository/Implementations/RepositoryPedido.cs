@@ -37,6 +37,44 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
             return pedido!;
         }
 
+        public async Task<ICollection<Pedido>> ListByClienteAsync(int idUsuarioCliente)
+        {
+            var collection = await _context.Set<Pedido>()
+                .Include(p => p.IdEstadoPedidoNavigation)
+                .Include(p => p.IdTipoEntregaNavigation)
+                .Include(p => p.IdUsuario)
+                    .ThenInclude(u => u.IdRolNavigation)
+                .Where(p => p.IdUsuario.Any(u => u.IdUsuario == idUsuarioCliente))
+                .OrderByDescending(p => p.FechaPedido)
+                .ToListAsync();
+
+            return collection;
+        }
+
+        public async Task<ICollection<Pedido>> ListAsync(DateTime? fecha, int? idEstadoPedido)
+        {
+            var query = _context.Set<Pedido>()
+                .Include(p => p.IdEstadoPedidoNavigation)
+                .Include(p => p.IdTipoEntregaNavigation)
+                .Include(p => p.IdUsuario)
+                    .ThenInclude(u => u.IdRolNavigation)
+                .AsQueryable();
+
+            if (fecha.HasValue)
+            {
+                query = query.Where(p => p.FechaPedido.Date == fecha.Value.Date);
+            }
+
+            if (idEstadoPedido.HasValue)
+            {
+                query = query.Where(p => p.IdEstadoPedido == idEstadoPedido.Value);
+            }
+
+            return await query
+                .OrderByDescending(p => p.FechaPedido)
+                .ToListAsync();
+        }
+
         public async Task<int> AddAsync(Pedido entity, int idUsuarioCliente, int? idUsuarioEncargado)
         {
             try

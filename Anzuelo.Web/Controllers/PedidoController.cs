@@ -1,4 +1,5 @@
 ﻿using Anzuelo.Application.DTOs;
+using Anzuelo.Application.Services.Implementations;
 using Anzuelo.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace Anzuelo.Web.Controllers
         private readonly IServiceMetodoPago _serviceMetodoPago;
         private readonly IServiceDireccion _serviceDireccion;
         private readonly IServiceUsuario _serviceUsuario;
+        private readonly IServiceEstadoPedido _serviceEstadoPedido;
 
         public PedidoController(
             IServicePedido servicePedido,
@@ -29,7 +31,8 @@ namespace Anzuelo.Web.Controllers
             IServiceTipoEntrega serviceTipoEntrega,
             IServiceMetodoPago serviceMetodoPago,
             IServiceDireccion serviceDireccion,
-            IServiceUsuario serviceUsuario)
+            IServiceUsuario serviceUsuario,
+            IServiceEstadoPedido serviceEstadoPedido)
         {
             _servicePedido = servicePedido;
             _serviceProducto = serviceProducto;
@@ -38,6 +41,7 @@ namespace Anzuelo.Web.Controllers
             _serviceMetodoPago = serviceMetodoPago;
             _serviceDireccion = serviceDireccion;
             _serviceUsuario = serviceUsuario;
+            _serviceEstadoPedido = serviceEstadoPedido;
         }
 
         private int? IdUsuarioSesion
@@ -46,6 +50,35 @@ namespace Anzuelo.Web.Controllers
             {
                 var valor = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 return int.TryParse(valor, out var id) ? id : null;
+            }
+        }
+
+        public async Task<ActionResult> Index(DateTime? fecha, int? idEstadoPedido)
+        {
+            if (IdUsuarioSesion == null || string.IsNullOrEmpty(RolSesion))
+                return RedirectToAction("Login", "Usuario");
+
+            try
+            {
+                var historial = await _servicePedido.ListHistorialAsync(IdUsuarioSesion.Value, RolSesion, fecha, idEstadoPedido);
+
+                if (RolSesion != ROL_CLIENTE)
+                {
+                    ViewBag.ListEstadoPedido = await _serviceEstadoPedido.ListAsync();
+                    ViewBag.FechaFiltro = fecha?.ToString("yyyy-MM-dd");
+                    ViewBag.EstadoFiltro = idEstadoPedido;
+                }
+
+                return View(historial);
+            }
+            catch (Exception ex)
+            {
+                TempData["Mensaje"] = Util.SweetAlertHelper.Mensaje(
+                    "Historial de Pedidos",
+                    "Ocurrió un error al cargar el historial: " + ex.Message,
+                    Util.SweetAlertMessageType.error);
+
+                return View(new List<PedidoDTO>());
             }
         }
 

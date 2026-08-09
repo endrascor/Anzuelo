@@ -123,6 +123,9 @@
   <data name="Admin_Menu" xml:space="preserve">
     <value>Menu (Admin)</value>
   </data>
+  <data name="Admin_Pedidos" xml:space="preserve">
+    <value>Orders</value>
+  </data>
   <data name="Admin_Preparacion" xml:space="preserve">
     <value> Preparation (Admin)</value>
   </data>
@@ -170,6 +173,9 @@
   </data>
   <data name="Usuario_DetalleUsuario" xml:space="preserve">
     <value>User details</value>
+  </data>
+  <data name="Usuario_HistorialPedidos" xml:space="preserve">
+    <value>Order history</value>
   </data>
   <data name="Usuario_MiCuenta" xml:space="preserve">
     <value>My Account</value>
