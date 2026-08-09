@@ -591,6 +591,12 @@ public partial class AnzueloContext : DbContext
                 .HasForeignKey(d => d.IdEstadoPedidoEstacion)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PedidoEstacion_Estado");
+
+            entity.HasOne(d => d.IdProductoNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PedidoEstacion_Producto");
         });
 
         modelBuilder.Entity<Preparacion>(entity =>

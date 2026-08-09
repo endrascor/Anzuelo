@@ -168,7 +168,7 @@ namespace Anzuelo.Application.Services
                     precioUnitario = producto.Precio;
 
                     var pasos = await _repositoryPreparacionEstacion.ListByProductoAsync(linea.IdProducto.Value);
-                    AgregarPasosPlanificados(estacionesLinea, pasos, ref fechaInicioLinea);
+                    AgregarPasosPlanificados(estacionesLinea, pasos, linea.IdProducto.Value, ref fechaInicioLinea);
                 }
                 else
                 {
@@ -180,7 +180,7 @@ namespace Anzuelo.Application.Services
                     foreach (var cp in productosCombo)
                     {
                         var pasos = await _repositoryPreparacionEstacion.ListByProductoAsync(cp.IdProducto);
-                        AgregarPasosPlanificados(estacionesLinea, pasos, ref fechaInicioLinea);
+                        AgregarPasosPlanificados(estacionesLinea, pasos,cp.IdProducto, ref fechaInicioLinea);
                     }
                 }
 
@@ -281,7 +281,7 @@ namespace Anzuelo.Application.Services
             dto.NombreEncargado = usuarioEncargado != null ? $"{usuarioEncargado.Nombre} {usuarioEncargado.Apellido1}" : string.Empty;
         }
 
-        private static void AgregarPasosPlanificados(List<PedidoEstacionDTO> destino, ICollection<PreparacionEstacion> pasos, ref DateTime fechaInicio)
+        private static void AgregarPasosPlanificados(List<PedidoEstacionDTO> destino, ICollection<PreparacionEstacion> pasos, int idProducto, ref DateTime fechaInicio)
         {
             foreach (var paso in pasos.OrderBy(p => p.NumeroOrden))
             {
@@ -289,6 +289,7 @@ namespace Anzuelo.Application.Services
 
                 destino.Add(new PedidoEstacionDTO
                 {
+                    IdProducto = idProducto,
                     IdEstacionCocina = paso.IdEstacionCocina,
                     IdEstadoPedidoEstacion = ID_ESTADO_PEDIDO_ESTACION_PENDIENTE,
                     OrdenProceso = paso.NumeroOrden,

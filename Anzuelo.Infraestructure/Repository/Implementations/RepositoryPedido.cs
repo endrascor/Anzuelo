@@ -122,5 +122,11 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
                 throw new Exception(ex.Message);
             }
         }
+        public async Task UpdateAsync(Pedido entity)
+        {
+            _context.Set<Pedido>().Update(entity);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

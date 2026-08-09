@@ -20,10 +20,12 @@ public partial class PedidoEstacion
     public DateTime FechaFin { get; set; }
 
     public int TiempoEstimadoMinutos { get; set; }
+    public int IdProducto { get; set; }
 
     public virtual DetallePedido IdDetallePedidoNavigation { get; set; } = null!;
 
     public virtual EstacionCocina IdEstacionCocinaNavigation { get; set; } = null!;
 
     public virtual EstadoPedidoEstacion IdEstadoPedidoEstacionNavigation { get; set; } = null!;
+    public virtual Producto IdProductoNavigation { get; set; } = null!;
 }

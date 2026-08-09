@@ -326,6 +326,15 @@
                                 </a>
                             </li>
                         }
+                        else if (User.IsInRole("Cocina"))
+                        {
+                            <li class="nav-item mx-3">
+                                <a class="nav-link text-white fs-5" asp-controller="PedidoEstacion" asp-action="Index">
+                                    <i class="bi bi-clock-history me-1"></i>
+                                    Listado de ordenes
+                                </a>
+                            </li>
+                        }
 
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {

@@ -1,0 +1,664 @@
+﻿@using System.Linq
+@model IEnumerable<Anzuelo.Application.DTOs.PedidoEstacionDTO>
+
+@{
+    ViewData["Title"] = "Pedidos en cocina";
+}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="mb-1">
+            <i class="bi bi-fire me-2"></i>
+            Pedidos en cocina
+        </h2>
+
+        <p class="text-muted mb-0">
+            Proceso de preparación de los pedidos.
+        </p>
+    </div>
+
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5 text-muted">
+
+            <i class="bi bi-inbox"
+               style="font-size:3rem; opacity:.4;">
+            </i>
+
+            <h5 class="mt-3">
+                No hay pedidos en preparación.
+            </h5>
+
+        </div>
+    }
+    else
+    {
+        @foreach (var pedido in
+            Model
+            .GroupBy(x => x.IdPedido)
+            .OrderBy(x => x.Key))
+        {
+            <section class="pedido-card">
+
+                <!-- PEDIDO -->
+
+                <div class="pedido-header">
+
+                    <div>
+                        <span class="pedido-label">
+                            PEDIDO
+                        </span>
+
+                        <h3 class="pedido-numero">
+                            #@pedido.Key
+                        </h3>
+                    </div>
+
+                    <i class="bi bi-receipt pedido-icon"></i>
+
+                </div>
+
+
+                <div class="pedido-contenido">
+
+
+                    @foreach (var detalle in
+                                pedido.GroupBy(
+                                x => x.IdDetallePedido))
+                    {
+                        var primerElemento =
+                        detalle.First();
+
+
+                        <!-- SI EL DETALLE ES UN COMBO -->
+                        @if (primerElemento.EsCombo)
+                        {
+                            <div class="combo-header">
+
+                                <div class="combo-icon">
+                                    <i class="bi bi-box2-heart"></i>
+                                </div>
+
+                                <div>
+                                    <span class="tipo-item">
+                                        COMBO
+                                    </span>
+
+                                    <h4>
+                                        @primerElemento.NombreCombo
+                                    </h4>
+                                </div>
+
+                            </div>
+                        }
+
+
+                        <!-- PRODUCTOS -->
+
+                        <div class="productos-container">
+
+                            @foreach (var producto in
+                                            detalle
+                                            .GroupBy(x => new
+                                            {
+                                                x.IdProducto,
+                                                x.NombreProducto
+                                            }))
+                            {
+                                var etapas = producto
+                                .OrderBy(
+                                x => x.OrdenProceso)
+                                .ToList();
+
+
+                                var etapaProceso =
+                                etapas.FirstOrDefault(
+                                x => x.PuedeFinalizar);
+
+
+                                var etapaDisponible =
+                                etapas.FirstOrDefault(
+                                x => x.PuedeIniciar);
+
+
+                                var completado =
+                                etapas.All(
+                                x => EsCompletado(
+                                x.NombreEstadoPedidoEstacion));
+
+
+                                <div class="producto-card">
+
+
+                                    <!-- PRODUCTO -->
+
+                                    <div class="producto-superior">
+
+                                        <div>
+
+                                            @if (!primerElemento.EsCombo)
+                                            {
+                                                <span class="tipo-item">
+                                                    PRODUCTO
+                                                </span>
+                                            }
+
+                                            <h4 class="producto-nombre">
+                                                @producto.Key.NombreProducto
+                                            </h4>
+
+
+                                            @if (etapaProceso != null)
+                                            {
+                                                <div class="estado-actual">
+
+                                                    <span class="badge-proceso">
+                                                        En proceso
+                                                    </span>
+
+                                                    <span class="text-muted">
+                                                        Estación actual:
+                                                        <strong>
+                                                            @etapaProceso.NombreEstacion
+                                                        </strong>
+                                                    </span>
+
+                                                </div>
+                                            }
+                                            else if (completado)
+                                            {
+                                                <div class="estado-actual">
+
+                                                    <span class="badge-listo">
+                                                        Listo
+                                                    </span>
+
+                                                </div>
+                                            }
+                                            else if (etapaDisponible != null)
+                                            {
+                                                <div class="estado-actual">
+
+                                                    <span class="badge-pendiente">
+                                                        Pendiente
+                                                    </span>
+
+                                                    <span class="text-muted">
+                                                        Próxima estación:
+                                                        <strong>
+                                                            @etapaDisponible.NombreEstacion
+                                                        </strong>
+                                                    </span>
+
+                                                </div>
+                                            }
+
+                                        </div>
+
+
+                                        <!-- ACCIÓN -->
+
+                                        <div class="producto-accion">
+
+
+                                            @if (etapaProceso != null)
+                                            {
+                                                <form asp-action="Finalizar"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="id"
+                                                           value="@etapaProceso.IdPedidoEstacion" />
+
+                                                    <button type="submit"
+                                                            class="btn-finalizar">
+
+                                                        <i class="bi bi-check-lg me-1"></i>
+
+                                                        Finalizar etapa
+
+                                                    </button>
+
+                                                </form>
+                                            }
+                                            else if (etapaDisponible != null)
+                                            {
+                                                <form asp-action="Iniciar"
+                                                      method="post">
+
+                                                    <input type="hidden"
+                                                           name="id"
+                                                           value="@etapaDisponible.IdPedidoEstacion" />
+
+                                                    <button type="submit"
+                                                            class="btn-iniciar">
+
+                                                        <i class="bi bi-play-fill me-1"></i>
+
+                                                        Iniciar
+
+                                                    </button>
+
+                                                </form>
+                                            }
+                                            else if (completado)
+                                            {
+                                                <span class="producto-listo">
+
+                                                    <i class="bi bi-check-circle-fill me-1"></i>
+
+                                                    Listo
+
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- PROCESO DE ESTACIONES -->
+
+                                    <div class="proceso-estaciones">
+
+                                        @foreach (var etapa in etapas)
+                                        {
+                                            <div class="etapa">
+
+                                                <span class="etapa-punto @ClaseEstado(etapa.NombreEstadoPedidoEstacion)">
+
+                                                    @SimboloEstado(
+                                                    etapa.NombreEstadoPedidoEstacion)
+
+                            </span>
+
+                            <div>
+
+                                <div class="etapa-nombre">
+                                    @etapa.NombreEstacion
+                                </div>
+
+                                <div class="etapa-estado">
+                                    @TextoEstado(
+                                                                        etapa.NombreEstadoPedidoEstacion)
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        @if (etapa != etapas.Last())
+                                            {
+                                                <div class="linea-proceso"></div>
+                                            }
+                                        }
+
+                                    </div>
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+
+                </div>
+
+            </section>
+        }
+    }
+
+</div>
+
+
+<style>
+
+    .pedido-card {
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+
+    .pedido-header {
+        padding: 18px 22px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .pedido-label {
+        font-size: .72rem;
+        font-weight: 700;
+        color: #888;
+        letter-spacing: 1px;
+    }
+
+
+    .pedido-numero {
+        margin: 0;
+        font-weight: 700;
+    }
+
+
+    .pedido-icon {
+        font-size: 1.8rem;
+        color: #f47b20;
+    }
+
+
+    .pedido-contenido {
+        padding: 22px;
+    }
+
+
+    /* COMBO */
+
+    .combo-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #eee;
+    }
+
+
+        .combo-header h4 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+
+    .combo-icon {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #fff3e8;
+        color: #f47b20;
+        font-size: 1.2rem;
+    }
+
+
+    .tipo-item {
+        font-size: .7rem;
+        color: #888;
+        font-weight: 700;
+        letter-spacing: .8px;
+    }
+
+
+    /* PRODUCTOS */
+
+    .productos-container {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+
+    .producto-card {
+        border: 1px solid #ececec;
+        border-radius: 12px;
+        padding: 18px;
+    }
+
+
+    .producto-superior {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+
+    .producto-nombre {
+        margin: 2px 0 7px 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+
+    .estado-actual {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+
+    /* BADGES */
+
+    .badge-pendiente,
+    .badge-proceso,
+    .badge-listo {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: .78rem;
+        font-weight: 700;
+    }
+
+
+    .badge-pendiente {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+
+    .badge-proceso {
+        background: #cfe2ff;
+        color: #084298;
+    }
+
+
+    .badge-listo {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+
+    /* PROCESO */
+
+    .proceso-estaciones {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+
+    .etapa {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+
+    .etapa-punto {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-weight: 700;
+    }
+
+
+    .estado-completado {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+
+    .estado-proceso {
+        background: #cfe2ff;
+        color: #084298;
+    }
+
+
+    .estado-pendiente {
+        background: #eeeeee;
+        color: #777;
+    }
+
+
+    .etapa-nombre {
+        font-weight: 600;
+    }
+
+
+    .etapa-estado {
+        color: #888;
+        font-size: .78rem;
+    }
+
+
+    .linea-proceso {
+        height: 2px;
+        width: 45px;
+        background: #ddd;
+        margin: 13px 12px 0 12px;
+    }
+
+
+    /* BOTONES */
+
+    .btn-iniciar,
+    .btn-finalizar {
+        border: none;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+
+    .btn-iniciar {
+        background: #f47b20;
+        color: white;
+    }
+
+
+        .btn-iniciar:hover {
+            background: #da6813;
+        }
+
+
+    .btn-finalizar {
+        background: #198754;
+        color: white;
+    }
+
+
+        .btn-finalizar:hover {
+            background: #157347;
+        }
+
+
+    .producto-listo {
+        color: #198754;
+        font-weight: 700;
+    }
+
+
+    @@media (max-width: 768px) {
+
+        .producto-superior {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+
+        .proceso-estaciones {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+
+        .linea-proceso {
+            height: 20px;
+            width: 2px;
+            margin: 0 0 0 13px;
+        }
+    }
+
+</style>
+
+
+@functions {
+
+    bool EsPendiente(string? estado)
+    {
+        return !string.IsNullOrWhiteSpace(estado)
+            && estado.ToLower().Contains("pendiente");
+    }
+
+
+    bool EsProceso(string? estado)
+    {
+        return !string.IsNullOrWhiteSpace(estado)
+            && estado.ToLower().Contains("proceso");
+    }
+
+
+    bool EsCompletado(string? estado)
+    {
+        if (string.IsNullOrWhiteSpace(estado))
+            return false;
+
+        var valor = estado.ToLower();
+
+        return valor.Contains("complet")
+            || valor.Contains("finaliz")
+            || valor.Contains("terminad");
+    }
+
+
+    string SimboloEstado(string? estado)
+    {
+        if (EsCompletado(estado))
+            return "✓";
+
+        if (EsProceso(estado))
+            return "●";
+
+        return "○";
+    }
+
+
+    string ClaseEstado(string? estado)
+    {
+        if (EsCompletado(estado))
+            return "estado-completado";
+
+        if (EsProceso(estado))
+            return "estado-proceso";
+
+        return "estado-pendiente";
+    }
+
+
+    string TextoEstado(string? estado)
+    {
+        if (EsCompletado(estado))
+            return "Completado";
+
+        if (EsProceso(estado))
+            return "En proceso";
+
+        return "Pendiente";
+    }
+
+}

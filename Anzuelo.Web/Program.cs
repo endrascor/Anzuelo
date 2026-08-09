@@ -82,6 +82,7 @@ builder.Services.AddTransient<IRepositoryEstadoPedido, RepositoryEstadoPedido>()
 builder.Services.AddTransient<IRepositoryMetodoPago, RepositoryMetodoPago>();
 builder.Services.AddTransient<IRepositoryTipoEntrega, RepositoryTipoEntrega>();
 builder.Services.AddTransient<IRepositoryPreparacionEstacion, RepositoryPreparacionEstacion>();
+builder.Services.AddTransient<IRepositoryPedidoEstacion, RepositoryPedidoEstacion>();
 
 //Services
 builder.Services.AddTransient<IServiceCombo, ServiceCombo>();
@@ -105,6 +106,7 @@ builder.Services.AddTransient<IServicePedido, ServicePedido>();
 builder.Services.AddTransient<IServiceEstadoPedido, ServiceEstadoPedido>();
 builder.Services.AddTransient<IServiceMetodoPago, ServiceMetodoPago>();
 builder.Services.AddTransient<IServiceTipoEntrega, ServiceTipoEntrega>();
+builder.Services.AddTransient<IServicePedidoEstacion, ServicePedidoEstacion>();
 
 builder.Services.AddHostedService<ActualizarMenuCronService>();
 
