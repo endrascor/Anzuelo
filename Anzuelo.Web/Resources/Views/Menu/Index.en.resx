@@ -117,61 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BtnAgregarEstacion" xml:space="preserve">
-    <value>Agregar estación</value>
+  <data name="BtnVerMenu" xml:space="preserve">
+    <value>View available menu</value>
   </data>
-  <data name="BtnCancelar" xml:space="preserve">
-    <value>Cancelar</value>
+  <data name="EncabezadoPrincipal" xml:space="preserve">
+    <value>Menus</value>
   </data>
-  <data name="BtnGuardarProceso" xml:space="preserve">
-    <value>Guardar proceso</value>
+  <data name="SinMenu" xml:space="preserve">
+    <value>There are no menus registered yet</value>
   </data>
-  <data name="BtnQuitar" xml:space="preserve">
-    <value>Quitar</value>
+  <data name="SubtituloPrincipal" xml:space="preserve">
+    <value>Menus registered in the system</value>
   </data>
-  <data name="LabelDescripcion" xml:space="preserve">
-    <value>Descripción</value>
+  <data name="ThMenu" xml:space="preserve">
+    <value>Menu</value>
   </data>
-  <data name="LabelEstacion" xml:space="preserve">
-    <value>Estación</value>
+  <data name="ThDescripcion" xml:space="preserve">
+    <value>Description</value>
   </data>
-  <data name="LabelProducto" xml:space="preserve">
-    <value>Producto</value>
+  <data name="ThDisponibilidad" xml:space="preserve">
+    <value>Availability</value>
   </data>
-  <data name="LabelTiempoMin" xml:space="preserve">
-    <value>Tiempo (min)</value>
+  <data name="TituloPagina" xml:space="preserve">
+    <value>Menus</value>
   </data>
-  <data name="MsgMinimoEstacionesJs" xml:space="preserve">
-    <value>Debe agregar al menos una estación.</value>
+  <data name="ThHorario" xml:space="preserve">
+    <value>Schedule</value>
   </data>
-  <data name="MsgSinEstaciones" xml:space="preserve">
-    <value> No se han agregado estaciones</value>
+  <data name="ThEstado" xml:space="preserve">
+    <value>Status</value>
   </data>
-  <data name="OpcionSeleccioneProducto" xml:space="preserve">
-    <value> -- Seleccione un producto --</value>
-  </data>
-  <data name="PlaceholderDescripcion" xml:space="preserve">
-    <value>Descripción del proceso</value>
-  </data>
-  <data name="SeccionEstacionesProceso" xml:space="preserve">
-    <value>Estaciones del proceso</value>
-  </data>
-  <data name="SeccionInformacionGeneral" xml:space="preserve">
-    <value> Información general</value>
-  </data>
-  <data name="SubtituloCrearPreparacion" xml:space="preserve">
-    <value> Complete la información y las estaciones del proceso.</value>
-  </data>
-  <data name="SubtituloEstaciones" xml:space="preserve">
-    <value>Defina el orden de ejecución de cada estación.</value>
-  </data>
-  <data name="TitleBajar" xml:space="preserve">
-    <value>Bajar</value>
-  </data>
-  <data name="TitleSubir" xml:space="preserve">
-    <value> Subir</value>
-  </data>
-  <data name="TituloCrearPreparacion" xml:space="preserve">
-    <value>Crear proceso de preparación</value>
+  <data name="msjSinMenu" xml:space="preserve">
+    <value>There is no menu available at this time</value>
   </data>
 </root>

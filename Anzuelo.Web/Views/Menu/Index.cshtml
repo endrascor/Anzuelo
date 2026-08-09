@@ -1,9 +1,11 @@
 ﻿@using X.PagedList
 @using X.PagedList.Mvc.Core
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model IPagedList<Anzuelo.Application.DTOs.MenuDTO>
 
 @{
-    ViewData["Title"] = "Menús";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <style>
@@ -126,71 +128,60 @@
 </style>
 
 <div class="page-hero">
-
     <div class="container">
-
-        <h1>
-            <i class="bi bi-journal-text me-2"></i>
-            Menús
-        </h1>
-
-        <p class="page-hero-sub">
-            Menús registrados en el sistema
-        </p>
-
+        <h1><i class="bi bi-journal-text me-2"></i>@Localizer["EncabezadoPrincipal"]</h1>
+        <p class="page-hero-sub">@Localizer["SubtituloPrincipal"]</p>
     </div>
-
 </div>
 
 <div class="container">
 
     <div class="top-actions">
-
         <a asp-controller="Menu"
            asp-action="Details"
            class="btn-menu-principal">
-
             <i class="bi bi-eye"></i>
-            Ver menú disponible
-
+            @Localizer["BtnVerMenu"]
         </a>
-
     </div>
+
+    @if (TempData["MensajeMenu"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show mt-3"
+             role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            @Localizer["msjSinMenu"]
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Cerrar">
+            </button>
+        </div>
+    }
 
     @if (Model == null || !Model.Any())
     {
         <div class="text-center py-5 text-muted">
-
             <i class="bi bi-inbox"
                style="font-size: 3rem; opacity: .4;">
             </i>
-
-            <h5 class="mt-3">
-                No hay menús registrados
-            </h5>
-
+            <h5 class="mt-3"> @Localizer["SinMenu"]</h5>
         </div>
     }
     else
     {
         <div class="menu-table-wrap">
-
             <div class="table-responsive">
-
                 <table class="table menu-table mb-0">
-
                     <thead>
-
                         <tr>
-                            <th>Menú</th>
-                            <th>Descripción</th>
-                            <th>Disponibilidad</th>
-                            <th>Horario</th>
-                            <th class="text-center">Estado</th>
+                            <th>@Localizer["ThMenu"]</th>
+                            <th>@Localizer["ThDescripcion"]</th>
+                            <th>@Localizer["ThDisponibilidad"]</th>
+                            <th>@Localizer["ThHorario"]</th>
+                            <th class="text-center">@Localizer["ThEstado"]</th>
                         </tr>
-
                     </thead>
-
                     <tbody>
 
                         @foreach (var item in Model)
@@ -226,53 +217,30 @@
 
                                 <td class="horario-columna">
 
-                                    @item.HoraInicio.ToString("HH:mm")
+                                    @item.HoraInicio.ToString("hh:mm tt")
 
                                     <span class="mx-1">
                                         -
                                     </span>
 
-                                    @item.HoraFinal.ToString("HH:mm")
+                                    @item.HoraFinal.ToString("hh:mm tt")
 
                                 </td>
 
                                 <td class="text-center">
-
                                     @if (estadoActivo)
                                     {
                                         <span class="badge-activo">
-
-                                            @if (!string.IsNullOrWhiteSpace(
-                                                item.NombreEstado))
-                                            {
-                                                @item.NombreEstado
-                                            }
-                                            else
-                                            {
-                                                <text>Activo</text>
-                                            }
-
+                                            @item.NombreEstado
                                         </span>
                                     }
                                     else
                                     {
                                         <span class="badge-inactivo">
-
-                                            @if (!string.IsNullOrWhiteSpace(
-                                                item.NombreEstado))
-                                            {
-                                                @item.NombreEstado
-                                            }
-                                            else
-                                            {
-                                                <text>Inactivo</text>
-                                            }
-
+                                            @item.NombreEstado
                                         </span>
                                     }
-
                                 </td>
-
                             </tr>
                         }
 

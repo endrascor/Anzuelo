@@ -129,6 +129,9 @@
   <data name="BtnQuitar" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="LabelDescripcion" xml:space="preserve">
+    <value>Description</value>
+  </data>
   <data name="LabelEstacion" xml:space="preserve">
     <value> Station</value>
   </data>

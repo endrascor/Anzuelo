@@ -117,61 +117,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BtnAgregarEstacion" xml:space="preserve">
-    <value>Agregar estación</value>
+  <data name="BtnAgregarCombo" xml:space="preserve">
+    <value>Agregar combo</value>
+  </data>
+  <data name="BtnAgregarProducto" xml:space="preserve">
+    <value>Agregar producto</value>
   </data>
   <data name="BtnCancelar" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="BtnGuardarProceso" xml:space="preserve">
-    <value>Guardar proceso</value>
+  <data name="BtnGuardarMenu" xml:space="preserve">
+    <value>Guardar menú</value>
   </data>
   <data name="BtnQuitar" xml:space="preserve">
     <value>Quitar</value>
   </data>
+  <data name="TextContentMin" xml:space="preserve">
+    <value>Debe agregar al menos un producto o un combo</value>
+  </data>
+  <data name="LabelCombo" xml:space="preserve">
+    <value>Combo</value>
+  </data>
   <data name="LabelDescripcion" xml:space="preserve">
     <value>Descripción</value>
   </data>
-  <data name="LabelEstacion" xml:space="preserve">
-    <value>Estación</value>
+  <data name="LabelDescripcionDisponibilidad" xml:space="preserve">
+    <value>Descripción de disponibilidad</value>
+  </data>
+  <data name="LabelDescuento" xml:space="preserve">
+    <value>Descuento %</value>
+  </data>
+  <data name="LabelDia" xml:space="preserve">
+    <value>Día disponible</value>
+  </data>
+  <data name="LabelEstado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="LabelFechaFinal" xml:space="preserve">
+    <value>Fecha final</value>
+  </data>
+  <data name="LabelFechaInicial" xml:space="preserve">
+    <value>Fecha inicial</value>
+  </data>
+  <data name="LabelHoraFinal" xml:space="preserve">
+    <value>Hora final</value>
+  </data>
+  <data name="LabelHoraInicial" xml:space="preserve">
+    <value>Hora inicial</value>
+  </data>
+  <data name="LabelNombreMenu" xml:space="preserve">
+    <value>Nombre del menú</value>
   </data>
   <data name="LabelProducto" xml:space="preserve">
     <value>Producto</value>
   </data>
-  <data name="LabelTiempoMin" xml:space="preserve">
-    <value>Tiempo (min)</value>
+  <data name="MsgSinCombos" xml:space="preserve">
+    <value>No se han agregado combos</value>
   </data>
-  <data name="MsgMinimoEstacionesJs" xml:space="preserve">
-    <value>Debe agregar al menos una estación.</value>
+  <data name="MsgSinProductos" xml:space="preserve">
+    <value>No se han agregado productos</value>
   </data>
-  <data name="MsgSinEstaciones" xml:space="preserve">
-    <value> No se han agregado estaciones</value>
+  <data name="OpcionSeleccioneCombo" xml:space="preserve">
+    <value>-- Seleccione un combo --</value>
+  </data>
+  <data name="OpcionSeleccioneDia" xml:space="preserve">
+    <value>-- Seleccione un día --</value>
+  </data>
+  <data name="OpcionSeleccioneEstado" xml:space="preserve">
+    <value>-- Seleccione un estado --</value>
   </data>
   <data name="OpcionSeleccioneProducto" xml:space="preserve">
-    <value> -- Seleccione un producto --</value>
+    <value>-- Seleccione un producto --</value>
   </data>
   <data name="PlaceholderDescripcion" xml:space="preserve">
-    <value>Descripción del proceso</value>
+    <value>Descripción del menú</value>
   </data>
-  <data name="SeccionEstacionesProceso" xml:space="preserve">
-    <value>Estaciones del proceso</value>
+  <data name="PlaceholderDescripcionDisponibilidad" xml:space="preserve">
+    <value>Ejemplo: menú disponible para almuerzo</value>
+  </data>
+  <data name="PlaceholderNombre" xml:space="preserve">
+    <value>Nombre del menú</value>
+  </data>
+  <data name="SeccionCombos" xml:space="preserve">
+    <value>Combos del menú</value>
+  </data>
+  <data name="SeccionDisponibilidad" xml:space="preserve">
+    <value>Disponibilidad</value>
   </data>
   <data name="SeccionInformacionGeneral" xml:space="preserve">
     <value> Información general</value>
   </data>
-  <data name="SubtituloCrearPreparacion" xml:space="preserve">
-    <value> Complete la información y las estaciones del proceso.</value>
+  <data name="SeccionProductos" xml:space="preserve">
+    <value>Productos del menú</value>
   </data>
-  <data name="SubtituloEstaciones" xml:space="preserve">
-    <value>Defina el orden de ejecución de cada estación.</value>
+  <data name="SubtituloCrearMenu" xml:space="preserve">
+    <value>Completa la información, disponibilidad, productos y combos</value>
   </data>
-  <data name="TitleBajar" xml:space="preserve">
-    <value>Bajar</value>
-  </data>
-  <data name="TitleSubir" xml:space="preserve">
-    <value> Subir</value>
-  </data>
-  <data name="TituloCrearPreparacion" xml:space="preserve">
-    <value>Crear proceso de preparación</value>
+  <data name="TituloCrearMenu" xml:space="preserve">
+    <value>Crear menú</value>
   </data>
 </root>

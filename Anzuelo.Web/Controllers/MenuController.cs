@@ -46,10 +46,6 @@ namespace Anzuelo.Web.Controllers
                 serviceCombo;
         }
 
-        /*
-         * LISTADO
-         */
-
         [HttpGet]
         public async Task<ActionResult> Index(int? page)
         {
@@ -61,10 +57,6 @@ namespace Anzuelo.Web.Controllers
                     page ?? 1,
                     5));
         }
-
-        /*
-         * LISTADO ADMINISTRATIVO
-         */
 
         [HttpGet]
         public async Task<ActionResult> IndexAdmin(
@@ -79,23 +71,34 @@ namespace Anzuelo.Web.Controllers
                     5));
         }
 
-        /*
-         * DETALLE DEL MENÚ DISPONIBLE
-         */
 
         [HttpGet]
-        public async Task<ActionResult> Details()
+        public async Task<ActionResult> Details(
+    bool admin = false)
         {
             var menu =
                 await _serviceMenu
                     .GetMenuDisponibleAsync();
 
+            if (menu == null)
+            {
+                TempData["MensajeMenu"] =
+                    "Sin Menu";
+
+                if (admin)
+                {
+                    return RedirectToAction(
+                        nameof(IndexAdmin));
+                }
+
+                return RedirectToAction(
+                    nameof(Index));
+            }
+
             return View(menu);
         }
 
-        /*
-         * CARGAR LISTAS
-         */
+
 
         private async Task CargarListasAsync(
             MenuDTO? menu = null)
@@ -323,19 +326,6 @@ namespace Anzuelo.Web.Controllers
                 ?? new List<MenuComboDTO>();
         }
 
-        /*
-         * CORREGIR DECIMALES RECIBIDOS
-         *
-         * El navegador normalmente envía:
-         * 10.00
-         *
-         * Algunas configuraciones regionales
-         * esperan:
-         * 10,00
-         *
-         * Este método acepta ambos formatos.
-         */
-
         private void CorregirDescuentosDesdeFormulario(
             MenuDTO dto)
         {
@@ -430,9 +420,6 @@ namespace Anzuelo.Web.Controllers
                 combos;
         }
 
-        /*
-         * CONVERSIÓN DE DECIMAL
-         */
 
         private static bool TryParseDecimal(
             string valor,
@@ -445,11 +432,6 @@ namespace Anzuelo.Web.Controllers
                 return false;
             }
 
-            /*
-             * Convierte una coma decimal en punto
-             * para interpretar siempre el valor
-             * utilizando formato invariable.
-             */
             var valorNormalizado =
                 valor
                     .Trim()
