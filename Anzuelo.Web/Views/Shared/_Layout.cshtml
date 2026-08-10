@@ -144,6 +144,10 @@
             padding: 0 4px;
         }
 
+        .navbar-nav .nav-link {
+            white-space: nowrap;
+        }
+
         @@media (max-width: 991px) {
 
             .btn-acceso {
@@ -167,7 +171,7 @@
 
     <header>
 
-        <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+        <nav class="navbar navbar-expand-xl navbar-dark shadow-sm"
              style="background-color: var(--anzuelo-primary);">
 
 
@@ -214,7 +218,7 @@
 
                     <ul class="navbar-nav text-end align-items-lg-center">
 
-                        <li class="nav-item mx-3">
+                        <li class="nav-item mx-2">
 
                             <a class="nav-link text-white fs-5"
                                asp-controller="Home"
@@ -226,7 +230,7 @@
 
                         </li>
 
-                        <li class="nav-item mx-3">
+                        <li class="nav-item mx-2">
 
                             <a class="nav-link text-white fs-5"
                                asp-controller="Menu"
@@ -238,7 +242,7 @@
 
                         </li>
 
-                        <li class="nav-item mx-3">
+                        <li class="nav-item mx-2">
 
                             <a class="nav-link text-white fs-5"
                                asp-controller="Combo"
@@ -250,7 +254,7 @@
 
                         </li>
 
-                        <li class="nav-item mx-3">
+                        <li class="nav-item mx-2">
 
                             <a class="nav-link text-white fs-5"
                                asp-controller="Producto"
@@ -262,7 +266,7 @@
 
                         </li>
 
-                        <li class="nav-item mx-3">
+                        <li class="nav-item mx-2">
 
                             <a class="nav-link text-white fs-5"
                                asp-controller="Preparacion"
@@ -276,7 +280,7 @@
 
                         @if (User.IsInRole("Administrador"))
                         {
-                            <li class="nav-item dropdown mx-3">
+                            <li class="nav-item dropdown mx-2">
                                 <a class="nav-link dropdown-toggle text-white fs-5" href="#" id="navbarDropdownAdmin"
                                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     @SharedResource.Menu_Administracion
@@ -319,7 +323,7 @@
                         }
                         else if (User.IsInRole("Encargado"))
                         {
-                            <li class="nav-item mx-3">
+                            <li class="nav-item mx-2">
                                 <a class="nav-link text-white fs-5" asp-controller="Pedido" asp-action="Index">
                                     <i class="bi bi-clock-history me-1"></i>
                                     @SharedResource.Admin_Pedidos
@@ -328,7 +332,7 @@
                         }
                         else if (User.IsInRole("Cocina"))
                         {
-                            <li class="nav-item mx-3">
+                            <li class="nav-item mx-2">
                                 <a class="nav-link text-white fs-5" asp-controller="PedidoEstacion" asp-action="Index">
                                     <i class="bi bi-clock-history me-1"></i>
                                     Listado de ordenes
@@ -338,7 +342,7 @@
 
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item mx-3">
+                            <li class="nav-item mx-2">
                                 <a class="nav-link text-white fs-5 nav-carrito"
                                    asp-controller="Pedido"
                                    asp-action="Create"
