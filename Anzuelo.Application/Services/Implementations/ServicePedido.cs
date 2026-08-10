@@ -16,7 +16,7 @@ namespace Anzuelo.Application.Services
         private const decimal PORCENTAJE_IMPUESTO = 0.13m;
         private const decimal COSTO_ENVIO_DOMICILIO = 1500m;
 
-        private const int ID_ESTADO_INICIAL = 1;
+        private const int ID_ESTADO_INICIAL = 2;
         private const int ID_ENTREGA_DOMICILIO = 1;
         private const int ID_PAGO_EFECTIVO = 1;
         private const int ID_PAGO_TARJETA_CREDITO = 2;
