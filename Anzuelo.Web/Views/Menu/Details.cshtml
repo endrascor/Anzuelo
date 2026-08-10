@@ -1,7 +1,10 @@
-﻿@model Anzuelo.Application.DTOs.MenuDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.MenuDTO
+
 
 @{
-    ViewData["Title"] = "Detalle Menú";
+    ViewData["Title"] = @Localizer["Titulo"];
 }
 
 <style>
@@ -184,7 +187,7 @@
         </div>
 
         <div class="menu-info">
-            <strong>Disponibilidad:</strong>
+            <strong>@Localizer["lblDisponibilidad"]:</strong>
             @Model.FechaInicio.ToString("dd/MM/yyyy")
             -
             @Model.FechaFinal.ToString("dd/MM/yyyy")
@@ -297,7 +300,7 @@
         }
 
         <div class="menu-footer">
-            Menú disponible actualmente
+            @Localizer["lblMenuDisponible"]
         </div>
 
     </div>
@@ -305,7 +308,7 @@
     <div class="mt-4 text-center">
         <a href="javascript:history.back()" class="btn-back">
             <i class="bi bi-arrow-left"></i>
-            Volver a Menus
+            @Localizer["btnVolver"]
         </a>
     </div>
 
