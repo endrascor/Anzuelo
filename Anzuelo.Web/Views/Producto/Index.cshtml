@@ -1,7 +1,9 @@
-﻿@model IEnumerable<Anzuelo.Application.DTOs.ProductoDTO>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<Anzuelo.Application.DTOs.ProductoDTO>
 
 @{
-    ViewData["Title"] = "Productos";
+    ViewData["Title"] = Localizer["Titulo"];
 }
 
 <style>
@@ -93,11 +95,11 @@
         <div class="container">
             <h1>
                 <i class="bi bi-box-seam me-2"></i>
-                Productos
+                @Localizer["Titulo"]
             </h1>
 
             <p class="page-hero-sub">
-                Listado de productos disponibles
+                @Localizer["subtitulo"]
             </p>
         </div>
     </div>
@@ -146,7 +148,7 @@
                            class="btn btn-anzuelo btn-sm">
 
                             <i class="bi bi-eye me-1"></i>
-                            Ver detalle
+                            @Localizer["btnDetalle"]
                         </a>
                     </div>
 

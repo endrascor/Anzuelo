@@ -1,7 +1,9 @@
-﻿@model Anzuelo.Application.DTOs.ProductoDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.ProductoDTO
 
 @{
-    ViewData["Title"] = "Detalle del Producto";
+    ViewData["Title"] = Localizer["Titulo"];
 }
 
 <style>
@@ -82,7 +84,7 @@
 
 <div class="page-hero text-center">
     <div class="container">
-        <h1><i class="bi bi-box-seam me-2"></i>Detalle del Producto</h1>
+        <h1><i class="bi bi-box-seam me-2"></i>@Localizer["Titulo"]</h1>
         <p class="page-hero-sub">@Model.Nombre</p>
     </div>
 </div>
@@ -158,11 +160,11 @@
 
                 <hr />
 
-                <p><strong>Descripción:</strong><br />@Model.Descripcion</p>
+                <p><strong>@Localizer["lblDescripcion"]:</strong><br />@Model.Descripcion</p>
 
-                <p><strong>Categoría:</strong> @Model.NombreCategoria</p>
+                <p><strong>@Localizer["lblCategoria"]:</strong> @Model.NombreCategoria</p>
 
-                <h3 class="price">₡@Model.Precio.ToString("N2")</h3>
+                <h3 class="@Localizer["lblPrecio"]>₡@Model.Precio.ToString("N2")</h3>
 
             </div>
 
@@ -174,7 +176,7 @@
 
         <div class="card-body">
 
-            <h4 style="color:var(--anzuelo-primary);font-weight:700;">Ingredientes</h4>
+            <h4 style="color:var(--anzuelo-primary);font-weight:700;">@Localizer["lblIngredientes"]</h4>
 
             @if (Model.Ingredientes.Any())
             {
@@ -190,7 +192,7 @@
             else
             {
                 <div class="alert alert-info">
-                    Este producto no tiene ingredientes registrados.
+                    @Localizer["msjSinIngredientes"]
                 </div>
             }
 
@@ -200,7 +202,7 @@
 
     <div class="mt-4">
         <a href="javascript:history.back()" class="btn-back">
-            <i class="bi bi-arrow-left"></i> Volver a Productos
+            <i class="bi bi-arrow-left"></i> @Localizer["btnVolver"]
         </a>
     </div>
 
