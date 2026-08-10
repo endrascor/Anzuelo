@@ -150,4 +150,7 @@
   <data name="lblDetalle" xml:space="preserve">
     <value>Details</value>
   </data>
+  <data name="btnDetalle" xml:space="preserve">
+    <value>View details</value>
+  </data>
 </root>

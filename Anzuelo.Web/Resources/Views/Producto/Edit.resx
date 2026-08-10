@@ -117,17 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="btnCrear" xml:space="preserve">
-    <value>Crear producto</value>
+  <data name="btnAgregarIngrediente" xml:space="preserve">
+    <value>Agregar ingrediente</value>
   </data>
-  <data name="subtitulo" xml:space="preserve">
-    <value>Gestión de productos registrados en el sistema</value>
+  <data name="btnCancelar" xml:space="preserve">
+    <value>Cancelar</value>
   </data>
-  <data name="Titulo" xml:space="preserve">
-    <value>Administrar Productos</value>
+  <data name="btnCrearIngrediente" xml:space="preserve">
+    <value>Crear ingrediente</value>
   </data>
-  <data name="lblEditar" xml:space="preserve">
-    <value>Editar</value>
+  <data name="btnGuardar" xml:space="preserve">
+    <value>Guardar producto</value>
   </data>
   <data name="lblCategoria" xml:space="preserve">
     <value>Categoría</value>
@@ -135,8 +135,26 @@
   <data name="lblDescripcion" xml:space="preserve">
     <value>Descripción</value>
   </data>
-  <data name="lblAccion" xml:space="preserve">
-    <value>Accion</value>
+  <data name="lblEjemploDescripcion" xml:space="preserve">
+    <value>Descripción del producto</value>
+  </data>
+  <data name="lblEjemploIngrediente" xml:space="preserve">
+    <value>Ejemplo: queso cheddar</value>
+  </data>
+  <data name="lblEjemploNombre" xml:space="preserve">
+    <value>Nombre del producto</value>
+  </data>
+  <data name="lblEstado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="lblImagenDescripcion" xml:space="preserve">
+    <value>Puede seleccionar varias imágenes. La primera será utilizada como imagen principal. Tamaño máximo por imagen: 5 MB</value>
+  </data>
+  <data name="lblIngredientes" xml:space="preserve">
+    <value>Ingredientes</value>
+  </data>
+  <data name="SeccionInformacionGeneral" xml:space="preserve">
+    <value> Información general</value>
   </data>
   <data name="lblNombre" xml:space="preserve">
     <value>Nombre</value>
@@ -144,13 +162,61 @@
   <data name="lblPrecio" xml:space="preserve">
     <value>Precio</value>
   </data>
-  <data name="msjSinProductos" xml:space="preserve">
-    <value>No hay productos registrados aún</value>
+  <data name="msjSinCategoria" xml:space="preserve">
+    <value>Seleccione una categoría</value>
   </data>
-  <data name="lblDetalle" xml:space="preserve">
-    <value>Detalle</value>
+  <data name="msjSinEstado" xml:space="preserve">
+    <value>Seleccione un estado</value>
   </data>
-  <data name="btnDetalle" xml:space="preserve">
-    <value>Detalle</value>
+  <data name="msjSinImagen" xml:space="preserve">
+    <value>No se eligió ningún archivo</value>
+  </data>
+  <data name="msjSinImagenes" xml:space="preserve">
+    <value>No se han seleccionado imágenes</value>
+  </data>
+  <data name="msjSinIngredientes" xml:space="preserve">
+    <value>Este producto no tiene ingredientes registrados</value>
+  </data>
+  <data name="subtitulo" xml:space="preserve">
+    <value>Complete la información, los ingredientes y las imágenes.</value>
+  </data>
+  <data name="Titulo" xml:space="preserve">
+    <value>Editar Producto</value>
+  </data>
+  <data name="lblMaximo" xml:space="preserve">
+    <value>Máximo 45 caracteres</value>
+  </data>
+  <data name="SeccionClasificacion" xml:space="preserve">
+    <value>Clasificación</value>
+  </data>
+  <data name="SeccionIngredientes" xml:space="preserve">
+    <value>Ingredientes</value>
+  </data>
+  <data name="SeccionImagenes" xml:space="preserve">
+    <value>Imágenes del producto</value>
+  </data>
+  <data name="lblIngrediente" xml:space="preserve">
+    <value>Ingrediente</value>
+  </data>
+  <data name="msjSinIngrediente" xml:space="preserve">
+    <value>Seleccione un ingrediente</value>
+  </data>
+  <data name="lblCantidad" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="btnQuitar" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="msjSinAgregarIngrediente" xml:space="preserve">
+    <value>No se han agregado ingredientes</value>
+  </data>
+  <data name="lblCantidadImagenes" xml:space="preserve">
+    <value>Seleccione una o varias imágenes</value>
+  </data>
+  <data name="lblAgregarIngrediente" xml:space="preserve">
+    <value>Agregue los ingredientes utilizados en el producto</value>
+  </data>
+  <data name="lblImagenGuardada" xml:space="preserve">
+    <value>Imagen Guardada</value>
   </data>
 </root>
