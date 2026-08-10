@@ -272,6 +272,7 @@
 
                                     <label asp-for="IdCategoriaProducto"
                                            class="form-label">
+                                        @Localizer["msjSinCategoria"]
                                     </label>
 
                                     <select asp-for="IdCategoriaProducto"
@@ -279,7 +280,7 @@
                                             class="form-select">
 
                                         <option value="0">
-                                            @Localizer["msjSinCategoria"]
+                                            @Localizer["lblCategoria"]
                                         </option>
 
                                     </select>
@@ -294,6 +295,7 @@
 
                                     <label asp-for="IdEstadoProducto"
                                            class="form-label">
+                                        @Localizer["lblEstado"]
                                     </label>
 
                                     <select asp-for="IdEstadoProducto"
