@@ -225,13 +225,56 @@
             </div>
 
             <div class="mt-4 text-center">
-                <a asp-action="Seguimiento" asp-route-id="@Model.IdPedido" class="btn-back me-2">
-                    <i class="bi bi-truck"></i> @Localizer["BtnVerSeguimiento"]
-                </a>
-                <a asp-controller="Home" asp-action="Index" class="btn-back">
-                    <i class="bi bi-arrow-left"></i> @Localizer["BtnVolverInicio"]
-                </a>
+                <div class="mt-4 text-center">
+                    <a asp-controller="Home" asp-action="Index" class="btn-back">
+                        <i class="bi bi-arrow-left"></i> @Localizer["BtnVolverInicio"]
+                    </a>
+                    <a asp-action="Seguimiento" asp-route-id="@Model.IdPedido" class="btn-back me-2">
+                        <i class="bi bi-truck"></i> @Localizer["BtnVerSeguimiento"]
+                    </a>
+                    <button type="button" class="btn-back me-2" id="btnEnviarFactura">
+                        <i class="bi bi-envelope"></i> @Localizer["BtnEnviarFacturaCorreo"]
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.getElementById('btnEnviarFactura')?.addEventListener('click', function () {
+            const boton = this;
+            boton.disabled = true;
+
+            const params = new URLSearchParams();
+            params.append('idPedido', '@Model.IdPedido');
+
+            fetch('/Pedido/EnviarFacturaCorreo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: params
+            })
+                .then(response => {
+                    if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                    return response.json();
+                })
+                .then(() => {
+                    Swal.fire({
+                        icon: "success",
+                        title: "@Localizer["MsgFacturaEnviada"]",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                })
+                .catch(error => {
+                    Swal.fire({ title: "@Localizer["MsgErrorTitulo"]", text: error.message, icon: "error" });
+                })
+                .finally(() => {
+                    boton.disabled = false;
+                });
+        });
+    </script>
+}

@@ -107,6 +107,7 @@ builder.Services.AddTransient<IServiceEstadoPedido, ServiceEstadoPedido>();
 builder.Services.AddTransient<IServiceMetodoPago, ServiceMetodoPago>();
 builder.Services.AddTransient<IServiceTipoEntrega, ServiceTipoEntrega>();
 builder.Services.AddTransient<IServicePedidoEstacion, ServicePedidoEstacion>();
+builder.Services.AddTransient<IServiceFacturaPedido, ServiceFacturaPedido>();
 
 builder.Services.AddHostedService<ActualizarMenuCronService>();
 

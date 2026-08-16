@@ -15,6 +15,7 @@ namespace Anzuelo.Web.Controllers
         private const string SESSION_CARRITO = "CarritoPedido";
         private const string ROL_CLIENTE = "Cliente";
         private const decimal PORCENTAJE_IMPUESTO = 0.13m;
+        private const string EMAIL_PRUEBA = "rojasmadrian28@gmail.com";
 
         private readonly IServicePedido _servicePedido;
         private readonly IServiceProducto _serviceProducto;
@@ -24,6 +25,7 @@ namespace Anzuelo.Web.Controllers
         private readonly IServiceDireccion _serviceDireccion;
         private readonly IServiceUsuario _serviceUsuario;
         private readonly IServiceEstadoPedido _serviceEstadoPedido;
+        private readonly IServiceFacturaPedido _serviceFacturaPedido;
 
         public PedidoController(
             IServicePedido servicePedido,
@@ -33,7 +35,8 @@ namespace Anzuelo.Web.Controllers
             IServiceMetodoPago serviceMetodoPago,
             IServiceDireccion serviceDireccion,
             IServiceUsuario serviceUsuario,
-            IServiceEstadoPedido serviceEstadoPedido)
+            IServiceEstadoPedido serviceEstadoPedido,
+            IServiceFacturaPedido serviceFacturaPedido)
         {
             _servicePedido = servicePedido;
             _serviceProducto = serviceProducto;
@@ -43,6 +46,7 @@ namespace Anzuelo.Web.Controllers
             _serviceDireccion = serviceDireccion;
             _serviceUsuario = serviceUsuario;
             _serviceEstadoPedido = serviceEstadoPedido;
+            _serviceFacturaPedido = serviceFacturaPedido;
         }
 
         private int? IdUsuarioSesion
@@ -363,6 +367,17 @@ namespace Anzuelo.Web.Controllers
                 return NotFound("El pedido solicitado no existe.");
 
             return View(pedido);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarFacturaCorreo(int idPedido)
+        {
+            var enviado = await _serviceFacturaPedido.EnviarFacturaAsync(idPedido, EMAIL_PRUEBA);
+
+            if (!enviado)
+                return BadRequest("No se pudo enviar la factura por correo.");
+
+            return Ok(new { success = true });
         }
     }
 }

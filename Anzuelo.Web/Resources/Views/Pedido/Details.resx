@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BtnEnviarFacturaCorreo" xml:space="preserve">
+    <value>Enviar factura por correo</value>
+  </data>
   <data name="BtnVerSeguimiento" xml:space="preserve">
     <value>Ver Seguimiento</value>
   </data>
@@ -161,6 +164,9 @@
   </data>
   <data name="LabelVuelto" xml:space="preserve">
     <value>Vuelto</value>
+  </data>
+  <data name="MsgFacturaEnviada" xml:space="preserve">
+    <value>Factura enviada correctamente</value>
   </data>
   <data name="SubtituloComprobante" xml:space="preserve">
     <value>Comprobante del pedido registrado</value>
