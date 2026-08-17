@@ -153,6 +153,9 @@
   <data name="Carrito_RegistrarPedido" xml:space="preserve">
     <value> Place order</value>
   </data>
+  <data name="Dashboard_Titulo" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
   <data name="Footer_Copyright" xml:space="preserve">
     <value>© 2026 El Anzuelo System. Created by: Dilan Sanchez and Adrian Rojas. All rights reserved.</value>
   </data>

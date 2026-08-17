@@ -1,0 +1,315 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Application.DTOs.DashboardDTO
+@{
+    ViewData["Title"] = Localizer["TituloDashboard"];
+    var tipoSeleccionado = ViewBag.TipoSeleccionado as string;
+    var totalPedidos = Model.Estados.Sum(e => e.Cantidad);
+    var colores = new[] { "#e67e22", "#0a2f5a", "#28a745", "#dc3545", "#6c757d" };
+
+    var fInicioStr = ViewBag.FechaInicio as string;
+    var fFinStr = ViewBag.FechaFin as string;
+
+    string textoPeriodo;
+
+    if (!string.IsNullOrEmpty(fInicioStr) && !string.IsNullOrEmpty(fFinStr))
+    {
+        var fInicio = DateTime.Parse(fInicioStr);
+        var fFin = DateTime.Parse(fFinStr);
+
+        textoPeriodo = (fInicio == fFin)
+            ? $"{Localizer["TextoResumenDel"].Value} {fInicio:dd/MM/yyyy}"
+            : $"{Localizer["TextoPeriodoDel"].Value} {fInicio:dd/MM/yyyy} {Localizer["TextoAl"].Value} {fFin:dd/MM/yyyy}";
+    }
+    else
+    {
+        textoPeriodo = $"{Localizer["TextoResumenDel"].Value} {DateTime.Today:dd/MM/yyyy}";
+    }
+}
+
+<style>
+    .dashboard-card {
+        background: #fff;
+        border-radius: .65rem;
+        box-shadow: 0 2px 12px rgba(10, 47, 90, .08);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .dashboard-card-title {
+        color: var(--anzuelo-primary);
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-section {
+        border: 1px solid #dee2e6;
+        border-radius: .65rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        background: #fff;
+    }
+
+    .form-section-title {
+        color: var(--anzuelo-primary);
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .btn-filtrar {
+        background: var(--anzuelo-accent);
+        border-color: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 600;
+    }
+
+        .btn-filtrar:hover {
+            background: var(--anzuelo-primary);
+            border-color: var(--anzuelo-primary);
+            color: #fff;
+        }
+
+    .ranking-item, .estado-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: .7rem .9rem;
+        border-radius: .45rem;
+        background: #f8f9fa;
+        margin-bottom: .5rem;
+    }
+
+    .ranking-posicion {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--anzuelo-accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: .8rem;
+        margin-right: .6rem;
+    }
+
+    .badge-tipo {
+        font-size: .72rem;
+        font-weight: 600;
+        padding: .25em .7em;
+        border-radius: 2rem;
+        margin-left: .5rem;
+    }
+
+    .badge-tipo-producto {
+        background: var(--anzuelo-primary);
+        color: #fff;
+    }
+
+    .badge-tipo-combo {
+        background: #eaf4de;
+        color: #3d6b1a;
+    }
+
+    .donut-container {
+        position: relative;
+        max-width: 220px;
+        margin: 0 auto 1.5rem auto;
+    }
+
+    .donut-center-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .estado-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: .5rem;
+    }
+</style>
+
+<div class="page-hero">
+    <div class="container">
+        <h1><i class="bi bi-speedometer2 me-2"></i>@Localizer["TituloDashboard"]</h1>
+        <p class="page-hero-sub">@textoPeriodo</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <section class="form-section">
+        <div class="form-section-title">
+            <i class="bi bi-funnel me-1"></i>@Localizer["SeccionFiltros"]
+        </div>
+        <form asp-action="Index" method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">@Localizer["LabelFiltroTipo"]</label>
+                <select name="tipo" class="form-select">
+                    <option value="">@Localizer["OpcionTodos"]</option>
+                    <option value="Producto" selected="@(tipoSeleccionado == "Producto")">@Localizer["OpcionProductos"]</option>
+                    <option value="Combo" selected="@(tipoSeleccionado == "Combo")">@Localizer["OpcionCombos"]</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-bold">@Localizer["LabelFechaDesde"]</label>
+                <input type="date" name="fechaInicio" class="form-control" value="@ViewBag.FechaInicio" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-bold">@Localizer["LabelFechaHasta"]</label>
+                <input type="date" name="fechaFin" class="form-control" value="@ViewBag.FechaFin" />
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-filtrar w-100">
+                    <i class="bi bi-search me-1"></i>@Localizer["BtnFiltrar"]
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    <i class="bi bi-trophy me-1"></i>@Localizer["TituloTopProductos"]
+                </div>
+
+                @if (!Model.Productos.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size:2.5rem;opacity:.4;"></i>
+                        <p class="mt-2">@Localizer["MsgSinDatosHoy"]</p>
+                    </div>
+                }
+                else
+                {
+                    <canvas id="chartTopProductos" class="mb-3"></canvas>
+
+                    @foreach (var item in Model.Productos)
+                    {
+                        <div class="ranking-item">
+                            <div>
+                                <span class="ranking-posicion">@item.Posicion</span>
+                                <strong>@item.Nombre</strong>
+                                <span class="badge-tipo @(item.Tipo == "Combo" ? "badge-tipo-combo" : "badge-tipo-producto")">
+                                    @(item.Tipo == "Combo" ? Localizer["OpcionCombos"] : Localizer["OpcionProductos"])
+                                </span>
+                            </div>
+                            <span class="fw-bold" style="color:var(--anzuelo-accent);">@item.Cantidad</span>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="dashboard-card">
+                <div class="dashboard-card-title">
+                    <i class="bi bi-pie-chart me-1"></i>@Localizer["TituloPedidosPorEstado"]
+                </div>
+
+                @if (!Model.Estados.Any())
+                {
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-inbox" style="font-size:2.5rem;opacity:.4;"></i>
+                        <p class="mt-2">@Localizer["MsgSinDatosHoy"]</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="donut-container">
+                        <canvas id="chartPedidosEstado"></canvas>
+                        <div class="donut-center-text">
+                            <span class="d-block fw-bold fs-3 text-dark">@totalPedidos</span>
+                            <small class="text-muted fw-bold text-uppercase" style="font-size:.65rem; letter-spacing: 0.5px;">@Localizer["LabelPedidos"]</small>
+                        </div>
+                    </div>
+
+                    int idx = 0;
+                    @foreach (var item in Model.Estados)
+                    {
+                        var porcentaje = totalPedidos > 0 ? ((double)item.Cantidad / totalPedidos * 100) : 0;
+                        var colorActual = colores[idx % colores.Length];
+
+                        <div class="estado-item">
+                            <div class="d-flex align-items-center">
+                                <span class="estado-dot" style="background-color: @colorActual;"></span>
+                                <strong>@item.Estado</strong>
+                            </div>
+                            <div>
+                                <span class="fw-bold me-2">@item.Cantidad</span>
+                                <span class="text-muted small">(@porcentaje.ToString("0.#")%)</span>
+                            </div>
+                        </div>
+                        idx++;
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const nombresProductos = @Html.Raw(Json.Serialize(Model.Productos.Select(x => x.Nombre)));
+        const cantidadesProductos = @Html.Raw(Json.Serialize(Model.Productos.Select(x => x.Cantidad)));
+
+        const nombresEstados = @Html.Raw(Json.Serialize(Model.Estados.Select(x => x.Estado)));
+        const cantidadesEstados = @Html.Raw(Json.Serialize(Model.Estados.Select(x => x.Cantidad)));
+        const coloresDona = ['#e67e22', '#0a2f5a', '#28a745', '#dc3545', '#6c757d'];
+
+        if (nombresProductos.length > 0) {
+            new Chart(document.getElementById('chartTopProductos'), {
+                type: 'bar',
+                data: {
+                    labels: nombresProductos,
+                    datasets: [{
+                        label: '@Localizer["LabelCantidadPedida"]',
+                        data: cantidadesProductos,
+                        backgroundColor: '#e67e22'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        if (nombresEstados.length > 0) {
+            new Chart(document.getElementById('chartPedidosEstado'), {
+                type: 'doughnut',
+                data: {
+                    labels: nombresEstados,
+                    datasets: [{
+                        data: cantidadesEstados,
+                        backgroundColor: coloresDona,
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '72%',
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -160,13 +160,16 @@
     <value>District</value>
   </data>
   <data name="LabelEmailColon" xml:space="preserve">
-    <value> Email:</value>
+    <value>Email:</value>
   </data>
   <data name="LabelEstado" xml:space="preserve">
     <value>Status</value>
   </data>
   <data name="LabelFecha" xml:space="preserve">
     <value>Date</value>
+  </data>
+  <data name="LabelImpuesto" xml:space="preserve">
+    <value>Tax</value>
   </data>
   <data name="LabelInfoCliente" xml:space="preserve">
     <value>Customer information</value>
@@ -185,6 +188,9 @@
   </data>
   <data name="LabelProvincia" xml:space="preserve">
     <value>Province</value>
+  </data>
+  <data name="LabelSubtotal" xml:space="preserve">
+    <value>Subtotal</value>
   </data>
   <data name="LabelTotal" xml:space="preserve">
     <value>Total</value>

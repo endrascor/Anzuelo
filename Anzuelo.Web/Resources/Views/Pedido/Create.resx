@@ -168,6 +168,9 @@
   <data name="LabelFecha" xml:space="preserve">
     <value>Fecha</value>
   </data>
+  <data name="LabelImpuesto" xml:space="preserve">
+    <value>Impuesto</value>
+  </data>
   <data name="LabelInfoCliente" xml:space="preserve">
     <value>Información del cliente</value>
   </data>
@@ -185,6 +188,9 @@
   </data>
   <data name="LabelProvincia" xml:space="preserve">
     <value>Provincia</value>
+  </data>
+  <data name="LabelSubtotal" xml:space="preserve">
+    <value>Subtotal</value>
   </data>
   <data name="LabelTotal" xml:space="preserve">
     <value>Total</value>

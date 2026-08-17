@@ -20,5 +20,7 @@ namespace Anzuelo.Infraestructure.Repository.Interfaces
             int? idUsuarioEncargado);
 
         Task UpdateAsync(Pedido entity);
+        Task<ICollection<DetallePedido>> ListDetallesParaDashboardAsync(DateTime fechaInicio, DateTime fechaFin);
+        Task<ICollection<Pedido>> ListPedidosPorRangoFechaAsync(DateTime fechaInicio, DateTime fechaFin);
     }
 }

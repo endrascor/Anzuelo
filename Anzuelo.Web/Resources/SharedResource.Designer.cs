@@ -169,6 +169,15 @@ namespace Anzuelo.Web.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Panel de Control.
+        /// </summary>
+        public static string Dashboard_Titulo {
+            get {
+                return ResourceManager.GetString("Dashboard_Titulo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a © 2026 Sistema El Anzuelo. Creado por: Dilan Sánchez y Adrian Rojas. Todos los derechos reservados..
         /// </summary>
         public static string Footer_Copyright {

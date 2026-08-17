@@ -128,5 +128,27 @@ namespace Anzuelo.Infraestructure.Repository.Implementations
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<ICollection<DetallePedido>> ListDetallesParaDashboardAsync(DateTime fechaInicio, DateTime fechaFin)
+        {
+            return await _context.Set<DetallePedido>()
+                .AsNoTracking()
+                .Include(d => d.IdProductoNavigation)
+                .Include(d => d.IdComboNavigation)
+                .Include(d => d.IdPedidoNavigation)
+                .Where(d => d.IdPedidoNavigation.FechaPedido.Date >= fechaInicio.Date &&
+                            d.IdPedidoNavigation.FechaPedido.Date <= fechaFin.Date)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Pedido>> ListPedidosPorRangoFechaAsync(DateTime fechaInicio, DateTime fechaFin)
+        {
+            return await _context.Set<Pedido>()
+                .AsNoTracking()
+                .Include(p => p.IdEstadoPedidoNavigation)
+                .Where(p => p.FechaPedido.Date >= fechaInicio.Date &&
+                            p.FechaPedido.Date <= fechaFin.Date)
+                .ToListAsync();
+        }
     }
 }

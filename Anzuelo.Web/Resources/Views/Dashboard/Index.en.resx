@@ -117,85 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Admin_Combos" xml:space="preserve">
-    <value>Combos Admin</value>
+  <data name="BtnFiltrar" xml:space="preserve">
+    <value>Filter</value>
   </data>
-  <data name="Admin_Menu" xml:space="preserve">
-    <value>Menú Admin</value>
+  <data name="LabelCantidadPedida" xml:space="preserve">
+    <value>Quantity ordered</value>
   </data>
-  <data name="Admin_Pedidos" xml:space="preserve">
-    <value>Pedidos</value>
+  <data name="LabelFechaDesde" xml:space="preserve">
+    <value>Date from</value>
   </data>
-  <data name="Admin_Preparacion" xml:space="preserve">
-    <value>Preparación Admin</value>
+  <data name="LabelFechaHasta" xml:space="preserve">
+    <value>Date to</value>
   </data>
-  <data name="Admin_Productos" xml:space="preserve">
-    <value>Productos Admin</value>
+  <data name="LabelFiltroTipo" xml:space="preserve">
+    <value>Type</value>
   </data>
-  <data name="Admin_Usuarios" xml:space="preserve">
-    <value>Usuarios</value>
+  <data name="LabelPedidos" xml:space="preserve">
+    <value>Orders</value>
   </data>
-  <data name="Carrito_AgregarAlCarrito" xml:space="preserve">
-    <value>Agregar al carrito</value>
+  <data name="MsgSinDatosHoy" xml:space="preserve">
+    <value>No data recorded today</value>
   </data>
-  <data name="Carrito_Cantidad" xml:space="preserve">
-    <value>Cantidad</value>
-  </data>
-  <data name="Carrito_CantidadInvalida" xml:space="preserve">
-    <value>La cantidad debe ser mayor a cero</value>
-  </data>
-  <data name="Carrito_MsgError" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="Carrito_MsgExito" xml:space="preserve">
-    <value>Agregado al carrito</value>
-  </data>
-  <data name="Carrito_RegistrarPedido" xml:space="preserve">
-    <value>Registrar pedido</value>
-  </data>
-  <data name="Dashboard_Titulo" xml:space="preserve">
-    <value>Panel de Control</value>
-  </data>
-  <data name="Footer_Copyright" xml:space="preserve">
-    <value>© 2026 Sistema El Anzuelo. Creado por: Dilan Sánchez y Adrian Rojas. Todos los derechos reservados.</value>
-  </data>
-  <data name="Footer_Descripcion" xml:space="preserve">
-    <value>Especialistas en ceviches, mariscos frescos y comida tradicional costarricense.</value>
-  </data>
-  <data name="Login_IniciarSesionRegistrarse" xml:space="preserve">
-    <value>Iniciar Sesión/Registrarse</value>
-  </data>
-  <data name="Menu_Administracion" xml:space="preserve">
-    <value>Administración</value>
-  </data>
-  <data name="Menu_Combos" xml:space="preserve">
+  <data name="OpcionCombos" xml:space="preserve">
     <value>Combos</value>
   </data>
-  <data name="Menu_Inicio" xml:space="preserve">
-    <value>Inicio</value>
+  <data name="OpcionProductos" xml:space="preserve">
+    <value>Products</value>
   </data>
-  <data name="Menu_Menu" xml:space="preserve">
-    <value>Menú</value>
+  <data name="OpcionTodos" xml:space="preserve">
+    <value>-- All --</value>
   </data>
-  <data name="Menu_Preparacion" xml:space="preserve">
-    <value>Preparación</value>
+  <data name="SeccionFiltros" xml:space="preserve">
+    <value>Filters</value>
   </data>
-  <data name="Menu_Productos" xml:space="preserve">
-    <value>Productos</value>
+  <data name="SubtituloDashboard" xml:space="preserve">
+    <value>Sales summary</value>
   </data>
-  <data name="Nav_AbrirNavegacion" xml:space="preserve">
-    <value>Abrir navegación</value>
+  <data name="TextoAl" xml:space="preserve">
+    <value>to</value>
   </data>
-  <data name="Usuario_CerrarSesion" xml:space="preserve">
-    <value>Cerrar sesión</value>
+  <data name="TextoPeriodoDel" xml:space="preserve">
+    <value>Period from</value>
   </data>
-  <data name="Usuario_DetalleUsuario" xml:space="preserve">
-    <value>Detalle de usuario</value>
+  <data name="TextoResumenDel" xml:space="preserve">
+    <value>Summary for</value>
   </data>
-  <data name="Usuario_HistorialPedidos" xml:space="preserve">
-    <value>Historial de pedidos</value>
+  <data name="TituloDashboard" xml:space="preserve">
+    <value>Dashboard</value>
   </data>
-  <data name="Usuario_MiCuenta" xml:space="preserve">
-    <value>Mi cuenta</value>
+  <data name="TituloPedidosPorEstado" xml:space="preserve">
+    <value>Orders by status</value>
+  </data>
+  <data name="TituloTopProductos" xml:space="preserve">
+    <value>Top 3 most ordered</value>
   </data>
 </root>
