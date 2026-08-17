@@ -123,6 +123,9 @@
   <data name="BtnCancelar" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="BtnConfirmarPago" xml:space="preserve">
+    <value>Confirm payment and register order</value>
+  </data>
   <data name="BtnFinalizarPedido" xml:space="preserve">
     <value>Complete order</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="LabelClienteSelect" xml:space="preserve">
     <value>Customer</value>
+  </data>
+  <data name="LabelCostoEnvio" xml:space="preserve">
+    <value>Delivery cost</value>
   </data>
   <data name="LabelDetalleSenas" xml:space="preserve">
     <value>Details (landmarks)</value>
@@ -180,6 +186,9 @@
   <data name="LabelProvincia" xml:space="preserve">
     <value>Province</value>
   </data>
+  <data name="LabelTotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
   <data name="LabelUltimos4Tarjeta" xml:space="preserve">
     <value>Last 4 card digits</value>
   </data>
@@ -198,6 +207,9 @@
   <data name="MsgDebeAgregarProductoComboPedido" xml:space="preserve">
     <value>You must add at least one product or combo to the order.</value>
   </data>
+  <data name="MsgDebeIndicarUltimos4" xml:space="preserve">
+    <value>You must enter the last 4 digits of the card.</value>
+  </data>
   <data name="MsgDebeSeleccionarMetodoEntrega" xml:space="preserve">
     <value>You must select a delivery method.</value>
   </data>
@@ -212,6 +224,9 @@
   </data>
   <data name="MsgErrorTitulo" xml:space="preserve">
     <value>Error!</value>
+  </data>
+  <data name="MsgMontoRecibidoInsuficiente" xml:space="preserve">
+    <value>The amount received must be greater than or equal to the total.</value>
   </data>
   <data name="MsgNoDireccionesRegistradas" xml:space="preserve">
     <value>No addresses registered.</value>
@@ -260,6 +275,15 @@
   </data>
   <data name="SubtituloNuevoPedido" xml:space="preserve">
     <value>Complete the information and add products or combos.</value>
+  </data>
+  <data name="ThImpuesto" xml:space="preserve">
+    <value>Tax</value>
+  </data>
+  <data name="ThSubtotal" xml:space="preserve">
+    <value>Subtotal</value>
+  </data>
+  <data name="TituloModalPago" xml:space="preserve">
+    <value>Confirm payment</value>
   </data>
   <data name="TituloNuevoPedido" xml:space="preserve">
     <value>New order</value>

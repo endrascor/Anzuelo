@@ -135,6 +135,21 @@
   <data name="Admin_Usuarios" xml:space="preserve">
     <value>Usuarios</value>
   </data>
+  <data name="Carrito_AgregarAlCarrito" xml:space="preserve">
+    <value>Agregar al carrito</value>
+  </data>
+  <data name="Carrito_Cantidad" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="Carrito_CantidadInvalida" xml:space="preserve">
+    <value>La cantidad debe ser mayor a cero</value>
+  </data>
+  <data name="Carrito_MsgError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Carrito_MsgExito" xml:space="preserve">
+    <value>Agregado al carrito</value>
+  </data>
   <data name="Carrito_RegistrarPedido" xml:space="preserve">
     <value>Registrar pedido</value>
   </data>

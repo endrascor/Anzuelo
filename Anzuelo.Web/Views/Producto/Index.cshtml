@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
+@using Anzuelo.Web.Resources
 @model IEnumerable<Anzuelo.Application.DTOs.ProductoDTO>
 
 @{
@@ -125,30 +126,36 @@
                              alt="Sin imagen" />
                     }
 
-                    <div class="card-body">
-
+                    <div class="card-body d-flex flex-column">
                         <div class="product-title">
                             @item.Nombre
                         </div>
-
-                        <div class="product-desc">
+                        <div class="product-desc flex-grow-1">
                             @item.Descripcion
                         </div>
 
-                        <div class="price-tag">
-                            ₡@item.Precio.ToString("N2")
+                        <div class="mt-2 text-end">
+                            <span class="price-tag d-inline-block m-0">
+                                ₡@item.Precio.ToString("N2")
+                            </span>
                         </div>
-
                     </div>
 
-                    <div class="card-footer card-footer-custom text-end">
+                    <div class="card-footer card-footer-custom bg-white border-top-0 p-3">
+                        @if (User.IsInRole("Cliente"))
+                        {
+                            <div class="d-flex gap-2 mb-2">
+                                <input type="number" min="1" value="1" class="form-control text-center" style="width:75px;" id="cantidadProducto_@item.IdProducto" />
+                                <button type="button" class="btn-anzuelo d-flex justify-content-center w-100" onclick="agregarProductoDesdeIndex(@item.IdProducto)">
+                                    <i class="bi bi-cart-plus me-1"></i>@SharedResource.Carrito_AgregarAlCarrito
+                                </button>
+                            </div>
+                        }
 
                         <a asp-action="Details"
                            asp-route-id="@item.IdProducto"
-                           class="btn btn-anzuelo btn-sm">
-
-                            <i class="bi bi-eye me-1"></i>
-                            @Localizer["btnDetalle"]
+                           class="btn-anzuelo d-flex justify-content-center w-100">
+                            <i class="bi bi-eye me-1"></i>@Localizer["btnDetalle"]
                         </a>
                     </div>
 
@@ -160,3 +167,16 @@
     </div>
 
 </div>
+@section Scripts {
+    <script>
+        function agregarProductoDesdeIndex(idProducto) {
+            const input = document.getElementById('cantidadProducto_' + idProducto);
+            const cantidad = parseInt(input.value);
+            agregarAlCarritoDesdeCatalogo(idProducto, null, cantidad, {
+                error: '@SharedResource.Carrito_MsgError',
+                cantidadInvalida: '@SharedResource.Carrito_CantidadInvalida',
+                exito: '@SharedResource.Carrito_MsgExito'
+            });
+        }
+    </script>
+}

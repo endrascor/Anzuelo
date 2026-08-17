@@ -115,6 +115,51 @@ namespace Anzuelo.Web.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Agregar al carrito.
+        /// </summary>
+        public static string Carrito_AgregarAlCarrito {
+            get {
+                return ResourceManager.GetString("Carrito_AgregarAlCarrito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cantidad.
+        /// </summary>
+        public static string Carrito_Cantidad {
+            get {
+                return ResourceManager.GetString("Carrito_Cantidad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a La cantidad debe ser mayor a cero.
+        /// </summary>
+        public static string Carrito_CantidadInvalida {
+            get {
+                return ResourceManager.GetString("Carrito_CantidadInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Error.
+        /// </summary>
+        public static string Carrito_MsgError {
+            get {
+                return ResourceManager.GetString("Carrito_MsgError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Agregado al carrito.
+        /// </summary>
+        public static string Carrito_MsgExito {
+            get {
+                return ResourceManager.GetString("Carrito_MsgExito", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Registrar pedido.
         /// </summary>
         public static string Carrito_RegistrarPedido {

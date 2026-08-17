@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
+@using Anzuelo.Web.Resources
 @model Anzuelo.Application.DTOs.ProductoDTO
 
 @{
@@ -25,15 +26,14 @@
         font-size: .95rem;
     }
 
-    .detail-card {
+    .detail-card, .ingredients-card {
         border: none;
         border-left: 4px solid var(--anzuelo-accent);
         border-radius: .5rem;
         background: #fff;
     }
 
-    .carousel-item img,
-    .img-fluid {
+    .carousel-item img, .img-fluid {
         border-radius: .5rem;
         box-shadow: 0 3px 12px rgba(10, 47, 90, .10);
         background: #fff;
@@ -44,17 +44,10 @@
         font-weight: 700;
     }
 
-    .price {
+    .precio-destacado {
         font-size: 1.6rem;
         font-weight: 800;
         color: var(--anzuelo-accent);
-    }
-
-    .ingredients-card {
-        border: none;
-        border-left: 4px solid var(--anzuelo-accent);
-        border-radius: .5rem;
-        background: #fff;
     }
 
     .list-group-item {
@@ -80,6 +73,20 @@
             background: var(--anzuelo-accent);
             color: #fff;
         }
+
+    .btn-anzuelo {
+        background: var(--anzuelo-accent);
+        color: #fff;
+        border: none;
+        border-radius: .4rem;
+        font-weight: 600;
+        transition: 0.2s ease-in-out;
+    }
+
+        .btn-anzuelo:hover {
+            background: var(--anzuelo-primary);
+            color: #fff;
+        }
 </style>
 
 <div class="page-hero text-center">
@@ -91,134 +98,113 @@
 
 <div class="container">
 
+
     <div class="card detail-card shadow-sm p-4">
-
         <div class="row">
-
             <div class="col-md-5 text-center">
-
                 @if (Model.Imagenes.Any())
                 {
                     <div id="productoCarousel" class="carousel slide" style="height:350px;">
-
                         <div class="carousel-inner">
-
                             @{
                                 bool primera = true;
                             }
-
                             @foreach (var imagen in Model.Imagenes)
                             {
                                 <div class="carousel-item @(primera ? "active" : "")">
-
                                     <div class="d-flex justify-content-center align-items-center" style="height:350px;">
-
                                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(imagen.Imagen)"
-                                             class="img-fluid"
-                                             alt="@Model.Nombre"
+                                             class="img-fluid" alt="@Model.Nombre"
                                              style="max-height:330px; max-width:100%; object-fit:contain;" />
-
                                     </div>
-
                                 </div>
-
                                 primera = false;
                             }
-
                         </div>
-
                         @if (Model.Imagenes.Count > 1)
                         {
                             <button class="carousel-control-prev" type="button" data-bs-target="#productoCarousel" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon bg-dark rounded-circle"></span>
                             </button>
-
                             <button class="carousel-control-next" type="button" data-bs-target="#productoCarousel" data-bs-slide="next">
                                 <span class="carousel-control-next-icon bg-dark rounded-circle"></span>
                             </button>
                         }
-
                     </div>
                 }
                 else if (Model.Imagen != null)
                 {
                     <div class="d-flex justify-content-center align-items-center" style="height:350px;">
-
                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Imagen)"
-                             class="img-fluid"
-                             alt="@Model.Nombre"
+                             class="img-fluid" alt="@Model.Nombre"
                              style="max-height:330px; max-width:100%; object-fit:contain;" />
-
                     </div>
                 }
-
             </div>
 
             <div class="col-md-7 d-flex flex-column justify-content-center">
-
                 <h3>@Model.Nombre</h3>
-
                 <hr />
-
                 <p><strong>@Localizer["lblDescripcion"]:</strong><br />@Model.Descripcion</p>
-
                 <p><strong>@Localizer["lblCategoria"]:</strong> @Model.NombreCategoria</p>
 
-                <h3 class="@Localizer["lblPrecio"]>₡@Model.Precio.ToString("N2")</h3>
+                <p class="precio-destacado mt-2">₡@Model.Precio.ToString("N2")</p>
 
+                @if (User.IsInRole("Cliente"))
+                {
+                    <div class="d-flex align-items-stretch gap-2 mt-3">
+                        <input type="number" min="1" value="1" class="form-control text-center fw-bold" style="width:80px;" id="cantidadDetalleProducto" />
+                        <button type="button" class="btn btn-anzuelo flex-grow-1 d-flex justify-content-center align-items-center" onclick="agregarProductoDesdeDetalle()">
+                            <i class="bi bi-cart-plus me-2"></i>@SharedResource.Carrito_AgregarAlCarrito
+                        </button>
+                    </div>
+                }
             </div>
-
         </div>
-
     </div>
 
     <div class="card ingredients-card shadow-sm mt-4">
-
         <div class="card-body">
-
             <h4 style="color:var(--anzuelo-primary);font-weight:700;">@Localizer["lblIngredientes"]</h4>
-
             @if (Model.Ingredientes.Any())
             {
                 <ul class="list-group">
                     @foreach (var ingrediente in Model.Ingredientes)
                     {
-                        <li class="list-group-item">
-                            @ingrediente.NombreIngrediente
-                        </li>
+                        <li class="list-group-item">@ingrediente.NombreIngrediente</li>
                     }
                 </ul>
             }
             else
             {
-                <div class="alert alert-info">
-                    @Localizer["msjSinIngredientes"]
-                </div>
+                <div class="alert alert-info">@Localizer["msjSinIngredientes"]</div>
             }
-
         </div>
-
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 mb-4">
         <a href="javascript:history.back()" class="btn-back">
             <i class="bi bi-arrow-left"></i> @Localizer["btnVolver"]
         </a>
     </div>
-
 </div>
 
-@section Scripts
-{
+@section Scripts {
     @if (Model.Imagenes.Count > 1)
     {
         <script>
             const carouselElement = document.getElementById('productoCarousel');
-
-            new bootstrap.Carousel(carouselElement, {
-                interval: 3000,
-                ride: 'carousel'
-            });
+            new bootstrap.Carousel(carouselElement, { interval: 3000, ride: 'carousel' });
         </script>
     }
+    <script>
+        function agregarProductoDesdeDetalle() {
+            const cantidad = parseInt(document.getElementById('cantidadDetalleProducto').value);
+            agregarAlCarritoDesdeCatalogo(@Model.IdProducto, null, cantidad, {
+                error: '@SharedResource.Carrito_MsgError',
+                cantidadInvalida: '@SharedResource.Carrito_CantidadInvalida',
+                exito: '@SharedResource.Carrito_MsgExito'
+            });
+        }
+    </script>
 }

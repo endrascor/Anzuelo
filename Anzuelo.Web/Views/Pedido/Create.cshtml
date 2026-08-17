@@ -62,6 +62,33 @@
             border-color: var(--anzuelo-primary);
             color: #fff;
         }
+
+    .modal-pago-header {
+        background: var(--anzuelo-primary);
+        color: #fff;
+    }
+
+    .modal-pago-resumen {
+        background: #fff5ee;
+        border-radius: .5rem;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+        .modal-pago-resumen .fila-total {
+            display: flex;
+            justify-content: space-between;
+            padding: .2rem 0;
+        }
+
+        .modal-pago-resumen .fila-total-final {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--anzuelo-accent);
+            border-top: 1px solid #e6c9ab;
+            margin-top: .4rem;
+            padding-top: .4rem;
+        }
 </style>
 
 <div class="page-hero">
@@ -233,37 +260,67 @@
                             </div>
                         </section>
 
-                        <section class="form-section" id="seccionPago">
-                            <div class="form-section-title"><i class="bi bi-credit-card me-1"></i>@Localizer["SeccionMetodoPago"]</div>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <label class="form-label">@Localizer["SeccionMetodoPago"]</label>
-                                    <select class="form-select" id="selectMetodoPago" name="Pago.IdMetodoPago">
-                                        <option value="">@Localizer["OpcionSeleccione"]</option>
-                                        @foreach (var m in (IEnumerable<Anzuelo.Application.DTOs.MetodoPagoDTO>)ViewBag.ListMetodoPago)
-                                        {
-                                            <option value="@m.IdMetodoPago" data-descripcion="@m.Descripcion.ToLower()">@m.Descripcion</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3" id="campoMontoRecibido" style="display:none;">
-                                    <label class="form-label">@Localizer["LabelMontoRecibido"]</label>
-                                    <input type="number" step="0.01" class="form-control" name="Pago.MontoRecibido" id="inputMontoRecibido" />
-                                </div>
-                                <div class="col-md-4 mb-3" id="campoVuelto" style="display:none;">
-                                    <label class="form-label">@Localizer["LabelVuelto"]</label>
-                                    <input type="text" class="form-control" id="inputVuelto" disabled />
-                                </div>
-                                <div class="col-md-4 mb-3" id="campoTarjeta" style="display:none;">
-                                    <label class="form-label">@Localizer["LabelUltimos4Tarjeta"]</label>
-                                    <input type="text" maxlength="4" class="form-control" name="Pago.Ultimos4Tarjeta" id="inputUltimos4" />
-                                </div>
-                            </div>
-                        </section>
-
                         <div class="d-flex justify-content-end gap-2">
                             <a asp-controller="Home" asp-action="Index" class="btn btn-secondary"><i class="bi bi-arrow-left me-1"></i>@Localizer["BtnCancelar"]</a>
-                            <button type="submit" class="btn btn-guardar-pedido" id="btnFinalizarPedido"><i class="bi bi-check-circle me-1"></i>@Localizer["BtnFinalizarPedido"]</button>
+                            <button type="button" class="btn btn-guardar-pedido" id="btnAbrirModalPago"><i class="bi bi-credit-card me-1"></i>@Localizer["BtnFinalizarPedido"]</button>
+                        </div>
+
+                        <div class="modal fade" id="modalPago" tabindex="-1" aria-labelledby="modalPagoLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header modal-pago-header">
+                                        <h5 class="modal-title" id="modalPagoLabel"><i class="bi bi-credit-card me-2"></i>@Localizer["TituloModalPago"]</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="modal-pago-resumen">
+                                            <div class="fila-total">
+                                                <span>@Localizer["LabelSubtotal"]</span>
+                                                <span id="modalValorSubtotal">₡0.00</span>
+                                            </div>
+                                            <div class="fila-total">
+                                                <span>@Localizer["LabelImpuesto"]</span>
+                                                <span id="modalValorImpuesto">₡0.00</span>
+                                            </div>
+                                            <div class="fila-total" id="modalFilaCostoEnvio" style="display:none;">
+                                                <span>@Localizer["LabelCostoEnvio"]</span>
+                                                <span id="modalValorCostoEnvio">₡0.00</span>
+                                            </div>
+                                            <div class="fila-total fila-total-final">
+                                                <span>@Localizer["LabelTotal"]</span>
+                                                <span id="modalValorTotal">₡0.00</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">@Localizer["SeccionMetodoPago"]</label>
+                                            <select class="form-select" id="selectMetodoPago" name="Pago.IdMetodoPago">
+                                                <option value="">@Localizer["OpcionSeleccione"]</option>
+                                                @foreach (var m in (IEnumerable<Anzuelo.Application.DTOs.MetodoPagoDTO>)ViewBag.ListMetodoPago)
+                                                {
+                                                    <option value="@m.IdMetodoPago" data-descripcion="@m.Descripcion.ToLower()">@m.Descripcion</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="mb-3" id="campoMontoRecibido" style="display:none;">
+                                            <label class="form-label">@Localizer["LabelMontoRecibido"]</label>
+                                            <input type="number" step="0.01" class="form-control" name="Pago.MontoRecibido" id="inputMontoRecibido" />
+                                        </div>
+                                        <div class="mb-3" id="campoVuelto" style="display:none;">
+                                            <label class="form-label">@Localizer["LabelVuelto"]</label>
+                                            <input type="text" class="form-control" id="inputVuelto" disabled />
+                                        </div>
+                                        <div class="mb-3" id="campoTarjeta" style="display:none;">
+                                            <label class="form-label">@Localizer["LabelUltimos4Tarjeta"]</label>
+                                            <input type="text" maxlength="4" class="form-control" name="Pago.Ultimos4Tarjeta" id="inputUltimos4" />
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["BtnCancelar"]</button>
+                                        <button type="button" class="btn btn-guardar-pedido" id="btnConfirmarPago"><i class="bi bi-check-circle me-1"></i>@Localizer["BtnConfirmarPago"]</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -290,6 +347,15 @@
         const labelDireccionEntrega = '@Localizer["LabelDireccionEntrega"]';
         const labelCedulaColon = '@Localizer["LabelCedulaColon"]';
         const labelEmailColon = '@Localizer["LabelEmailColon"]';
+        const msgMontoRecibidoInsuficiente = '@Localizer["MsgMontoRecibidoInsuficiente"]';
+        const msgDebeIndicarUltimos4 = '@Localizer["MsgDebeIndicarUltimos4"]';
+
+        let modalPago;
+
+        document.addEventListener('DOMContentLoaded', function () {
+            modalPago = new bootstrap.Modal(document.getElementById('modalPago'));
+            actualizarTotalInline();
+        });
 
         function actualizarContadorGlobal() {
             if (typeof actualizarContadorCarrito === 'function') {
@@ -297,11 +363,7 @@
             }
         }
 
-        function recalcularTotalConEnvio() {
-            const filaEnvio = document.getElementById('filaCostoEnvio');
-            const valorEnvio = document.getElementById('valorCostoEnvio');
-            const valorTotal = document.getElementById('valorTotalPedido');
-
+        function calcularTotales() {
             const tabla = document.getElementById('tablaCarrito');
             const subtotal = parseFloat(tabla?.dataset.subtotal) || 0;
             const impuesto = parseFloat(tabla?.dataset.impuesto) || 0;
@@ -311,6 +373,20 @@
             const esDomicilio = textoSeleccionado.includes('domicilio');
             const costoEnvio = esDomicilio ? 1500 : 0;
 
+            const total = subtotal + impuesto + costoEnvio;
+
+            return { subtotal, impuesto, costoEnvio, esDomicilio, total };
+        }
+
+        function actualizarTotalInline() {
+            const { costoEnvio, esDomicilio, total } = calcularTotales();
+
+            const filaEnvio = document.getElementById('filaCostoEnvio');
+            const valorEnvio = document.getElementById('valorCostoEnvio');
+            const valorTotal = document.getElementById('valorTotalPedido');
+
+            if (!filaEnvio || !valorEnvio || !valorTotal) return;
+
             if (esDomicilio) {
                 filaEnvio.style.display = 'flex';
                 valorEnvio.textContent = '₡' + costoEnvio.toFixed(2);
@@ -318,15 +394,33 @@
                 filaEnvio.style.display = 'none';
             }
 
-            const totalCalculado = subtotal + impuesto + costoEnvio;
-            valorTotal.textContent = '₡' + totalCalculado.toFixed(2);
-            valorTotal.dataset.totalCrudo = totalCalculado.toFixed(2);
+            valorTotal.textContent = '₡' + total.toFixed(2);
+            valorTotal.dataset.totalCrudo = total.toFixed(2);
+        }
+
+        function actualizarResumenModal() {
+            const { subtotal, impuesto, costoEnvio, esDomicilio, total } = calcularTotales();
+
+            document.getElementById('modalValorSubtotal').textContent = '₡' + subtotal.toFixed(2);
+            document.getElementById('modalValorImpuesto').textContent = '₡' + impuesto.toFixed(2);
+
+            const filaEnvio = document.getElementById('modalFilaCostoEnvio');
+            if (esDomicilio) {
+                filaEnvio.style.display = 'flex';
+                document.getElementById('modalValorCostoEnvio').textContent = '₡' + costoEnvio.toFixed(2);
+            } else {
+                filaEnvio.style.display = 'none';
+            }
+
+            const valorTotal = document.getElementById('modalValorTotal');
+            valorTotal.textContent = '₡' + total.toFixed(2);
+            valorTotal.dataset.totalCrudo = total.toFixed(2);
 
             actualizarVuelto();
         }
 
         function actualizarVuelto() {
-            const valorTotal = document.getElementById('valorTotalPedido');
+            const valorTotal = document.getElementById('modalValorTotal');
             const total = parseFloat(valorTotal?.dataset.totalCrudo) || 0;
             const montoInput = document.getElementById('inputMontoRecibido');
             const vueltoInput = document.getElementById('inputVuelto');
@@ -344,7 +438,7 @@
             if (seccionDireccion) {
                 seccionDireccion.style.display = texto.includes('domicilio') ? 'block' : 'none';
             }
-            recalcularTotalConEnvio();
+            actualizarTotalInline();
         });
 
         document.getElementById('selectCliente')?.addEventListener('change', function () {
@@ -427,10 +521,10 @@
                 })
                 .then(html => {
                     document.getElementById('contenedorDetallePedido').innerHTML = html;
+                    actualizarTotalInline();
                     document.getElementById('inputCantidadNueva').value = 1;
                     document.getElementById('inputObservacionesNueva').value = '';
                     select.value = '';
-                    recalcularTotalConEnvio();
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
@@ -460,7 +554,7 @@
                 })
                 .then(html => {
                     document.getElementById('contenedorDetallePedido').innerHTML = html;
-                    recalcularTotalConEnvio();
+                    actualizarTotalInline();
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
@@ -490,7 +584,7 @@
                 })
                 .then(html => {
                     document.getElementById('contenedorDetallePedido').innerHTML = html;
-                    recalcularTotalConEnvio();
+                    actualizarTotalInline();
                 })
                 .catch(error => {
                     Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
@@ -517,7 +611,7 @@
                 })
                 .then(html => {
                     document.getElementById('contenedorDetallePedido').innerHTML = html;
-                    recalcularTotalConEnvio();
+                    actualizarTotalInline();
                     actualizarContadorGlobal();
                 })
                 .catch(error => {
@@ -603,20 +697,11 @@
             }
         });
 
-        document.getElementById('formPedido').addEventListener('submit', function (e) {
-            e.preventDefault();
-
+        document.getElementById('btnAbrirModalPago').addEventListener('click', function () {
             const filas = document.querySelectorAll('.carrito-table tbody tr td.text-end');
             if (filas.length === 0) {
                 Swal.fire({ title: msgError, text: msgDebeAgregarProductoComboPedido, icon: "error" });
                 document.getElementById('seccionDetalle').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
-            }
-
-            const metodoPago = document.getElementById('selectMetodoPago').value;
-            if (!metodoPago) {
-                Swal.fire({ title: msgError, text: msgDebeSeleccionarMetodoPago, icon: "error" });
-                document.getElementById('seccionPago').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
 
@@ -626,10 +711,38 @@
                 return;
             }
 
-            const btnSubmit = document.getElementById('btnFinalizarPedido');
-            btnSubmit.disabled = true;
+            actualizarResumenModal();
+            modalPago.show();
+        });
 
-            const formData = new FormData(e.target);
+        document.getElementById('btnConfirmarPago').addEventListener('click', function () {
+            const metodoPago = document.getElementById('selectMetodoPago');
+            if (!metodoPago.value) {
+                Swal.fire({ title: msgError, text: msgDebeSeleccionarMetodoPago, icon: "error" });
+                return;
+            }
+
+            const descripcion = metodoPago.options[metodoPago.selectedIndex].dataset.descripcion || '';
+            const total = parseFloat(document.getElementById('modalValorTotal').dataset.totalCrudo) || 0;
+
+            if (descripcion.includes('efectivo')) {
+                const monto = parseFloat(document.getElementById('inputMontoRecibido').value) || 0;
+                if (monto < total) {
+                    Swal.fire({ title: msgError, text: msgMontoRecibidoInsuficiente, icon: "error" });
+                    return;
+                }
+            } else if (descripcion.includes('tarjeta')) {
+                const ultimos4 = document.getElementById('inputUltimos4').value.trim();
+                if (ultimos4.length !== 4) {
+                    Swal.fire({ title: msgError, text: msgDebeIndicarUltimos4, icon: "error" });
+                    return;
+                }
+            }
+
+            const boton = this;
+            boton.disabled = true;
+
+            const formData = new FormData(document.getElementById('formPedido'));
 
             fetch('/Pedido/Create', {
                 method: 'POST',
@@ -643,6 +756,7 @@
                     return response.json();
                 })
                 .then(data => {
+                    modalPago.hide();
                     Swal.fire({
                         icon: "success",
                         title: msgPedidoRegistrado,
@@ -653,13 +767,10 @@
                     });
                 })
                 .catch(error => {
-                    btnSubmit.disabled = false;
+                    boton.disabled = false;
                     Swal.fire({ title: msgErrorGenerico, text: error.message, icon: "error" });
                 });
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            recalcularTotalConEnvio();
-        });
     </script>
 }
