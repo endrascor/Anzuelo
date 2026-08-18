@@ -1,5 +1,6 @@
 ﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -53,6 +54,7 @@ namespace Anzuelo.Web.Controllers
             return View(collection);
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult>
             IndexAdmin(int? page)
         {
@@ -122,6 +124,7 @@ namespace Anzuelo.Web.Controllers
                     .ToList();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult>
             Create()
@@ -132,6 +135,7 @@ namespace Anzuelo.Web.Controllers
                 new ProductoDTO());
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult>
@@ -177,6 +181,7 @@ namespace Anzuelo.Web.Controllers
                 nameof(IndexAdmin));
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -198,6 +203,7 @@ namespace Anzuelo.Web.Controllers
             return View(producto);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult>
@@ -354,6 +360,7 @@ namespace Anzuelo.Web.Controllers
                     .ToList();
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult>

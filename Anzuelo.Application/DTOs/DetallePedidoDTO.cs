@@ -32,5 +32,6 @@ namespace Anzuelo.Application.DTOs
         public ICollection<PedidoEstacionDTO> Estaciones { get; set; } = new List<PedidoEstacionDTO>();
         public int TotalEstaciones { get; set; }
         public int EstacionesCompletadas { get; set; }
+        public ICollection<ProductoConEstacionesDTO> ProductosEstaciones { get; set; } = new List<ProductoConEstacionesDTO>();
     }
 }

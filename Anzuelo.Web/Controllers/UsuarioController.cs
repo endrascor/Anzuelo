@@ -1,5 +1,6 @@
 ﻿using Anzuelo.Application.DTOs;
 using Anzuelo.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Anzuelo.Web.Controllers
@@ -20,7 +21,7 @@ namespace Anzuelo.Web.Controllers
             _serviceEstadoUsuario = serviceEstadoUsuario;
         }
 
-
+        [Authorize(Roles = "Administrador")]
         // GET: Usuario
         public async Task<ActionResult> Index()
         {
@@ -42,6 +43,7 @@ namespace Anzuelo.Web.Controllers
 
 
         // GET: Usuario/Create
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -51,6 +53,7 @@ namespace Anzuelo.Web.Controllers
         }
 
         // GET: Usuario/CreateAdmin
+        [Authorize(Roles = "Administrador")]
         [HttpGet]
         public async Task<IActionResult> CreateAdmin()
         {
@@ -61,6 +64,7 @@ namespace Anzuelo.Web.Controllers
 
 
         // POST: Usuario/Create
+        [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(UsuarioDTO dto)
@@ -89,6 +93,7 @@ namespace Anzuelo.Web.Controllers
         }
 
         // POST: Usuario/CreateAdmin
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> CreateAdmin(UsuarioDTO dto)
         {
 

@@ -1,7 +1,9 @@
-﻿@model Anzuelo.Web.ViewModels.ViewModelLogin
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model Anzuelo.Web.ViewModels.ViewModelLogin
 
 @{
-    ViewData["Title"] = "Iniciar sesión";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <style>
@@ -169,11 +171,11 @@
             </div>
 
             <h1 class="login-title">
-                Iniciar sesión
+                @Localizer["TituloLogin"]
             </h1>
 
             <p class="login-subtitle">
-                Ingrese sus credenciales para acceder al sistema
+                @Localizer["SubtituloLogin"]
             </p>
 
         </div>
@@ -200,7 +202,7 @@
 
                     <label asp-for="User"
                            class="form-label login-label">
-                        Correo electrónico
+                        @Localizer["LabelCorreo"]
                     </label>
 
                     <div class="login-input-group">
@@ -210,7 +212,7 @@
                         <input asp-for="User"
                                type="email"
                                class="form-control login-input"
-                               placeholder="ejemplo@correo.com"
+                               placeholder="@Localizer["PlaceholderCorreo"]"
                                autocomplete="username" />
 
                     </div>
@@ -225,7 +227,7 @@
 
                     <label asp-for="Password"
                            class="form-label login-label">
-                        Contraseña
+                        @Localizer["LabelContrasena"]
                     </label>
 
                     <div class="login-input-group">
@@ -235,7 +237,7 @@
                         <input asp-for="Password"
                                type="password"
                                class="form-control login-input"
-                               placeholder="Digite su contraseña"
+                               placeholder="@Localizer["PlaceholderContrasena"]"
                                autocomplete="current-password" />
 
                     </div>
@@ -250,7 +252,7 @@
 
                     <button type="button"
                             class="forgot-password">
-                        ¿No recuerda la contraseña?
+                        @Localizer["BtnOlvidoContrasena"]
                     </button>
 
                 </div>
@@ -262,14 +264,14 @@
                        class="btn-cancel-login text-center text-decoration-none">
 
                         <i class="bi bi-arrow-left me-1"></i>
-                        Cancelar
+                        @Localizer["BtnCancelar"]
                     </a>
 
                     <button type="submit"
                             class="btn-submit-login">
 
                         <i class="bi bi-box-arrow-in-right me-1"></i>
-                        Ingresar
+                        @Localizer["BtnIngresar"]
                     </button>
 
                 </div>

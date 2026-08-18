@@ -1,7 +1,10 @@
-﻿@model Anzuelo.Application.DTOs.UsuarioDTO
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@model Anzuelo.Application.DTOs.UsuarioDTO
+
+@inject IViewLocalizer Localizer
 
 @{
-    ViewData["Title"] = "Registrarse";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <style>
@@ -156,10 +159,10 @@
                         <i class="bi bi-person-plus-fill"></i>
                     </div>
 
-                    <h2>Crear cuenta</h2>
+                    <h2>@Localizer["CrearCuenta"]</h2>
 
                     <p>
-                        Complete la información para registrarse en El Anzuelo.
+                        @Localizer["DescripcionRegistro"]
                     </p>
 
                 </div>
@@ -183,7 +186,7 @@
 
                             <div class="form-section-title">
                                 <i class="bi bi-person-vcard me-1"></i>
-                                Información personal
+                                @Localizer["InformacionPersonal"]
                             </div>
 
                             <div class="row">
@@ -195,7 +198,7 @@
 
                                     <label asp-for="Cedula"
                                            class="form-label">
-                                        Cédula
+                                        @Localizer["Cedula"]
                                     </label>
 
                                     <div class="input-icon-container">
@@ -204,7 +207,7 @@
 
                                         <input asp-for="Cedula"
                                                class="form-control input-with-icon"
-                                               placeholder="Digite su cédula"
+                                               placeholder="@Localizer["DigiteCedula"]"
                                                autocomplete="off" />
 
                                     </div>
@@ -222,7 +225,7 @@
 
                                     <label asp-for="Nombre"
                                            class="form-label">
-                                        Nombre
+                                        @Localizer["Nombre"]
                                     </label>
 
                                     <div class="input-icon-container">
@@ -231,7 +234,7 @@
 
                                         <input asp-for="Nombre"
                                                class="form-control input-with-icon"
-                                               placeholder="Digite su nombre"
+                                               placeholder="@Localizer["DigiteNombre"]"
                                                autocomplete="given-name" />
 
                                     </div>
@@ -249,12 +252,12 @@
 
                                     <label asp-for="Apellido1"
                                            class="form-label">
-                                        Primer apellido
+                                        @Localizer["PrimerApellido"]
                                     </label>
 
                                     <input asp-for="Apellido1"
                                            class="form-control"
-                                           placeholder="Digite su primer apellido" />
+                                           placeholder="@Localizer["DigitePrimerApellido"]" />
 
                                     <span asp-validation-for="Apellido1"
                                           class="text-danger small">
@@ -269,12 +272,12 @@
 
                                     <label asp-for="Apellido2"
                                            class="form-label">
-                                        Segundo apellido
+                                        @Localizer["SegundoApellido"]
                                     </label>
 
                                     <input asp-for="Apellido2"
                                            class="form-control"
-                                           placeholder="Digite su segundo apellido" />
+                                           placeholder="@Localizer["DigiteSegundoApellido"]" />
 
                                     <span asp-validation-for="Apellido2"
                                           class="text-danger small">
@@ -295,7 +298,7 @@
 
                             <div class="form-section-title">
                                 <i class="bi bi-shield-lock me-1"></i>
-                                Información de acceso
+                                @Localizer["InformacionAcceso"]
                             </div>
 
                             <div class="row">
@@ -307,7 +310,7 @@
 
                                     <label asp-for="Email"
                                            class="form-label">
-                                        Correo electrónico
+                                        @Localizer["CorreoElectronico"]
                                     </label>
 
                                     <div class="input-icon-container">
@@ -335,7 +338,7 @@
 
                                     <label asp-for="PasswordHash"
                                            class="form-label">
-                                        Contraseña
+                                        @Localizer["Contrasena"]
                                     </label>
 
                                     <div class="input-icon-container">
@@ -345,7 +348,7 @@
                                         <input asp-for="PasswordHash"
                                                type="password"
                                                class="form-control input-with-icon"
-                                               placeholder="Digite una contraseña"
+                                               placeholder="@Localizer["DigiteContrasena"]"
                                                autocomplete="new-password" />
 
                                     </div>
@@ -355,7 +358,7 @@
                                     </span>
 
                                     <div class="form-text">
-                                        La contraseña será almacenada de forma cifrada.
+                                        @Localizer["ContrasenaCifrada"]
                                     </div>
 
                                 </div>
@@ -396,7 +399,7 @@
                                class="btn-cancel-user">
 
                                 <i class="bi bi-arrow-left me-1"></i>
-                                Cancelar
+                                @Localizer["Cancelar"]
 
                             </a>
 
@@ -404,7 +407,7 @@
                                     class="btn-save-user">
 
                                 <i class="bi bi-person-check me-1"></i>
-                                Registrarse
+                                @Localizer["Registrarse"]
 
                             </button>
 

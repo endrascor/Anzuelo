@@ -7,6 +7,7 @@ using X.PagedList.Extensions;
 
 namespace Anzuelo.Web.Controllers
 {
+    [Authorize(Roles = "Administrador,Cocina")]
     public class PreparacionController : Controller
     {
         private readonly IServicePreparacion _servicePreparacion;
@@ -120,7 +121,6 @@ namespace Anzuelo.Web.Controllers
         // POST: PreparacionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //[Authorize(Roles = "Admnistrador")]
         public async Task<IActionResult> Create(PreparacionDTO dto, int[] selectedEstaciones, int[] selectedTiempos)
         {
             CargarEstacionesSeleccionadas(dto, selectedEstaciones, selectedTiempos);
@@ -158,7 +158,6 @@ namespace Anzuelo.Web.Controllers
         }
 
         // GET: PreparacionController/Create
-        //[Authorize(Roles = "Admnistrador")]
         public async Task<IActionResult> Create()
         {
             await CargarListasCrearAsync();

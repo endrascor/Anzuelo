@@ -84,6 +84,17 @@ namespace Anzuelo.Application.Services
                         _ => "pendiente"
                     };
                 }
+
+                linea.ProductosEstaciones = linea.Estaciones
+                    .GroupBy(e => new { e.IdProducto, e.NombreProducto })
+                    .OrderBy(g => g.Min(e => e.OrdenProceso))
+                    .Select(g => new ProductoConEstacionesDTO
+                    {
+                        IdProducto = g.Key.IdProducto,
+                        NombreProducto = g.Key.NombreProducto ?? string.Empty,
+                        Estaciones = g.OrderBy(e => e.OrdenProceso).ToList()
+                    })
+                    .ToList();
             }
 
             return dto;

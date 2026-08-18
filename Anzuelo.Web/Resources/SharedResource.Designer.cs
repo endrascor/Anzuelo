@@ -79,6 +79,15 @@ namespace Anzuelo.Web.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Listado de órdenes.
+        /// </summary>
+        public static string Admin_OrdenesEstacion {
+            get {
+                return ResourceManager.GetString("Admin_OrdenesEstacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Pedidos.
         /// </summary>
         public static string Admin_Pedidos {

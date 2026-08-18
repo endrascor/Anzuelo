@@ -34,6 +34,7 @@ namespace Anzuelo.Web.Controllers
             return View(collection);
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult> IndexAdmin(int? page)
         {
             if (TempData.ContainsKey("Mensaje"))
@@ -92,6 +93,7 @@ namespace Anzuelo.Web.Controllers
             ViewBag.Productos = new SelectList(products, "IdProducto", "Nombre");
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ComboDTO dto, IFormFile? imagenFile, int[] productosIds, int[] productosCantidades)
@@ -168,6 +170,7 @@ namespace Anzuelo.Web.Controllers
             return RedirectToAction("IndexAdmin");
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Create()
         {
             if (TempData.ContainsKey("Mensaje"))
@@ -183,6 +186,7 @@ namespace Anzuelo.Web.Controllers
             return View(nuevoCombo);
         }
 
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ComboDTO dto, IFormFile? imagenFile, int[] productosIds, int[] productosCantidades)
@@ -247,6 +251,7 @@ namespace Anzuelo.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Edit(int id)
         {
             if (TempData.ContainsKey("Mensaje"))

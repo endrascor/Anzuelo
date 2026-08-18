@@ -117,88 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Admin_Combos" xml:space="preserve">
-    <value>Combos (Admin)</value>
+  <data name="BtnCancelar" xml:space="preserve">
+    <value>Cancelar</value>
   </data>
-  <data name="Admin_Menu" xml:space="preserve">
-    <value>Menu (Admin)</value>
+  <data name="BtnIngresar" xml:space="preserve">
+    <value>Ingresar</value>
   </data>
-  <data name="Admin_OrdenesEstacion" xml:space="preserve">
-    <value>Orders List</value>
+  <data name="BtnOlvidoContrasena" xml:space="preserve">
+    <value>¿No recuerda la contraseña?</value>
   </data>
-  <data name="Admin_Pedidos" xml:space="preserve">
-    <value>Orders</value>
+  <data name="LabelContrasena" xml:space="preserve">
+    <value>Contraseña</value>
   </data>
-  <data name="Admin_Preparacion" xml:space="preserve">
-    <value> Preparation (Admin)</value>
+  <data name="LabelCorreo" xml:space="preserve">
+    <value>Correo electrónico</value>
   </data>
-  <data name="Admin_Productos" xml:space="preserve">
-    <value>Products (Admin)</value>
+  <data name="PlaceholderContrasena" xml:space="preserve">
+    <value>Digite su contraseña</value>
   </data>
-  <data name="Admin_Usuarios" xml:space="preserve">
-    <value> Users</value>
+  <data name="PlaceholderCorreo" xml:space="preserve">
+    <value>ejemplo@correo.com</value>
   </data>
-  <data name="Carrito_AgregarAlCarrito" xml:space="preserve">
-    <value>Add to cart</value>
+  <data name="SubtituloLogin" xml:space="preserve">
+    <value>Ingrese sus credenciales para acceder al sistema</value>
   </data>
-  <data name="Carrito_Cantidad" xml:space="preserve">
-    <value>Quantity</value>
+  <data name="TituloLogin" xml:space="preserve">
+    <value>Iniciar sesión</value>
   </data>
-  <data name="Carrito_CantidadInvalida" xml:space="preserve">
-    <value>Quantity must be more than zero</value>
-  </data>
-  <data name="Carrito_MsgError" xml:space="preserve">
-    <value>Error</value>
-  </data>
-  <data name="Carrito_MsgExito" xml:space="preserve">
-    <value>Added to cart</value>
-  </data>
-  <data name="Carrito_RegistrarPedido" xml:space="preserve">
-    <value> Place order</value>
-  </data>
-  <data name="Dashboard_Titulo" xml:space="preserve">
-    <value>Dashboard</value>
-  </data>
-  <data name="Footer_Copyright" xml:space="preserve">
-    <value>© 2026 El Anzuelo System. Created by: Dilan Sanchez and Adrian Rojas. All rights reserved.</value>
-  </data>
-  <data name="Footer_Descripcion" xml:space="preserve">
-    <value>Specialists in ceviche, fresh seafood, and traditional Costa Rican cuisine.</value>
-  </data>
-  <data name="Login_IniciarSesionRegistrarse" xml:space="preserve">
-    <value>Sign In / Register</value>
-  </data>
-  <data name="Menu_Administracion" xml:space="preserve">
-    <value> Administration</value>
-  </data>
-  <data name="Menu_Combos" xml:space="preserve">
-    <value>Combos</value>
-  </data>
-  <data name="Menu_Inicio" xml:space="preserve">
-    <value>Home</value>
-  </data>
-  <data name="Menu_Menu" xml:space="preserve">
-    <value>Menu</value>
-  </data>
-  <data name="Menu_Preparacion" xml:space="preserve">
-    <value> Preparation</value>
-  </data>
-  <data name="Menu_Productos" xml:space="preserve">
-    <value>Products</value>
-  </data>
-  <data name="Nav_AbrirNavegacion" xml:space="preserve">
-    <value> Open navigation</value>
-  </data>
-  <data name="Usuario_CerrarSesion" xml:space="preserve">
-    <value>Log out</value>
-  </data>
-  <data name="Usuario_DetalleUsuario" xml:space="preserve">
-    <value>User details</value>
-  </data>
-  <data name="Usuario_HistorialPedidos" xml:space="preserve">
-    <value>Order history</value>
-  </data>
-  <data name="Usuario_MiCuenta" xml:space="preserve">
-    <value>My Account</value>
+  <data name="TituloPagina" xml:space="preserve">
+    <value>Iniciar sesión</value>
   </data>
 </root>

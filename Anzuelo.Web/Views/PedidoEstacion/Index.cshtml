@@ -1,8 +1,11 @@
 ﻿@using System.Linq
+@using Microsoft.AspNetCore.Mvc.Localization
 @model IEnumerable<Anzuelo.Application.DTOs.PedidoEstacionDTO>
 
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Pedidos en cocina";
+    ViewData["Title"] = Localizer["TituloPagina"];
 }
 
 <div class="container-fluid">
@@ -10,11 +13,11 @@
     <div class="mb-4">
         <h2 class="mb-1">
             <i class="bi bi-fire me-2"></i>
-            Pedidos en cocina
+            @Localizer["TituloPagina"]
         </h2>
 
         <p class="text-muted mb-0">
-            Proceso de preparación de los pedidos.
+            @Localizer["DescripcionPagina"]
         </p>
     </div>
 
@@ -28,7 +31,7 @@
             </i>
 
             <h5 class="mt-3">
-                No hay pedidos en preparación.
+                @Localizer["NoHayPedidos"]
             </h5>
 
         </div>
@@ -48,7 +51,7 @@
 
                     <div>
                         <span class="pedido-label">
-                            PEDIDO
+                            @Localizer["Pedido"]
                         </span>
 
                         <h3 class="pedido-numero">
@@ -83,7 +86,7 @@
 
                                 <div>
                                     <span class="tipo-item">
-                                        COMBO
+                                        @Localizer["Combo"]
                                     </span>
 
                                     <h4>
@@ -141,7 +144,7 @@
                                             @if (!primerElemento.EsCombo)
                                             {
                                                 <span class="tipo-item">
-                                                    PRODUCTO
+                                                    @Localizer["Producto"]
                                                 </span>
                                             }
 
@@ -155,11 +158,11 @@
                                                 <div class="estado-actual">
 
                                                     <span class="badge-proceso">
-                                                        En proceso
+                                                        @Localizer["EnProceso"]
                                                     </span>
 
                                                     <span class="text-muted">
-                                                        Estación actual:
+                                                        @Localizer["EstacionActual"]:
                                                         <strong>
                                                             @etapaProceso.NombreEstacion
                                                         </strong>
@@ -172,7 +175,7 @@
                                                 <div class="estado-actual">
 
                                                     <span class="badge-listo">
-                                                        Listo
+                                                        @Localizer["Listo"]
                                                     </span>
 
                                                 </div>
@@ -182,11 +185,11 @@
                                                 <div class="estado-actual">
 
                                                     <span class="badge-pendiente">
-                                                        Pendiente
+                                                        @Localizer["Pendiente"]
                                                     </span>
 
                                                     <span class="text-muted">
-                                                        Próxima estación:
+                                                        @Localizer["ProximaEstacion"]:
                                                         <strong>
                                                             @etapaDisponible.NombreEstacion
                                                         </strong>
@@ -217,7 +220,7 @@
 
                                                         <i class="bi bi-check-lg me-1"></i>
 
-                                                        Finalizar etapa
+                                                        @Localizer["FinalizarEtapa"]
 
                                                     </button>
 
@@ -237,7 +240,7 @@
 
                                                         <i class="bi bi-play-fill me-1"></i>
 
-                                                        Iniciar
+                                                        @Localizer["Iniciar"]
 
                                                     </button>
 
@@ -249,7 +252,7 @@
 
                                                     <i class="bi bi-check-circle-fill me-1"></i>
 
-                                                    Listo
+                                                    @Localizer["Listo"]
 
                                                 </span>
                                             }
@@ -653,12 +656,12 @@
     string TextoEstado(string? estado)
     {
         if (EsCompletado(estado))
-            return "Completado";
+            return Localizer["Completado"].Value;
 
         if (EsProceso(estado))
-            return "En proceso";
+            return Localizer["EnProceso"].Value;
 
-        return "Pendiente";
+        return Localizer["Pendiente"].Value;
     }
 
 }
