@@ -183,7 +183,7 @@ namespace Anzuelo.Application.Services
                         AgregarPasosPlanificados(estacionesLinea, pasos,cp.IdProducto, ref fechaInicioLinea);
                     }
                 }
-
+                //COMMIT REALIZADO POR EL PROFESOR 
                 var subtotalLinea = precioUnitario * linea.Cantidad;
                 var impuestoLinea = Math.Round(subtotalLinea * PORCENTAJE_IMPUESTO, 2);
                 linea.PrecioUnitario = precioUnitario;
