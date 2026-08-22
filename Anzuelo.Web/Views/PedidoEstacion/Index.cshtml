@@ -8,7 +8,8 @@
     ViewData["Title"] = Localizer["TituloPagina"];
 }
 
-<div class="container-fluid">
+<div class="container-fluid"
+     id="contenedorPedidosEstacion">
 
     <div class="mb-4">
         <h2 class="mb-1">
@@ -20,7 +21,6 @@
             @Localizer["DescripcionPagina"]
         </p>
     </div>
-
 
     @if (Model == null || !Model.Any())
     {
@@ -45,8 +45,6 @@
         {
             <section class="pedido-card">
 
-                <!-- PEDIDO -->
-
                 <div class="pedido-header">
 
                     <div>
@@ -63,9 +61,7 @@
 
                 </div>
 
-
                 <div class="pedido-contenido">
-
 
                     @foreach (var detalle in
                                 pedido.GroupBy(
@@ -74,8 +70,6 @@
                         var primerElemento =
                         detalle.First();
 
-
-                        <!-- SI EL DETALLE ES UN COMBO -->
                         @if (primerElemento.EsCombo)
                         {
                             <div class="combo-header">
@@ -97,45 +91,35 @@
                             </div>
                         }
 
-
-                        <!-- PRODUCTOS -->
-
                         <div class="productos-container">
 
                             @foreach (var producto in
-                                            detalle
-                                            .GroupBy(x => new
+                                            detalle.GroupBy(x => new
                                             {
                                                 x.IdProducto,
                                                 x.NombreProducto
                                             }))
                             {
-                                var etapas = producto
+                                var etapas =
+                                producto
                                 .OrderBy(
                                 x => x.OrdenProceso)
                                 .ToList();
-
 
                                 var etapaProceso =
                                 etapas.FirstOrDefault(
                                 x => x.PuedeFinalizar);
 
-
                                 var etapaDisponible =
                                 etapas.FirstOrDefault(
                                 x => x.PuedeIniciar);
-
 
                                 var completado =
                                 etapas.All(
                                 x => EsCompletado(
                                 x.NombreEstadoPedidoEstacion));
 
-
                                 <div class="producto-card">
-
-
-                                    <!-- PRODUCTO -->
 
                                     <div class="producto-superior">
 
@@ -151,7 +135,6 @@
                                             <h4 class="producto-nombre">
                                                 @producto.Key.NombreProducto
                                             </h4>
-
 
                                             @if (etapaProceso != null)
                                             {
@@ -200,16 +183,16 @@
 
                                         </div>
 
-
-                                        <!-- ACCIÓN -->
-
                                         <div class="producto-accion">
-
 
                                             @if (etapaProceso != null)
                                             {
                                                 <form asp-action="Finalizar"
-                                                      method="post">
+                                                      asp-controller="PedidoEstacion"
+                                                      method="post"
+                                                      class="form-estado-pedido">
+
+                                                    @Html.AntiForgeryToken()
 
                                                     <input type="hidden"
                                                            name="id"
@@ -229,7 +212,11 @@
                                             else if (etapaDisponible != null)
                                             {
                                                 <form asp-action="Iniciar"
-                                                      method="post">
+                                                      asp-controller="PedidoEstacion"
+                                                      method="post"
+                                                      class="form-estado-pedido">
+
+                                                    @Html.AntiForgeryToken()
 
                                                     <input type="hidden"
                                                            name="id"
@@ -261,9 +248,6 @@
 
                                     </div>
 
-
-                                    <!-- PROCESO DE ESTACIONES -->
-
                                     <div class="proceso-estaciones">
 
                                         @foreach (var etapa in etapas)
@@ -271,10 +255,8 @@
                                             <div class="etapa">
 
                                                 <span class="etapa-punto @ClaseEstado(etapa.NombreEstadoPedidoEstacion)">
-
                                                     @SimboloEstado(
                                                     etapa.NombreEstadoPedidoEstacion)
-
                             </span>
 
                             <div>
@@ -291,7 +273,6 @@
                             </div>
 
                         </div>
-
 
                         @if (etapa != etapas.Last())
                                             {
@@ -315,7 +296,6 @@
 
 </div>
 
-
 <style>
 
     .pedido-card {
@@ -326,7 +306,6 @@
         margin-bottom: 24px;
     }
 
-
     .pedido-header {
         padding: 18px 22px;
         background: #f8f9fa;
@@ -336,7 +315,6 @@
         align-items: center;
     }
 
-
     .pedido-label {
         font-size: .72rem;
         font-weight: 700;
@@ -344,25 +322,19 @@
         letter-spacing: 1px;
     }
 
-
     .pedido-numero {
         margin: 0;
         font-weight: 700;
     }
-
 
     .pedido-icon {
         font-size: 1.8rem;
         color: #f47b20;
     }
 
-
     .pedido-contenido {
         padding: 22px;
     }
-
-
-    /* COMBO */
 
     .combo-header {
         display: flex;
@@ -373,12 +345,10 @@
         border-bottom: 1px solid #eee;
     }
 
-
         .combo-header h4 {
             margin: 0;
             font-weight: 700;
         }
-
 
     .combo-icon {
         width: 42px;
@@ -392,16 +362,12 @@
         font-size: 1.2rem;
     }
 
-
     .tipo-item {
         font-size: .7rem;
         color: #888;
         font-weight: 700;
         letter-spacing: .8px;
     }
-
-
-    /* PRODUCTOS */
 
     .productos-container {
         display: flex;
@@ -410,13 +376,11 @@
         margin-bottom: 22px;
     }
 
-
     .producto-card {
         border: 1px solid #ececec;
         border-radius: 12px;
         padding: 18px;
     }
-
 
     .producto-superior {
         display: flex;
@@ -425,13 +389,11 @@
         gap: 15px;
     }
 
-
     .producto-nombre {
         margin: 2px 0 7px 0;
         font-size: 1.1rem;
         font-weight: 700;
     }
-
 
     .estado-actual {
         display: flex;
@@ -439,9 +401,6 @@
         gap: 10px;
         flex-wrap: wrap;
     }
-
-
-    /* BADGES */
 
     .badge-pendiente,
     .badge-proceso,
@@ -452,26 +411,20 @@
         font-weight: 700;
     }
 
-
     .badge-pendiente {
         background: #fff3cd;
         color: #856404;
     }
-
 
     .badge-proceso {
         background: #cfe2ff;
         color: #084298;
     }
 
-
     .badge-listo {
         background: #d1e7dd;
         color: #0f5132;
     }
-
-
-    /* PROCESO */
 
     .proceso-estaciones {
         display: flex;
@@ -480,13 +433,11 @@
         flex-wrap: wrap;
     }
 
-
     .etapa {
         display: flex;
         align-items: center;
         gap: 8px;
     }
-
 
     .etapa-punto {
         width: 28px;
@@ -498,35 +449,29 @@
         font-weight: 700;
     }
 
-
     .estado-completado {
         background: #d1e7dd;
         color: #0f5132;
     }
-
 
     .estado-proceso {
         background: #cfe2ff;
         color: #084298;
     }
 
-
     .estado-pendiente {
         background: #eeeeee;
         color: #777;
     }
 
-
     .etapa-nombre {
         font-weight: 600;
     }
-
 
     .etapa-estado {
         color: #888;
         font-size: .78rem;
     }
-
 
     .linea-proceso {
         height: 2px;
@@ -534,9 +479,6 @@
         background: #ddd;
         margin: 13px 12px 0 12px;
     }
-
-
-    /* BOTONES */
 
     .btn-iniciar,
     .btn-finalizar {
@@ -547,34 +489,34 @@
         white-space: nowrap;
     }
 
-
     .btn-iniciar {
         background: #f47b20;
         color: white;
     }
 
-
         .btn-iniciar:hover {
             background: #da6813;
         }
-
 
     .btn-finalizar {
         background: #198754;
         color: white;
     }
 
-
         .btn-finalizar:hover {
             background: #157347;
         }
 
+        .btn-iniciar:disabled,
+        .btn-finalizar:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
 
     .producto-listo {
         color: #198754;
         font-weight: 700;
     }
-
 
     @@media (max-width: 768px) {
 
@@ -583,12 +525,10 @@
             flex-direction: column;
         }
 
-
         .proceso-estaciones {
             flex-direction: column;
             gap: 8px;
         }
-
 
         .linea-proceso {
             height: 20px;
@@ -599,7 +539,6 @@
 
 </style>
 
-
 @functions {
 
     bool EsPendiente(string? estado)
@@ -608,13 +547,11 @@
             && estado.ToLower().Contains("pendiente");
     }
 
-
     bool EsProceso(string? estado)
     {
         return !string.IsNullOrWhiteSpace(estado)
             && estado.ToLower().Contains("proceso");
     }
-
 
     bool EsCompletado(string? estado)
     {
@@ -628,7 +565,6 @@
             || valor.Contains("terminad");
     }
 
-
     string SimboloEstado(string? estado)
     {
         if (EsCompletado(estado))
@@ -639,7 +575,6 @@
 
         return "○";
     }
-
 
     string ClaseEstado(string? estado)
     {
@@ -652,7 +587,6 @@
         return "estado-pendiente";
     }
 
-
     string TextoEstado(string? estado)
     {
         if (EsCompletado(estado))
@@ -663,5 +597,132 @@
 
         return Localizer["Pendiente"].Value;
     }
+
+}
+
+@section Scripts {
+
+    <script>
+
+        document.addEventListener(
+            'submit',
+            async function (event) {
+
+                const form =
+                    event.target.closest(
+                        '.form-estado-pedido'
+                    );
+
+                if (!form) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const boton =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
+
+                if (boton) {
+                    boton.disabled = true;
+                }
+
+                try {
+
+                    const formData =
+                        new FormData(form);
+
+                    const response =
+                        await fetch(
+                            form.action,
+                            {
+                                method: 'POST',
+                                body: formData
+                            }
+                        );
+
+                    if (!response.ok) {
+
+                        const mensaje =
+                            await response.text();
+
+                        throw new Error(mensaje);
+                    }
+
+                    await actualizarPedidosEstacion();
+
+                }
+                catch (error) {
+
+                    if (boton) {
+                        boton.disabled = false;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message
+                    });
+                }
+            }
+        );
+
+        async function actualizarPedidosEstacion() {
+
+            const response =
+                await fetch(
+                    '@Url.Action("Index", "PedidoEstacion")',
+                    {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With':
+                                'XMLHttpRequest'
+                        }
+                    }
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'No se pudieron actualizar los pedidos.'
+                );
+            }
+
+            const html =
+                await response.text();
+
+            const parser =
+                new DOMParser();
+
+            const documento =
+                parser.parseFromString(
+                    html,
+                    'text/html'
+                );
+
+            const nuevoContenido =
+                documento.getElementById(
+                    'contenedorPedidosEstacion'
+                );
+
+            const contenidoActual =
+                document.getElementById(
+                    'contenedorPedidosEstacion'
+                );
+
+            if (!nuevoContenido ||
+                !contenidoActual) {
+
+                throw new Error(
+                    'No se pudo actualizar el contenido.'
+                );
+            }
+
+            contenidoActual.innerHTML =
+                nuevoContenido.innerHTML;
+        }
+
+    </script>
 
 }

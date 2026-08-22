@@ -32,8 +32,7 @@ namespace Anzuelo.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<ICollection<PedidoEstacionDTO>>
-            ListAsync()
+        public async Task<ICollection<PedidoEstacionDTO>>ListAsync()
         {
             var list =
                 await _repository.ListAsync();
@@ -84,11 +83,21 @@ namespace Anzuelo.Application.Services
                 }
             }
 
-            return collection;
+            var pedidosPendientes =
+                collection
+                    .GroupBy(x => x.IdPedido)
+                    .Where(pedido =>
+                        !pedido.All(x =>
+                            EsCompletado(
+                                x.NombreEstadoPedidoEstacion)))
+                    .SelectMany(pedido => pedido)
+                    .ToList();
+
+
+            return pedidosPendientes;
         }
 
-        public async Task<PedidoEstacionDTO?>
-            FindByIdAsync(int id)
+        public async Task<PedidoEstacionDTO?>FindByIdAsync(int id)
         {
             var pedidoEstacion =
                 await _repository.FindByIdAsync(id);
@@ -181,8 +190,7 @@ namespace Anzuelo.Application.Services
             return true;
         }
 
-        public async Task<bool>
-            FinalizarAsync(int id)
+        public async Task<bool>FinalizarAsync(int id)
         {
             var pedidoEstacion =
                 await _repository.FindByIdAsync(id);

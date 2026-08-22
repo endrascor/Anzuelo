@@ -141,6 +141,9 @@
   <data name="Listo" xml:space="preserve">
     <value>Listo</value>
   </data>
+  <data name="NoHayPedidos" xml:space="preserve">
+    <value>No existen pedidos en proceso</value>
+  </data>
   <data name="Pedido" xml:space="preserve">
     <value>PEDIDO</value>
   </data>

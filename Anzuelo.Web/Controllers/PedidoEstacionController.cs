@@ -32,11 +32,20 @@ namespace Anzuelo.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Iniciar(int id)
         {
-            await _servicePedidoEstacion
-                .IniciarAsync(id);
+            var resultado =
+                await _servicePedidoEstacion
+                    .IniciarAsync(id);
 
-            return RedirectToAction(
-                nameof(Index));
+            if (!resultado)
+            {
+                return BadRequest(
+                    "No se pudo iniciar la etapa.");
+            }
+
+            return Json(new
+            {
+                success = true
+            });
         }
 
 
@@ -44,11 +53,20 @@ namespace Anzuelo.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Finalizar(int id)
         {
-            await _servicePedidoEstacion
-                .FinalizarAsync(id);
+            var resultado =
+                await _servicePedidoEstacion
+                    .FinalizarAsync(id);
 
-            return RedirectToAction(
-                nameof(Index));
+            if (!resultado)
+            {
+                return BadRequest(
+                    "No se pudo finalizar la etapa.");
+            }
+
+            return Json(new
+            {
+                success = true
+            });
         }
     }
 }
