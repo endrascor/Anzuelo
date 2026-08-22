@@ -26,6 +26,7 @@ namespace Anzuelo.Web.Controllers
         private readonly IServiceUsuario _serviceUsuario;
         private readonly IServiceEstadoPedido _serviceEstadoPedido;
         private readonly IServiceFacturaPedido _serviceFacturaPedido;
+        private readonly IServiceTipoCambio _serviceTipoCambio;
 
         public PedidoController(
             IServicePedido servicePedido,
@@ -36,7 +37,8 @@ namespace Anzuelo.Web.Controllers
             IServiceDireccion serviceDireccion,
             IServiceUsuario serviceUsuario,
             IServiceEstadoPedido serviceEstadoPedido,
-            IServiceFacturaPedido serviceFacturaPedido)
+            IServiceFacturaPedido serviceFacturaPedido,
+            IServiceTipoCambio serviceTipoCambio)
         {
             _servicePedido = servicePedido;
             _serviceProducto = serviceProducto;
@@ -47,6 +49,7 @@ namespace Anzuelo.Web.Controllers
             _serviceUsuario = serviceUsuario;
             _serviceEstadoPedido = serviceEstadoPedido;
             _serviceFacturaPedido = serviceFacturaPedido;
+            _serviceTipoCambio = serviceTipoCambio;
         }
 
         private int? IdUsuarioSesion
@@ -95,6 +98,10 @@ namespace Anzuelo.Web.Controllers
 
             var carrito = ObtenerCarrito();
             ViewBag.CarritoActual = carrito;
+
+            var tipoCambio = await _serviceTipoCambio.ObtenerTipoCambioAsync();
+
+            ViewBag.TipoCambioVenta = tipoCambio.Venta.Valor;
 
             return View();
         }

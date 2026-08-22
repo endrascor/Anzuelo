@@ -109,7 +109,7 @@ builder.Services.AddTransient<IServiceTipoEntrega, ServiceTipoEntrega>();
 builder.Services.AddTransient<IServicePedidoEstacion, ServicePedidoEstacion>();
 builder.Services.AddTransient<IServiceFacturaPedido, ServiceFacturaPedido>();
 builder.Services.AddTransient<IServiceDashboard, ServiceDashboard>();
-
+builder.Services.AddHttpClient<IServiceTipoCambio,ServiceTipoCambio>();
 builder.Services.AddHostedService<ActualizarMenuCronService>();
 
 //Seguridad

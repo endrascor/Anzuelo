@@ -6,6 +6,7 @@
     var esCliente = User.IsInRole("Cliente");
     var listaDirecciones = (IEnumerable<Anzuelo.Application.DTOs.DireccionDTO>)ViewBag.ListDirecciones;
     var hayDirecciones = listaDirecciones != null && listaDirecciones.Any();
+    decimal tipoCambioVenta = ViewBag.TipoCambioVenta ?? 0m;
 }
 
 <style>
@@ -288,7 +289,16 @@
                                             </div>
                                             <div class="fila-total fila-total-final">
                                                 <span>@Localizer["LabelTotal"]</span>
-                                                <span id="modalValorTotal">₡0.00</span>
+
+                                                <div>
+                                                    <div id="modalValorTotal">
+                                                        ₡0.00
+                                                    </div>
+
+                                                    <div id="modalValorTotalDolares">
+                                                        $0.00
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -331,6 +341,7 @@
 
 @section Scripts {
     <script>
+        const tipoCambioVenta = @tipoCambioVenta.ToString(System.Globalization.CultureInfo.InvariantCulture);
         const antiforgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
 
         const msgError = '@Localizer["MsgErrorTitulo"]';
@@ -356,6 +367,13 @@
             modalPago = new bootstrap.Modal(document.getElementById('modalPago'));
             actualizarTotalInline();
         });
+
+        function convertirADolares(totalColones) {
+            if (!tipoCambioVenta || tipoCambioVenta <= 0) {
+                return 0;
+            }
+            return totalColones / tipoCambioVenta;
+        }
 
         function actualizarContadorGlobal() {
             if (typeof actualizarContadorCarrito === 'function') {
@@ -384,6 +402,7 @@
             const filaEnvio = document.getElementById('filaCostoEnvio');
             const valorEnvio = document.getElementById('valorCostoEnvio');
             const valorTotal = document.getElementById('valorTotalPedido');
+            const valorTotalDolares = document.getElementById('valorTotalPedidoDolares');
 
             if (!filaEnvio || !valorEnvio || !valorTotal) return;
 
@@ -396,6 +415,11 @@
 
             valorTotal.textContent = '₡' + total.toFixed(2);
             valorTotal.dataset.totalCrudo = total.toFixed(2);
+
+            if (valorTotalDolares) {
+                const totalDolares = convertirADolares(total);
+                valorTotalDolares.textContent = '$' + totalDolares.toFixed(2);
+            }
         }
 
         function actualizarResumenModal() {
@@ -415,6 +439,14 @@
             const valorTotal = document.getElementById('modalValorTotal');
             valorTotal.textContent = '₡' + total.toFixed(2);
             valorTotal.dataset.totalCrudo = total.toFixed(2);
+
+            const totalDolares = convertirADolares(total);
+            const valorTotalDolares = document.getElementById('modalValorTotalDolares');
+
+            if (valorTotalDolares)
+            {
+                valorTotalDolares.textContent = '$' + totalDolares.toFixed(2);
+            }
 
             actualizarVuelto();
         }

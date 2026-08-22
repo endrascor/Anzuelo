@@ -144,6 +144,17 @@
     </div>
     <div class="fila-total fila-total-final">
         <span>@Localizer["LabelTotal"]</span>
-        <span id="valorTotalPedido" data-total-crudo="@((subtotal + impuesto).ToString("F2", cultura))">₡@((subtotal + impuesto).ToString("N2"))</span>
+
+        <div>
+            <div id="valorTotalPedido"
+                 data-total-crudo="@((subtotal + impuesto).ToString("F2", cultura))">
+
+                ₡@((subtotal + impuesto).ToString("N2"))
+            </div>
+
+            <div id="valorTotalPedidoDolares">
+                $0.00
+            </div>
+        </div>
     </div>
 </div>
